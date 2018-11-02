@@ -8,13 +8,16 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.lang.NonNull;
+
  
  @Entity
 public class Task {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	@Column(nullable = false)
+	//@Column(nullable = false)
+	@NonNull
 	private String date;
 	@Column(nullable = false)
 	private String startTime;
