@@ -13,7 +13,10 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-    	http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**").permitAll();
+    	
+    	
+    	
+//    	http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**").permitAll();
 //		.antMatchers("/profile").hasAnyRole("USER,ADMIN")
 //		.antMatchers("/users","/addTask").hasRole("ADMIN")
 //		.and().formLogin().loginPage("/login").permitAll()
@@ -21,8 +24,8 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 
     	
     	
-//        http.authorizeRequests()
-//        .anyRequest().permitAll();
+        http.authorizeRequests()
+        .anyRequest().permitAll();
     }
     @Bean
     public LayoutDialect layoutDialect() {

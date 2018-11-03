@@ -11,7 +11,7 @@
 		<div class="alert alert-info" th:if="${exist}">
 			<p class="text text-center">User with this Email already Exist</p>
 		</div>
-		<form action="@{/register}" th:object="${user}" method="post">
+		<form action="#" th:action="@{/register}" th:object="${user}" method="post">
 
 			<div class="form-group">
 				<label for="email" class="form-control-label">Email</label> <input

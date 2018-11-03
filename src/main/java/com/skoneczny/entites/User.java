@@ -12,15 +12,21 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
+
 import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 public class User {
 	@Id
 	@Email
-	@Column(unique = true, nullable = false)
+	@NotEmpty
+	@Column(unique = true)
 	private String email;
-	@Column(nullable = false)
-	private String name;
+	@NotEmpty
+	@Size(min = 2, max = 30)
+	private String name;	
 	@Size(min = 4)
 	private String password;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

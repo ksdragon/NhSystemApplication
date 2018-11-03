@@ -33,8 +33,8 @@ public class NhSystemApplicationTests {
 		userService.createUser(newUser);
 	}
 	{
-		User newUser = new User("testAdmin@mail.com","testAdmin","123456");
-		userService.createUser(newUser);
+		User newUser1 = new User("testAdmin@mail.com","testAdmin","123456");
+		userService.createAdmin(newUser1);
 	}
 	
 	Task  userTask = new Task("03/01/2018","00:11","11:00","You need to work today");

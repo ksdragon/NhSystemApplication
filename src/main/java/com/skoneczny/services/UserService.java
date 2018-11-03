@@ -42,9 +42,8 @@ public class UserService {
 		return userRepository.findById(email).get();		
 	}
 
-	public boolean isUserPresent(String email) {
-		User u=userRepository.findById(email).get();
-		if(u!=null) return true;
+	public boolean isUserPresent(String email) {		
+		if(userRepository.existsById(email)) return true;
 		return false;
 	}
 }
