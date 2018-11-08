@@ -46,4 +46,12 @@ public class UserService {
 		if(userRepository.existsById(email)) return true;
 		return false;
 	}
+
+	public List<User> findAll() {		
+		return userRepository.findAll();
+	}
+
+	public List<User> findByName(String name) {		
+		return userRepository.findByNameLike("%"+name+"%");
+	}
 }
