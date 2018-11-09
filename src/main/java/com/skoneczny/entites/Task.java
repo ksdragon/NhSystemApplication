@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import org.springframework.lang.NonNull;
 
@@ -17,12 +18,16 @@ public class Task {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	//@Column(nullable = false)
+	@NotEmpty
 	@NonNull
 	private String date;
+	@NotEmpty
 	@Column(nullable = false)
 	private String startTime;
+	@NotEmpty
 	@Column(nullable = false)
-	private String stopTime;	
+	private String stopTime;
+	@NotEmpty
 	@Column(length=1000, nullable = false)
 	private String description;
 	@ManyToOne

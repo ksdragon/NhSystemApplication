@@ -28,7 +28,7 @@
 						<tr th:each="user:${users}">
 							<td th:text="${user.name}"></td>
 							<td th:text="${user.email}"></td>
-							<td><a href="" class="btn btn-dark">AddTask</a> </td>
+							<td><a th:href="@{/addTask(email=${user.email})}" class="btn btn-dark">AddTask</a> </td>
 
 						</tr>
 					</tbody>

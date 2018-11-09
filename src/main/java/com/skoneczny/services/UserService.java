@@ -3,7 +3,6 @@ package com.skoneczny.services;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,9 @@ public class UserService {
 		return userRepository.findAll();
 	}
 
-	public List<User> findByName(String name) {		
+	public List<User> findByName(String name) {
+//		List<String> namesList = new ArrayList<>(Arrays.asList(name.split(" ")));
+//		userRepository.findAll().forEach(x -> x.getName());
 		return userRepository.findByNameLike("%"+name+"%");
 	}
 }
