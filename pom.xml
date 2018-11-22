@@ -59,11 +59,15 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.thymeleaf.extras</groupId>
+		    <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		</dependency>
 		<!-- biblioteka działa w połączeniu z nz.net.ultraq.thymeleaf w Spring Boot 2 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
+		</dependency>		
 		<!-- Dodatkowo trzeba skonfigurować Bean w jednym z plików java które są oznaczone jako @Configuration  -->
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>

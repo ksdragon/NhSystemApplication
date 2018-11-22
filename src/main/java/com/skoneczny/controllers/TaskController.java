@@ -34,7 +34,7 @@ public class TaskController {
 	@PostMapping("/addTask")
 	public String addTask(@Valid Task task, BindingResult bindingResult, HttpSession session) {
 		if(bindingResult.hasErrors()) {
-			return "viewe/taskForm";
+			return "views/taskForm";
 		}
 		String email = (String)session.getAttribute("email");
 		taskService.addTask(task, userService.findOne(email));
