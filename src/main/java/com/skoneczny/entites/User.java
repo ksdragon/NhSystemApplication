@@ -26,7 +26,9 @@ public class User {
 	private String email;
 	@NotEmpty
 	@Size(min = 2, max = 30)
-	private String name;	
+	private String name;
+	@Size(min = 2, max = 30)
+	private String lastName;
 	@Size(min = 4)
 	private String password;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
