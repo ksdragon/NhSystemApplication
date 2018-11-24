@@ -3,6 +3,8 @@ package com.skoneczny.services;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -54,5 +56,15 @@ public class UserService {
 //		List<String> namesList = new ArrayList<>(Arrays.asList(name.split(" ")));
 //		userRepository.findAll().forEach(x -> x.getName());
 		return userRepository.findByNameLike("%"+name+"%");
+	}
+
+	public void updateUser(@Valid User user) {
+//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//		user.setPassword(encoder.encode(user.getPassword()));
+		Role userRole = new Role("USER");
+		List<Role> roles = new ArrayList<>();
+		roles.add(userRole);
+		user.setRoles(roles);
+		userRepository.save(user);		
 	}
 }
