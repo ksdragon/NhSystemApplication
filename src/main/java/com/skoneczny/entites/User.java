@@ -46,6 +46,11 @@ public class User {
 	private String birthday;	
 	@Size(min = 4)
 	private String password;
+	
+	// Activate a New Account by Email - add field indicate that account is enable
+    @Column(name = "enabled", nullable = false)
+    private Boolean enabled = false;
+	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Task> tasks;
 	
@@ -133,14 +138,19 @@ public class User {
 	public void setRoles(List<Role> roles) {
 		this.roles = roles;
 	}
-	
-	
+		
+	public boolean isEnabled() {
+		return enabled;
+	}
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 	
 	public User(@Email @NotEmpty String email, @NotEmpty @Size(min = 2, max = 30) String name,
 			@Size(min = 2, max = 30) String lastName, @Size(min = 2, max = 30) String street,
 			@Size(min = 2, max = 30) String numberHouse, @Size(min = 2, max = 30) String city,
 			@Size(min = 2, max = 30) String zipCode, @Size(min = 2, max = 30) String phone1,
-			@Size(min = 2, max = 30) String phone2, String birthday, @Size(min = 4) String password) {		
+			@Size(min = 2, max = 30) String phone2, String birthday, @Size(min = 4) String password, Boolean isEnabled) {		
 		this.email = email;
 		this.name = name;
 		this.lastName = lastName;
@@ -152,6 +162,7 @@ public class User {
 		this.phone2 = phone2;
 		this.birthday = birthday;
 		this.password = password;
+		this.enabled = isEnabled;
 	}
 	public User(String email, String name, String password) {
 		this.email = email;

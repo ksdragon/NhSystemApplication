@@ -35,6 +35,12 @@
 			<artifactId>webjars-locator</artifactId>
 			<version>0.34</version>
 		</dependency>
+		
+<!-- 		Activate a New Account by Email  -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.webjars/jquery -->
