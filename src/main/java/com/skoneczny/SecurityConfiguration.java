@@ -1,7 +1,6 @@
 package com.skoneczny;
 
 
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private DataSource dataSource;
@@ -64,4 +64,5 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 	public LayoutDialect layoutDialect() {
 		return new LayoutDialect();
 	}
+	
 }

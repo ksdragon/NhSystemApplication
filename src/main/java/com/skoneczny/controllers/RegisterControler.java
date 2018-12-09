@@ -35,21 +35,25 @@ public class RegisterControler {
 	@Autowired
 	private IUserService userService;
 	
+	
+	
 	@GetMapping("/register")
-	public String registerForm(Model model) {
-		
+	public String registerForm(Model model, WebRequest request) {
+//		Locale locale = request.getLocale();
 		model.addAttribute("user", new User());
-		return "views/registerForm";		
+		return "views/registerForm"; // ?lang=" + locale.getLanguage() ;		
 	}
 	
 	@PostMapping("/register")
 	public String registerUser(@Valid User user, BindingResult bindingResult, Model model, WebRequest request) {
+//		 Locale locale = request.getLocale();
+		
 		if (bindingResult.hasErrors()){
-			return "views/registerForm";
+			return "views/registerForm"; // ?lang=" + locale.getLanguage() ;
 		}
 		if(userService.isUserPresent(user.getEmail())) {
 			model.addAttribute("exist", true);
-			return "views/registerForm";
+			return "views/registerForm";  // ?lang=" + locale.getLanguage() ;
 		}		
 		User registered = userService.createUser(user);
 		
@@ -59,14 +63,14 @@ public class RegisterControler {
 	        eventPublisher.publishEvent(new OnRegistrationCompleteEvent
 	          (registered, request.getLocale(), appUrl));
 	    } catch (Exception me) {
-	        return "views/registerForm";
+	        return "views/registerForm";  // ?lang=\" + locale.getLanguage() ;
 	        		//new ModelAndView("emailError", "user", accountDto);
 	    }
 		
-		return "views/success";
+		return "views/success";  // ?lang=\" + locale.getLanguage() ;
 	}
 	
-	@GetMapping("/regitrationConfirm")
+	@GetMapping("/registrationConfirm")
 	public String confirmRegistration
 	  (WebRequest request, Model model, @RequestParam("token") String token) {
 	  
@@ -76,7 +80,7 @@ public class RegisterControler {
 	    if (verificationToken == null) {
 	        String message = messages.getMessage("auth.message.invalidToken", null, locale);
 	        model.addAttribute("message", message);
-	        return "redirect:/badUser.html?lang=" + locale.getLanguage();
+	        return "views/badUser.html"; // ?lang=" + locale.getLanguage();
 	    }
 	     
 	    User user = verificationToken.getUser();
@@ -84,12 +88,12 @@ public class RegisterControler {
 	    if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
 	        String messageValue = messages.getMessage("auth.message.expired", null, locale);
 	        model.addAttribute("message", messageValue);
-	        return "redirect:/badUser.html?lang=" + locale.getLanguage();
+	        return "views/badUser.html";			//  "redirect:/badUser.html?lang=" + locale.getLanguage();
 	    } 
 	     
 	    user.setEnabled(true); 
 	    userService.saveRegisteredUser(user); 
-	    return "redirect:/login.html?lang=" + request.getLocale().getLanguage(); 
+	    return  "redirect:/login";// "redirect:/loginForm.html?lang=" + request.getLocale().getLanguage(); 
 	}
 
 }
