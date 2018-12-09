@@ -22,6 +22,7 @@ import com.skoneczny.entites.VerificationToken;
 import com.skoneczny.event.OnRegistrationCompleteEvent;
 import com.skoneczny.services.IUserService;
 
+
 @Controller
 public class RegisterControler {
 	

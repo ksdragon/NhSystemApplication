@@ -94,5 +94,15 @@ public class UserService implements IUserService {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
     }
+
+	public void deleteUser(String email) {
+		Role userRole = new Role();
+		List<Role> roles = new ArrayList<>();
+		roles.add(userRole);		
+		User user = findOne(email);
+		user.setRoles(roles);
+		userRepository.deleteById(email);
+		
+	}
 	
 }
