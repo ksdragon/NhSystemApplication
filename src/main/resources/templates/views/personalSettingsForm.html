@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{fragments/main_layout}">
 <head>
-<title>Personal Settings Form</title>
+<title th:text="#{label.personalSettings.title}">Personal Settings Form</title>
 </head>
 <body>
 
@@ -22,13 +22,13 @@
 				<input class="form-control" type="hidden" th:field="*{password}" />
 					<table class="table table-hover" >
 						<tr class="text-right">
-							<td><label for="name" class="form-control-label">Name</label></td>
+							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.name}">Name</label></td>
 							<td><input class="form-control" type="text" th:field="*{name}" />
 								<div class="text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 							</td>
 						</tr>
 						<tr class="text-right">
-							<td><label for="name" class="form-control-label">Last Name</label></td>
+							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.lastName}">Last Name</label></td>
 							<td><input class="form-control" type="text" th:field="*{lastName}" /></td>
 						</tr>						
 					</table>

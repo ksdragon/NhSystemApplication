@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.skoneczny.entites.Role;
 import com.skoneczny.entites.User;
@@ -94,15 +95,36 @@ public class UserService implements IUserService {
         VerificationToken myToken = new VerificationToken(token, user);
         tokenRepository.save(myToken);
     }
-
-	public void deleteUser(String email) {
+	 
+	 public void deleteUserEntity(User user) {
+		 userRepository.delete(user); 
+	 } 
+	 
+	//@Transactional
+	public void deleteUser1(String email) {
 		Role userRole = new Role();
-		List<Role> roles = new ArrayList<>();
-		roles.add(userRole);		
+		List<User> users = new ArrayList<>();
 		User user = findOne(email);
-		user.setRoles(roles);
-		userRepository.deleteById(email);
-		
+		users.add(user);		
+		userRole.setUsers(users);
+		user.removeUser(userRole);
+//		user.setRoles(null);
+//		userRepository.save(user);
+		VerificationToken vtUser = new VerificationToken();
+		vtUser = tokenRepository.findByUser(user);
+		vtUser.setUser(null);		
+		tokenRepository.delete(vtUser);
+		userRepository.delete(user);		
 	}
+	
+	public void deleteUser(String email) {		
+		User user = findOne(email);		
+		user.setRoles(null);
+		VerificationToken vtUser = new VerificationToken();
+		vtUser = tokenRepository.findByUser(user);		
+		tokenRepository.deleteById(vtUser.getId());
+		userRepository.delete(user);		
+	}
+	  
 	
 }

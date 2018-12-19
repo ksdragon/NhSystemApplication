@@ -17,7 +17,7 @@ import javax.validation.Payload;
 @Constraint(validatedBy = EmailValidator.class)
 @Documented
 public @interface ValidEmail {   
-    String message() default "" ; //default "Invalid email annotation"
+    String message() default "Invalid email annotation" ; //default "Invalid email annotation"
     Class<?>[] groups() default {}; 
     Class<? extends Payload>[] payload() default {};
 }

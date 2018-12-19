@@ -29,7 +29,7 @@ public class UserController {
 		userService.deleteUser(email);
 //		session.setAttribute("email", email);
 //		model.addAttribute("task", new Task());
-		return "redirect:/list";
+		return "redirect:/users";
 	}
 	
 	
