@@ -3,21 +3,24 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{fragments/main_layout}">
 <head>
-<title>Index Page</title>
+<title th:text="#{label.profile.title}">Profile Page</title>
 </head>
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-
+		<div>
+		<a th:href="@{/addTask(email=${email})}" th:text="#{labelBt.profile.addTask}" class="btn btn-dark">AddTask</a>
+		</div>
 		<div class="card">
 			<div class="card card-body">
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th>Date</th>
-							<th>Start Time</th>
-							<th>Stop Time</th>
-							<td>Description</td>
+							<th th:text="#{label.profile.data}">Date</th>
+							<th th:text="#{label.profile.startTime}">Start Time</th>
+							<th th:text="#{label.profile.stopTime}">Stop Time</th>
+							<th th:text="#{label.profile.approved}">Approved</th>
+							<td th:text="#{label.profile.description}" >Description</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -25,7 +28,9 @@
 							<td th:text="${task.date}"></td>
 							<td th:text="${task.startTime}"></td>
 							<td th:text="${task.stopTime}"></td>
-							<td th:text="${task.description}"></td>
+								<td th:if="${task.approved == true}">Yes</td>
+      							<td th:if="${task.approved} == false">No</td>							 
+							<td th:text="${task.description}" ></td>
 						</tr>
 					</tbody>
 

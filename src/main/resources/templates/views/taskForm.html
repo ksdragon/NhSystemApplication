@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{fragments/main_layout}">
 <head>
-<title>Register Form</title>
+<title th:text="#{label.tasks.title}">Tasks Form</title>
 </head>
 <body>
 
@@ -11,13 +11,13 @@
 		<form th:action="@{/addTask}" th:object="${task}" method="post">
 
 			<div class="form-group">
-				<label for="Date" class="form-control-label">Date</label> <input
+				<label for="Date" class="form-control-label" th:text="#{label.tasks.data}">Date</label> <input
 					type="date" class="form-control" th:field="*{date}" id="date" />
 				<div class="text text-danger" th:if="${#fields.hasErrors('date')}"
 					th:errors="*{date}"></div>
 			</div>
 			<div class="form-group">
-				<label for="startTime" class="form-control-label">StartTime</label>
+				<label for="startTime" class="form-control-label" th:text="#{label.tasks.startTime}">StartTime</label>
 				<input type="time" class="form-control" th:field="*{startTime}"
 					id="startTime" />
 				<div class="text text-danger"
@@ -25,14 +25,14 @@
 
 			</div>
 			<div class="form-group">
-				<label for="stopTime" class="form-control-label">Stop Time</label> <input
+				<label for="stopTime" class="form-control-label" th:text="#{label.tasks.stopTime}">Stop Time</label> <input
 					type="time" class="form-control" th:field="*{stopTime}"
 					id="stopTime" />
 				<div class="text text-danger"
 					th:if="${#fields.hasErrors('stopTime')}" th:errors="*{stopTime}"></div>
                </div>
 				<div class="form-group">
-					<label for="description" class="form-control-label">Description</label>
+					<label for="description" class="form-control-label" th:text="#{label.tasks.description}">Description</label>
 					<textarea   class="form-control" th:field="*{description}"
 						id="description">  </textarea>
 					<div class="text text-danger"
@@ -40,7 +40,7 @@
 
 
 				</div>
-				<input type="submit" value="Submit" class="btn btn-primary" />
+				<input type="submit" value="Submit" class="btn btn-primary" th:value="#{value.tasks.submit}"/>
 		</form>
 	</div>
 </body>

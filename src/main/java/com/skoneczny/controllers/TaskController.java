@@ -38,6 +38,6 @@ public class TaskController {
 		}
 		String email = (String)session.getAttribute("email");
 		taskService.addTask(task, userService.findOne(email));
-		return "redirect:/users";
+		return "redirect:/profile";
 	}
 }

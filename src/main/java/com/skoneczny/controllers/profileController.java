@@ -25,6 +25,7 @@ public class profileController {
 		
 		String email = principal.getName();
 		User user = userService.findOne(email);
+		model.addAttribute("email",user.getEmail());
 		model.addAttribute("tasks", taskService.findUserTask(user));
 		
 		return "views/profile";
