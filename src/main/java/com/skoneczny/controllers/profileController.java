@@ -2,6 +2,8 @@ package com.skoneczny.controllers;
 
 import java.security.Principal;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,5 +31,11 @@ public class profileController {
 		model.addAttribute("tasks", taskService.findUserTask(user));
 		
 		return "views/profile";
+	}
+	
+	@GetMapping("/deleteTask")
+	public String taskFrom(Long id, Model model, HttpSession session) {
+		taskService.deleteTask(id);
+		return "redirect:/profile";
 	}
 }

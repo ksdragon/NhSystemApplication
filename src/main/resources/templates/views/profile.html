@@ -21,6 +21,7 @@
 							<th th:text="#{label.profile.stopTime}">Stop Time</th>
 							<th th:text="#{label.profile.approved}">Approved</th>
 							<td th:text="#{label.profile.description}" >Description</td>
+							<th th:text="#{label.profile.delete}">Delete</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -31,6 +32,7 @@
 								<td th:if="${task.approved == true}">Yes</td>
       							<td th:if="${task.approved} == false">No</td>							 
 							<td th:text="${task.description}" ></td>
+							<td><a th:href="@{/deleteTask(id=${task.id})}" th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a> </td>
 						</tr>
 					</tbody>
 
