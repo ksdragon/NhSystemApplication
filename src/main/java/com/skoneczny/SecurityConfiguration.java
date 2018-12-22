@@ -12,7 +12,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -37,7 +39,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 	public PasswordEncoder passwordEncoder() {
 		// TODO Auto-generated method stub
 		return new BCryptPasswordEncoder();
-	}
+	}	
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{  	
@@ -48,7 +50,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 //		.defaultSuccessUrl("/profile").and().logout().logoutSuccessUrl("/login");
 //		
 		
-				http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**").permitAll()
+				http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**","/webjars/").permitAll()
 		    	.antMatchers("/profile").hasAnyRole("USER,ADMIN")
 		    	.antMatchers("/personalSettings").hasAnyRole("USER,ADMIN")
 		    	.antMatchers("/addTask").hasAnyRole("USER,ADMIN")
@@ -64,6 +66,5 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 	@Bean
 	public LayoutDialect layoutDialect() {
 		return new LayoutDialect();
-	}
-	
+	}	
 }

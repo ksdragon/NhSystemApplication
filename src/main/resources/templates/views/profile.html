@@ -4,15 +4,76 @@
 	layout:decorate="~{fragments/main_layout}">
 <head>
 <title th:text="#{label.profile.title}">Profile Page</title>
+<script>
+// $(document).ready(function () {
+
+//     $("#selectedYear").change(function (event) {
+
+//         //stop submit the form, we will post it manually.
+//         event.preventDefault();
+
+//         selectYear();
+
+//     });
+
+// });
+function selectYear(str) {
+		
+		var xhttp; //deklaracja pustej zmienej
+		if (str == "") {
+	    document.getElementById("table").innerHTML = "";
+	    return;
+	  	}
+	
+		//create object XMLHttpRequest
+		if (window.XMLHttpRequest) {
+		   // code for modern browsers
+		   xhttp = new XMLHttpRequest();
+		 } else {
+		   // code for old IE browsers
+		   xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+	  
+		//w³aœciwoœc któr¹ posiada obiekt xhttp 
+	  xhttp.onreadystatechange = function() {
+	    if (this.readyState == 4 && this.status == 200) {
+	      document.getElementById("table").innerHTML =
+	      this.responseText;
+	    }
+	  };
+	  xhttp.open("GET", "/profileYear?selectedYear="+str, true);
+	  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	  xhttp.send(); 
+}
+
+</script>
 </head>
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-		<div>
-		<a th:href="@{/addTask(email=${email})}" th:text="#{labelBt.profile.addTask}" class="btn btn-dark">AddTask</a>
+		<div class="form-group mb-2">						
+			<div>
+			<a th:href="@{/addTask(email=${email})}"
+				th:text="#{labelBt.profile.addTask}" class="btn btn-primary">AddTask</a>
+			</div>
+			<div class="form-group blu-margin">
+					<select class="form-control" id="selectedYear" name="selectedYear" onchange="selectYear(this.value)">
+						<option value="0">Select Date</option>
+						<option th:each="year : ${years}" 
+							th:value="${year}" 
+							th:text="${year}"							
+							></option>
+					</select>
+<!-- 				<form action=""> -->
+<!-- 					<select class="form-control" id="selectedYear" name="selectedYear" onchange='if(this.value != 0) { this.form.submit();}'> -->
+<!-- 				</form> -->
+			</div>
+
 		</div>
+		<br>
+		
 		<div class="card">
-			<div class="card card-body">
+			<div class="card card-body" id="table">
 				<table class="table table-hover">
 					<thead>
 						<tr>
@@ -20,7 +81,7 @@
 							<th th:text="#{label.profile.startTime}">Start Time</th>
 							<th th:text="#{label.profile.stopTime}">Stop Time</th>
 							<th th:text="#{label.profile.approved}">Approved</th>
-							<td th:text="#{label.profile.description}" >Description</td>
+							<td th:text="#{label.profile.description}">Description</td>
 							<th th:text="#{label.profile.delete}">Delete</th>
 						</tr>
 					</thead>
@@ -29,16 +90,18 @@
 							<td th:text="${task.date}"></td>
 							<td th:text="${task.startTime}"></td>
 							<td th:text="${task.stopTime}"></td>
-								<td th:if="${task.approved == true}">Yes</td>
-      							<td th:if="${task.approved} == false">No</td>							 
-							<td th:text="${task.description}" ></td>
-							<td><a th:href="@{/deleteTask(id=${task.id})}" th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a> </td>
+							<td th:if="${task.approved == true}">Yes</td>
+							<td th:if="${task.approved} == false">No</td>
+							<td th:text="${task.description}"></td>
+							<td><a th:href="@{/deleteTask(id=${task.id})}"
+								th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a>
+							</td>
 						</tr>
 					</tbody>
 
 				</table>
 			</div>
 		</div>
-	</div>
+	</div>	
 </body>
 </html>

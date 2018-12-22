@@ -33,7 +33,6 @@ public class PersonalSettingsController {
 		if(bindingResult.hasErrors()) {
 			return "views/personalSettingsForm";
 		}
-//		String password = (String) session.getAttribute("password");		
 		userService.updateUser(user);
 		return ("redirect:/personalSettings");
 	}
