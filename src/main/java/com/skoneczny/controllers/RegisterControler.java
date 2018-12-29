@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 
+import com.skoneczny.api.IUserService;
 import com.skoneczny.entites.User;
 import com.skoneczny.entites.VerificationToken;
 import com.skoneczny.event.OnRegistrationCompleteEvent;
-import com.skoneczny.services.IUserService;
 
 
 @Controller

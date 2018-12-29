@@ -1,6 +1,8 @@
-package com.skoneczny.services;
+package com.skoneczny.api;
+
 
 import javax.validation.Valid;
+
 
 import com.skoneczny.entites.User;
 import com.skoneczny.entites.VerificationToken;
@@ -17,6 +19,7 @@ public interface IUserService {
 
 	boolean isUserPresent(String email);
 
-	User createUser(@Valid User user);
+	User createUser(@Valid User user);	
+	
 
 }

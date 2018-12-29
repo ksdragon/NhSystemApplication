@@ -8,6 +8,9 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import com.skoneczny.api.IUserService;
+import com.skoneczny.entites.Address;
 import com.skoneczny.entites.Role;
 import com.skoneczny.entites.User;
 import com.skoneczny.entites.VerificationToken;
@@ -30,6 +33,11 @@ public class UserService implements IUserService {
 		Role userRole = new Role("USER");
 		List<Role> roles = new ArrayList<>();
 		roles.add(userRole);
+		Address address = new Address();
+		address.setUser(user);		
+		List<Address> addresses = new ArrayList<Address>();
+		addresses.add(address);
+		user.setAdress(addresses);	
 		user.setRoles(roles);
 		return userRepository.save(user);
 		
@@ -42,6 +50,11 @@ public class UserService implements IUserService {
 		List<Role> roles = new ArrayList<>();
 		roles.add(userRole);
 		user.setRoles(roles);
+		Address address = new Address();
+		address.setUser(user);		
+		List<Address> addresses = new ArrayList<Address>();
+		addresses.add(address);
+		user.setAdress(addresses);
 		userRepository.save(user);		
 	}
 	
@@ -103,9 +116,9 @@ public class UserService implements IUserService {
 		Role userRole = new Role();
 		List<User> users = new ArrayList<>();
 		User user = findOne(email);
-		users.add(user);		
-		userRole.setUsers(users);
-		user.removeUser(userRole);
+		users.add(user);
+//		user.setAdress(address);
+		userRole.setUsers(users);		
 //		user.setRoles(null);
 //		userRepository.save(user);
 		VerificationToken vtUser = new VerificationToken();
@@ -123,6 +136,6 @@ public class UserService implements IUserService {
 		tokenRepository.deleteById(vtUser.getId());
 		userRepository.delete(user);		
 	}
-	  
 	
+		
 }

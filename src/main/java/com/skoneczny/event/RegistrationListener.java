@@ -10,8 +10,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.context.MessageSource;
 
+import com.skoneczny.api.IUserService;
 import com.skoneczny.entites.User;
-import com.skoneczny.services.IUserService;
 
 
 @Component
