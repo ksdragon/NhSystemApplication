@@ -29,7 +29,9 @@
 						</tr>
 						<tr class="text-right">
 							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.lastName}">Last Name</label></td>
-							<td><input class="form-control" type="text" th:field="*{lastName}" /></td>
+							<td><input class="form-control" type="text" th:field="*{lastName}" />
+								<div class="text text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+							</td>
 						</tr>						
 					</table>
 			</div>

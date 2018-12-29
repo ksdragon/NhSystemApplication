@@ -1,9 +1,10 @@
 package com.skoneczny.services;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,8 +51,9 @@ public class TaskService {
 		yeasList = (TreeSet<String>)yeasList.descendingSet();
 		return yeasList;		
 	}
+		
 
-	public List<Task> findUserTasksYear(User user, String year) {
+	/*public List<Task> findUserTasksYear(User user, String year) {
 		List<Task> tList = new ArrayList<>();
 		
 		List<Task> tasks = taskRepository.findByUser(user);
@@ -61,6 +63,13 @@ public class TaskService {
 			};
 		}
 		return tList;
+	}*/
+	
+	public List<Task> findUserTasksYear(User user, String year) {		
+		return taskRepository.findByUser(user)
+				.stream()
+				.filter(task -> Objects.equals(task.getDate().substring(0,4), year))
+				.collect(Collectors.toList());
 	}
 
 }

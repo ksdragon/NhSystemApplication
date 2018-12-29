@@ -16,8 +16,6 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import com.skoneczny.annotation.ValidEmail;
 
 ;
@@ -56,7 +54,16 @@ public class User {
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Task> tasks;
-	
+	/**
+	 * kaskadowość(cascade = {CascadeType.PERSIST itp) - to operacje na obiektach powiązanych w jakiejś relacji 
+	 * jak ustawimy tą adnotację nie potrzebujemy w jednej tansakcji zapisywać po kolej poszczególnych obiektów
+	 * tylko ten jeden który nas interesuje.
+	 * 	 * 
+	 * fetch.eager - pobiera obiekt w relecji 1-* odrazu np. jeżeli pobierzemy użytkownika to 
+	 * odrazu zrobi selecta z outer join do tabeli USER_ROLES
+	 * domyślnie jest fetch.lazy który pobierze tylko obiekt user bez żedanych powiązań a
+	 * hibernet jak będzie potrzebował to zrobi takie dopytanie. 
+	 */
 	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch=FetchType.EAGER)  //cascade = CascadeType.ALL
 	@JoinTable(name = "USER_ROLES", 
 			joinColumns={@JoinColumn(name = "USER_EMAIL", referencedColumnName = "email") },
