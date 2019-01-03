@@ -40,7 +40,7 @@ public class User {
 	private String password;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<Address> address;
+	private List<Address> addresses;
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Phone> phones;
 	
@@ -114,10 +114,10 @@ public class User {
 	
 		
 	public List<Address> getAdress() {
-		return address;
+		return addresses;
 	}
 	public void setAdress(List<Address> address) {
-		this.address = address;
+		this.addresses = address;
 	}
 	public List<Phone> getPhones() {
 		return phones;
@@ -145,7 +145,7 @@ public class User {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((address == null) ? 0 : address.hashCode());
+		result = prime * result + ((addresses == null) ? 0 : addresses.hashCode());
 		result = prime * result + ((birthday == null) ? 0 : birthday.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
@@ -166,10 +166,10 @@ public class User {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (address == null) {
-			if (other.address != null)
+		if (addresses == null) {
+			if (other.addresses != null)
 				return false;
-		} else if (!address.equals(other.address))
+		} else if (!addresses.equals(other.addresses))
 			return false;
 		if (birthday == null) {
 			if (other.birthday != null)

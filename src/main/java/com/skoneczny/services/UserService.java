@@ -50,11 +50,11 @@ public class UserService implements IUserService {
 		List<Role> roles = new ArrayList<>();
 		roles.add(userRole);
 		user.setRoles(roles);
-		Address address = new Address();
-		address.setUser(user);		
-		List<Address> addresses = new ArrayList<Address>();
-		addresses.add(address);
-		user.setAdress(addresses);
+//		Address address = new Address();
+//		address.setUser(user);		
+//		List<Address> addresses = new ArrayList<Address>();
+//		addresses.add(address);
+//		user.setAdress(addresses);
 		userRepository.save(user);		
 	}
 	

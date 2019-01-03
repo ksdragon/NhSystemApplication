@@ -36,7 +36,7 @@ public class PersonalSettingsController {
 		List<Address> addresses = addressService.getAddress(userService.findOne(email));
 		Address address = addresses.get(0);
 		model.addAttribute("personalSettings", userService.findOne(email));
-		model.addAttribute("addresses", address);
+		//model.addAttribute("addresses", address);
 		return ("views/personalSettingsForm");
 	}
 	
