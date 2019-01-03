@@ -42,7 +42,7 @@
 <!-- 								<div class="text text-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div> -->
 <!-- 								</td> -->
 <!-- 							</tr>												 -->
-						<tr class="text-right" th:each=" adres : *{addresses}">
+						<tr class="text-right" th:each=" adres : *{getAddresses()}">
 <!-- 								<td th:text="${addressStat.count}">1</td> -->
 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>								
 								<td><input class="form-control"  type="text" th:text="${adres.street}"></td>

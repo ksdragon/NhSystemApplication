@@ -113,10 +113,10 @@ public class User {
 	}	
 	
 		
-	public List<Address> getAdress() {
+	public List<Address> getAddresses() {
 		return addresses;
 	}
-	public void setAdress(List<Address> address) {
+	public void setAddresses(List<Address> address) {
 		this.addresses = address;
 	}
 	public List<Phone> getPhones() {

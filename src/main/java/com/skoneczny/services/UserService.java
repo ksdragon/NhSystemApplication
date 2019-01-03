@@ -37,7 +37,7 @@ public class UserService implements IUserService {
 		address.setUser(user);		
 		List<Address> addresses = new ArrayList<Address>();
 		addresses.add(address);
-		user.setAdress(addresses);	
+		user.setAddresses(addresses);	
 		user.setRoles(roles);
 		return userRepository.save(user);
 		
@@ -54,7 +54,7 @@ public class UserService implements IUserService {
 //		address.setUser(user);		
 //		List<Address> addresses = new ArrayList<Address>();
 //		addresses.add(address);
-//		user.setAdress(addresses);
+//		user.setAddresses(addresses);
 		userRepository.save(user);		
 	}
 	
