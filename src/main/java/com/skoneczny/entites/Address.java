@@ -6,8 +6,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import com.skoneczny.annotation.ValidZipCode;
+
+@Valid
 @Entity
 public class Address {
 
@@ -20,7 +24,7 @@ public class Address {
 	private String numberHouse;
 	@Size(min = 2, max = 30)
 	private String city;
-	@Size(min = 2, max = 30)
+	@ValidZipCode
 	private String zipCode;
 	@Size(min = 2, max = 30)
 	private String country;
@@ -84,6 +88,84 @@ public class Address {
 
 	public void setCountry(String country) {
 		this.country = country;
+	}
+	
+	
+
+	public Address() {		
+	}
+
+	public Address(Long id, @Size(min = 2, max = 30) String street, @Size(min = 2, max = 30) String numberHouse,
+			@Size(min = 2, max = 30) String city, String zipCode, @Size(min = 2, max = 30) String country, User user) {
+		super();
+		this.id = id;
+		this.street = street;
+		this.numberHouse = numberHouse;
+		this.city = city;
+		this.zipCode = zipCode;
+		this.country = country;
+		this.user = user;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		result = prime * result + ((country == null) ? 0 : country.hashCode());
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((numberHouse == null) ? 0 : numberHouse.hashCode());
+		result = prime * result + ((street == null) ? 0 : street.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		result = prime * result + ((zipCode == null) ? 0 : zipCode.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Address other = (Address) obj;
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		if (country == null) {
+			if (other.country != null)
+				return false;
+		} else if (!country.equals(other.country))
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (numberHouse == null) {
+			if (other.numberHouse != null)
+				return false;
+		} else if (!numberHouse.equals(other.numberHouse))
+			return false;
+		if (street == null) {
+			if (other.street != null)
+				return false;
+		} else if (!street.equals(other.street))
+			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
+		if (zipCode == null) {
+			if (other.zipCode != null)
+				return false;
+		} else if (!zipCode.equals(other.zipCode))
+			return false;
+		return true;
 	}
 	
 	

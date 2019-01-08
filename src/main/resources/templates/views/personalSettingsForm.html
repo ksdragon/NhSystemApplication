@@ -7,62 +7,109 @@
 </head>
 <body>
 
-	<div layout:fragment="content" class="container mySpace" th:object="${personalSettings}">
+	<div layout:fragment="content" class="container mySpace">
 			<div class="form-group row"  >
 
 		      <label for="staticEmail" class="col-sm-1 col-form-label">Email:</label>
-		      <div class="col-sm-8">
-		        <input type="text"  readonly="readonly" class="form-control-plaintext " id="staticEmail" value="email@example.com" th:field="*{email}">
+		      <div class="col-sm-8" th:object="${user}">
+		        <input type="text"  readonly="readonly" class="form-control-plaintext " id="staticEmail" value="email@example.com" th:field="*{email}"/>
 		      </div>
 		    </div>
 		  
-		<form th:action="@{/personalSettings}"  method="post">
+		<form th:action="@{/personalSettings}"  method="post" th:object="${user}">
 			
 			<div class="form-group" >
-				<input class="form-control" type="hidden" th:field="${personalSettings.email}" />
-				<input class="form-control" type="hidden" th:field="${personalSettings.password}" />
 <!-- 				<input class="form-control" type="hidden" th:field="${addresses.id}" /> -->
 <!-- 				<input class="form-control" type="hidden" th:field="${addresses.user}" /> -->
-					<table class="table table-hover"  >
-						<tr class="text-right">
-							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.name}">Name</label></td>
-							<td><input class="form-control" type="text" th:field="*{name}" />
-								<div class="text text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
-							</td>
-						</tr>
-						<tr class="text-right">
-							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.lastName}">Last Name</label></td>
-							<td><input class="form-control" type="text" th:field="*{lastName}" />
-								<div class="text text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
-							</td>
-						</tr>
+					<table class="table table-hover">
+						
+						
+						
+						
+						
 <!-- 						<tr class="text-right" th:object="${addresses}"> -->
 <!-- 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>								 -->
 <!-- 								<td><input class="form-control" type="text" th:field="*{street}"> -->
 <!-- 								<div class="text text-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div> -->
 <!-- 								</td> -->
 <!-- 							</tr>												 -->
-						<tr class="text-right" th:each=" adres : *{getAddresses()}">
+<!-- 						<tr class="text-right" th:each=" adres : *{addresses}"> -->
 <!-- 								<td th:text="${addressStat.count}">1</td> -->
-								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>								
-								<td><input class="form-control"  type="text" th:text="${adres.street}"></td>
-<!-- 								<div class="text text-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div> -->
-<!-- 								</td> -->
-						</tr>
-						
-<!-- 						<tr class="text-right" th:each=" adres,adresStat : *{addresses}">								 -->
-<!-- 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td> -->
-<!-- 								<td th:text="${adresStat.count}">1</td>								 -->
-<!-- 								<td><input class="form-control" type="text" th:field="|addresses[${adresStat.index}].street}" th:value="${addresses.getStreet()}"></td> -->
+<!-- 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>								 -->
+<!-- 								<td><input class="form-control"  type="text" th:text="${adres.street}"></td> -->
 <!-- 								<div class="text text-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div> -->
 <!-- 								</td> -->
 <!-- 						</tr> -->
 						
-						
-								
-						
+<!-- 						<tr class="text-right" th:each=" adres,adresStat : ${personalSettings.addresses}"> -->
+<!-- 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td> -->
+<!-- 								<td><input class="form-control" type="text" th:id="|addresses[${adresStat.index}].street|" th:name="|addresses[${adresStat.index}].street|" th:value="${adres.getStreet()}"></td> -->
+<!-- 								<td><input type="hidden" th:id="|addresses[${adresStat.index}].id|" th:name="|addresses[${adresStat.index}].id|" th:value="${adres.getId()}"></td>  -->
+<!-- 								<td><input type="hidden" th:id="|addresses[${adresStat.index}].user|" th:name="|addresses[${adresStat.index}].user|" th:value="${adres.getUser().getEmail()}"></td>																								 -->
+																						
+
+<!-- 						</tr> -->
+																
+						</table>						
+						<table class="table table-hover" th:each="adres,adresStat : *{addresses}">
+							<tr class="text-right">
+<!-- 							<td></td> -->
+							<td><input class="form-control" type="hidden" th:field="${user.email}" /></td>
+							<td><input class="form-control" type="hidden" th:field="${user.password}" /></td>
+							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.name}">Name</label></td>
+							<td><input class="form-control" type="text" th:field="*{name}" />
+								<div class="text-left text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+							</td>						
+						<tr class="text-right">
+<!-- 							<td></td> -->
+							<td></td>
+							<td></td>
+							<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.lastName}">Last Name</label></td>
+							<td><input class="form-control" type="text" th:field="*{lastName}" />
+								<div class="text-left text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
+							</td>							
+						</tr>						
+							<tr class="text-right">
+								<td><input type="hidden" th:field="*{addresses[__${adresStat.index}__].id}" ></td>
+								<td><input type="hidden" th:field="*{addresses[__${adresStat.index}__].user}" ></td>
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>
+								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].street}" /></td>								
+							</tr>
+							<tr class="text-right">
+								<td></td>
+								<td></td>
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.numberHouse}">Number house</label></td>
+								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].numberHouse}" >									
+								</td>														
+							</tr>
+							<tr class="text-right">
+								<td></td>
+								<td></td>
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.city}">City</label></td>
+								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].city}" >
+									<div class="text-left text-danger" th:if="${#fields.hasErrors('addresses[__${adresStat.index}__].city')}" th:errors="*{addresses[__${adresStat.index}__].city}"></div>									
+								</td>								
+							</tr>
+							<tr class="text-right">
+								<td></td>
+								<td></td>
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.zipCode}">Zip code</label></td>
+								<td><input class="form-control" type="text"  th:field="*{addresses[__${adresStat.index}__].zipCode}" />									
+									<div class="text-left text-danger" th:if="${#fields.hasErrors('addresses[__${adresStat.index}__].zipCode')}" th:errors="*{addresses[__${adresStat.index}__].zipCode}"></div>
+								</td>								
+							</tr>
+							<tr class="text-right">
+								<td></td>
+								<td></td>
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.country}">Country</label></td>
+								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].country}" >									
+								</td>								
+							</tr>
+							
+							
 						</table>
 						
+
 													
 						
 <!-- 					<table class="table table-hover" th:object="${addresses}"> th:each="address:${addresses}"  -->
