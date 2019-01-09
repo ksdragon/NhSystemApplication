@@ -43,6 +43,7 @@ public class User {
 	@Valid
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Address> addresses;
+	@Valid
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Phone> phones;
 	

@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 import com.skoneczny.annotation.ValidZipCode;
 
-@Valid
+
 @Entity
 public class Address {
 
@@ -30,6 +30,7 @@ public class Address {
 	private String country;
 	
 	
+	@Valid
 	@ManyToOne
 	@JoinColumn(name="USER_EMAIL")
 	private User user;

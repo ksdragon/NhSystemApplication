@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -18,9 +19,13 @@ public class Phone {
 	private String phone;
 	@Size(min = 2, max = 30)
 	private String type;	
+	
+	@Valid
 	@ManyToOne
 	@JoinColumn(name="USER_EMAIL")
 	private User user;
+	
+	
 	public Long getId() {
 		return id;
 	}

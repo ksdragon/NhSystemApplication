@@ -42,6 +42,10 @@ public class PersonalSettingsController {
 	@PostMapping("/personalSettings")
 	public String savePersonalSettings(@Valid User user, BindingResult bindingResult, HttpSession session) {
 		if(bindingResult.hasErrors()) {
+			bindingResult
+			.getFieldErrors()
+			.stream()
+			.forEach(f -> System.out.println(f.getField() + ": " + f.getDefaultMessage()));
 			return "views/personalSettingsForm";
 			}
 		//@Valid Address addresses,
