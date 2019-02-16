@@ -8,14 +8,23 @@
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-			<div class="form-group row"  >
+		<div class="form-group row justify-content-between">
 
-		      <label for="staticEmail" class="col-sm-1 col-form-label">Email:</label>
-		      <div class="col-sm-8" th:object="${user}">
-		        <input type="text"  readonly="readonly" class="form-control-plaintext " id="staticEmail" value="email@example.com" th:field="*{email}"/>
-		      </div>
-		    </div>
-		  
+			<div class="row">
+				<label for="staticEmail" class="col-form-label">Email:</label>
+				<div class="col-6" th:object="${user}">
+					<input type="text" readonly="readonly"
+						class="form-control-plaintext " id="staticEmail"
+						value="email@example.com" th:field="*{email}" />
+				</div>
+			</div>
+			<div>
+				<a th:href="@{/changePassword(email=${user.email})}"
+					th:text="#{labelBt.personalSettings.changePassword}"
+					class="btn btn-primary">Change password</a>
+			</div>
+		</div>
+
 		<form th:action="@{/personalSettings}"  method="post" th:object="${user}">
 			
 			<div class="form-group" >
@@ -41,14 +50,14 @@
 <!-- 								</td> -->
 <!-- 						</tr> -->
 						
-						<tr class="text-right" th:each=" adres,adresStat : ${user.addresses}">
-								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>
-								<td><input class="form-control" type="text" th:id="|addresses[${adresStat.index}].street|" th:name="|addresses[${adresStat.index}].street|" th:value="${adres.getStreet()}">
-									<div class="text-left text-danger" th:if="${#fields.hasErrors('adres.street')}"></div>
-								</td>
-								<td><input type="hidden" th:id="|addresses[${adresStat.index}].id|" th:name="|addresses[${adresStat.index}].id|" th:value="${adres.getId()}"></td> 
-								<td><input type="hidden" th:id="|addresses[${adresStat.index}].user|" th:name="|addresses[${adresStat.index}].user|" th:value="${adres.getUser().getEmail()}"></td>																								
-						</tr>
+<!-- 						<tr class="text-right" th:each=" adres,adresStat : ${user.addresses}"> -->
+<!-- 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td> -->
+<!-- 								<td><input class="form-control" type="text" th:id="|addresses[${adresStat.index}].street|" th:name="|addresses[${adresStat.index}].street|" th:value="${adres.getStreet()}"> -->
+<!-- 									<div class="text-left text-danger" th:if="${#fields.hasErrors('*')}"></div> -->
+<!-- 								</td> -->
+<!-- 								<td><input type="hidden" th:id="|addresses[${adresStat.index}].id|" th:name="|addresses[${adresStat.index}].id|" th:value="${adres.getId()}"></td>  -->
+<!-- 								<td><input type="hidden" th:id="|addresses[${adresStat.index}].user|" th:name="|addresses[${adresStat.index}].user|" th:value="${adres.getUser().getEmail()}"></td>																								 -->
+<!-- 						</tr> -->
 																
 						</table>						
 						<table class="table table-hover" th:each="adres,adresStat : *{addresses}">
@@ -69,12 +78,12 @@
 										<div class="text-left text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></div>
 									</td>							
 								</tr>						
-<!-- 							<tr class="text-right"> -->
-<!-- 								<td><input type="hidden" th:field="*{addresses[__${adresStat.index}__].id}" ></td> -->
-<!-- 								<td><input type="hidden" th:field="*{addresses[__${adresStat.index}__].user}" ></td> -->
-<!-- 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td> -->
-<!-- 								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].street}" /></td>								 -->
-<!-- 							</tr> -->
+							<tr class="text-right">
+								<td><input type="hidden" th:field="*{addresses[__${adresStat.index}__].id}" ></td>
+								<td><input type="hidden" th:field="*{addresses[__${adresStat.index}__].user}" ></td>
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>
+								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].street}" /></td>								
+							</tr>
 							<tr class="text-right">
 								<td></td>
 								<td></td>
@@ -86,9 +95,15 @@
 								<td></td>
 								<td></td>
 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.city}">City</label></td>
-								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].city}" >
-									<div class="text-left text-danger" th:if="${#fields.hasErrors('addresses[__${adresStat.index}__].city')}" th:errors="*{addresses[__${adresStat.index}__].city}"></div>									
+								<td><input class="form-control" type="text" th:field="*{addresses[__${adresStat.index}__].city}" >								
+<!-- 									<p class="text-left text-danger" th:if="${#fields.hasErrors('addresses[__${adresStat.index}__].city')}" th:errors="*{addresses[__${adresStat.index}__].city}"></p>									 -->
 								</td>								
+							</tr>
+							<tr class="text-right" th:if="${#fields.hasErrors('addresses[__${adresStat.index}__].city')}">
+								<td></td>
+								<td></td>
+								<td></td>								
+								<td><p class="text-left text-danger"  th:errors="*{addresses[__${adresStat.index}__].city}"></p></td>
 							</tr>
 							<tr class="text-right">
 								<td></td>
@@ -183,7 +198,7 @@
 
 
 <!-- 				</div> -->
-				<input type="submit" value="Submit" class="btn btn-primary" />
+				<input type="submit" value="Submit" class="btn btn-primary" />				
 		</form>
 	</div>
 </body>
