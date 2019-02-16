@@ -19,7 +19,8 @@ public interface IUserService {
 
 	boolean isUserPresent(String email);
 
-	User createUser(@Valid User user);	
-	
+	User createUser(@Valid User user);
+
+	User findOne(String email);	
 
 }

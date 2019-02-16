@@ -57,7 +57,7 @@ public class UserService implements IUserService {
 //		user.setAddresses(addresses);
 		userRepository.save(user);		
 	}
-	
+	@Override
 	public User findOne(String email) {
 		return userRepository.findById(email).get();		
 	}
@@ -135,7 +135,6 @@ public class UserService implements IUserService {
 		vtUser = tokenRepository.findByUser(user);		
 		tokenRepository.deleteById(vtUser.getId());
 		userRepository.delete(user);		
-	}
-	
+	}	
 		
 }

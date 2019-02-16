@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -19,22 +20,28 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Password {
 	
 	@Id
-    @GeneratedValue
+	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
 	private String email;
 	private String oldPassword;
 	private String newPassword;
 	private String repeatPassword;
-//	@Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private LocalDateTime createdDate;
-//	@Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 	@LastModifiedBy
 	private String lastModifiedBy;
 	
+	
+	public Password() {}
 		
+	public Password(String email, String oldPassword, String newPassword, String repeatPassword) {		
+		this.email = email;
+		this.oldPassword = oldPassword;
+		this.newPassword = newPassword;
+		this.repeatPassword = repeatPassword;
+	}
 	public Long getId() {
 		return id;
 	}

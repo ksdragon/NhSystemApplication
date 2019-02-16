@@ -2,6 +2,8 @@ package com.skoneczny.controllers;
 
 import java.security.Principal;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,9 @@ public class changePasswordController {
 	@Autowired
 	private IUserService userService;
 	
+	@Autowired
+	private IPasswordService iPasswordService;
+	
 	@GetMapping("/changePassword")
 	public String changePassword(Model model,Principal principal) {
 		String email = principal.getName();		
@@ -26,7 +31,9 @@ public class changePasswordController {
 	}
 	
 	@PostMapping("/changePassword")
-	public String changePassword(Principal principal) {
+	public String changePassword(@Valid Password password,Principal principal) {
+		String email = principal.getName();
+		iPasswordService.isCorrectPassword(email,password.getOldPassword());
 		return "views/changePasswordForm";
 	}
 

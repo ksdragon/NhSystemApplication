@@ -6,5 +6,7 @@ import com.skoneczny.entites.Password;
 
 public interface IPasswordService {
 
-//	Password createPassword(@Valid Password password);
+	Password createPassword(@Valid Password password);
+
+	boolean isCorrectPassword(String email, String oldPassword);
 }
