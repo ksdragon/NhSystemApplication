@@ -9,15 +9,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-
-
-
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE}) 
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = EmailValidator.class)
+@Constraint(validatedBy = ZipCodeValidator.class)
 @Documented
-public @interface ValidEmail {   
-    String message() default "Invalid email annotation" ; //default "Invalid email annotation"
+public @interface ValidZipCode {   
+    String message() default "Invalid zip code" ; //default "Invalid annotation"
     Class<?>[] groups() default {}; 
     Class<? extends Payload>[] payload() default {};
 }
+

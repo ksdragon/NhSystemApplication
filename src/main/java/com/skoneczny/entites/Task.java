@@ -29,10 +29,20 @@ public class Task {
 	@NotEmpty
 	@Column(length=1000, nullable = false)
 	private String description;
+	@Column(name = "approved", nullable = false)
+	private Boolean isApproved = false;
 	@ManyToOne
 	@JoinColumn(name="USER_EMAIL")
 	private User user;
 	
+	
+	
+	public boolean isApproved() {
+		return isApproved;
+	}
+	public void setApproved(boolean isApproved) {
+		this.isApproved = isApproved;
+	}
 	public Long getId() {
 		return id;
 	}
@@ -69,12 +79,13 @@ public class Task {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public Task(String date, String startTime, String stopTime, String description, User user) {
+	public Task(String date, String startTime, String stopTime, String description, Boolean isApproved,  User user) {
 		this.date = date;
 		this.startTime = startTime;
 		this.stopTime = stopTime;
 		this.description = description;
 		this.user = user;
+		this.isApproved = isApproved;
 	}
 	public Task(String date, String startTime, String stopTime, String description) {
 		this.date = date;

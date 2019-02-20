@@ -1,7 +1,6 @@
 package com.skoneczny;
 
 
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
+public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private DataSource dataSource;
@@ -37,7 +35,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 	public PasswordEncoder passwordEncoder() {
 		// TODO Auto-generated method stub
 		return new BCryptPasswordEncoder();
-	}
+	}	
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception{  	
@@ -48,10 +46,11 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 //		.defaultSuccessUrl("/profile").and().logout().logoutSuccessUrl("/login");
 //		
 		
-				http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**").permitAll()
+				http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**","/webjars/").permitAll()
 		    	.antMatchers("/profile").hasAnyRole("USER,ADMIN")
 		    	.antMatchers("/personalSettings").hasAnyRole("USER,ADMIN")
-				.antMatchers("/users","/addTask").hasRole("ADMIN")
+		    	.antMatchers("/addTask").hasAnyRole("USER,ADMIN")
+				.antMatchers("/users").hasRole("ADMIN")
 				.and().formLogin().loginPage("/login").permitAll()
 				.defaultSuccessUrl("/profile").and().logout().logoutSuccessUrl("/login");
 
@@ -63,5 +62,5 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter{
 	@Bean
 	public LayoutDialect layoutDialect() {
 		return new LayoutDialect();
-	}
+	}	
 }

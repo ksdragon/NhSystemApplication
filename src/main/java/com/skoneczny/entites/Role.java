@@ -1,7 +1,9 @@
 package com.skoneczny.entites;
 
 import java.util.List;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
@@ -9,8 +11,9 @@ import javax.persistence.ManyToMany;
 public class Role {
 	@Id
 	private String name;
-	@ManyToMany(mappedBy = "roles")
+	@ManyToMany(mappedBy = "roles", fetch=FetchType.EAGER)  //, cascade = CascadeType.ALL ,, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
 	private List<User> users;
+	
 	public String getName() {
 		return name;
 	}
@@ -32,4 +35,5 @@ public class Role {
 	public Role(String name) {
 		this.name = name;
 	}
+		
 }

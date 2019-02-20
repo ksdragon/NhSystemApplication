@@ -4,6 +4,13 @@
   layout:decorate="~{fragments/main_layout}" >
 <head>
  <title>Index Page</title>
+  <script>
+     $(document).ready(function(){
+    	  $("p").click(function(){
+    	    alert("The paragraph was clicked.");
+    	  });
+    	});
+     </script>
 </head>
 <body>
 
@@ -12,6 +19,15 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum maiores autem vel doloribus consequuntur harum commodi eos tenetur vitae asperiores!</p>
           
           </div>
-     </div>
+     
+     <div class="container"><br/>
+            <div class="alert alert-success">
+                <a href="#" class="close" data-dismiss="alert"
+                  aria-label="close">×</a>
+                <strong>Success!</strong> It is working as we expected.
+            </div>
+        </div>
+        </div>
+    
 </body>
 </html>

@@ -1,0 +1,22 @@
+<div th:fragment="address">			
+		  
+		<form th:action="@{/personalSettings}"  method="post">			
+			<div class="form-group" >
+<!-- 				<input class="form-control" type="hidden" th:field="${personalSettings.email}" /> -->
+<!-- 				<input class="form-control" type="hidden" th:field="${personalSettings.password}" /> -->
+			
+					<table class="table table-hover" th:object="${addresses}"> <!-- th:each="address:${addresses}" --> 
+				
+						
+							<tr class="text-right" >
+								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.street}">Street</label></td>								
+								<td><input class="form-control" type="text" th:text="*{street}">
+								<div class="text text-danger" th:if="${#fields.hasErrors('street')}" th:errors="*{street}"></div>
+								</td>
+							</tr>
+							
+								
+							
+				</table></div>
+				</form>
+</div>
