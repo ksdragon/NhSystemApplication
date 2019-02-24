@@ -29,7 +29,6 @@
       </li>
     </ul>
     <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post"  sec:authorize="isAuthenticated()">
-    	<b th:text="#{label.header.user}">Logged in user: </b> <b class="nav-link" th:inline="text"> [[${#httpServletRequest.remoteUser}]] </b>
       <input class="form-control mr-sm-2" type="hidden" /> 
       <button class="btn btn-secondary my-2 my-sm-0" type="submit" th:text="#{label.header.logout}">Logout</button>
     </form>

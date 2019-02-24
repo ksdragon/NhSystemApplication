@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{fragments/main_layout}" >
+<head>
+ <title th:text="#{label.badUser.title}">Bad user</title>
+</head>
+<body>
+
+     <div  layout:fragment="content" class="container mySpace">
+          <h1 class="alert alert-danger" th:text="${message}">error</h1>
+<!--             <span th:text="#{info.badUser}"></span>           -->
+          	<br/>
+<!-- 			<a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">Sign up</a> -->
+     </div>
+</body>
+</html>

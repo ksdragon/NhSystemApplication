@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/main_layout}">
+<head>
+<title th:text="#{label.registrationConfirm.title}">Activate account</title>
+</head>
+<body>
+
+	<div layout:fragment="content" class="container mySpace">
+	<div>
+		<h1 class="alert alert-info" th:text="#{message.regSucc}">success</h1>
+		<br /> <span th:if="${param.token != null}" th:text="#{token.message}">token</span>
+		<span th:text="${param.token}">token</span> <br /> <a
+			class="btn btn-primary" th:href="@{/loginForm}" th:text="#{label.login}">login</a>
+	</div>
+	</div>
+</body>
+</html>

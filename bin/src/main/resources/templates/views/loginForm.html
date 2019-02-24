@@ -10,12 +10,10 @@
 	<div layout:fragment="content" class="container mySpace">
 		<div class="alert alert-danger" th:if="${param.error}">
 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2>
-			<h2 >Invalid Email or Password</h2>
 		</div>
 		<form action="#" th:action="@{/login}" method="post">
 
 			<div class="form-group">
-<!-- 				<p th:text="${email}"></p> -->
 				<label for="email" class="form-control-label">Email</label> 
 				<input	type="text" class="form-control" id="email" name="username" />
 			</div>
