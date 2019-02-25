@@ -8,7 +8,8 @@ import com.skoneczny.entites.User;
 
 @SuppressWarnings("serial")
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
-    private String appUrl;
+   
+	private String appUrl;
     private Locale locale;
     private User user;
  

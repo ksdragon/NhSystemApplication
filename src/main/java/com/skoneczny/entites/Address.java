@@ -9,6 +9,8 @@ import javax.persistence.ManyToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
+import org.springframework.lang.Nullable;
+
 import com.skoneczny.annotation.ValidZipCode;
 
 
@@ -23,7 +25,7 @@ public class Address {
 	@Size(min = 2, max = 30)
 	private String numberHouse;
 	@Size(min = 2, max = 30)
-	private String city;
+	private String city;	
 	@ValidZipCode
 	private String zipCode;
 	@Size(min = 2, max = 30)

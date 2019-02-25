@@ -49,12 +49,14 @@ public class UserService implements IUserService {
 		Role userRole = new Role("ADMIN");
 		List<Role> roles = new ArrayList<>();
 		roles.add(userRole);
+		Address address = new Address();
+		address.setZipCode("00-000");
+		address.setUser(user);		
+		List<Address> addresses = new ArrayList<Address>();
+		addresses.add(address);
+		user.setAddresses(addresses);			
 		user.setRoles(roles);
-//		Address address = new Address();
-//		address.setUser(user);		
-//		List<Address> addresses = new ArrayList<Address>();
-//		addresses.add(address);
-//		user.setAddresses(addresses);
+		user.setEnabled(true);
 		userRepository.save(user);		
 	}
 	@Override

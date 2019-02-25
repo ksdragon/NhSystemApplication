@@ -17,7 +17,13 @@ import nz.net.ultraq.thymeleaf.LayoutDialect;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
-
+	
+	/*
+	*https://www.baeldung.com/spring-security-block-brute-force-authentication-attempts
+	*https://www.baeldung.com/spring-boot-security-autoconfiguration
+	*
+	*/
+	
 	@Autowired
 	private DataSource dataSource;
 
@@ -25,7 +31,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication().dataSource(dataSource)
-		.usersByUsernameQuery("select email as principal, password as credentails, true from user where email=?")
+		.usersByUsernameQuery("select email as principal, password as credentails, enabled as enabled from user where email=?")
 		.authoritiesByUsernameQuery("select user_email as principal, role_name as role from user_roles where user_email=?")
 		.passwordEncoder(passwordEncoder()).rolePrefix("ROLE_");  
 		
