@@ -8,7 +8,8 @@
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-		<div class="alert alert-danger" th:if="${param.error}">
+		<div class="alert alert-danger" th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
+    		Reason: <span th:text="${errorMsg}">Wrong input!</span>
 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2>
 			<h2 >Invalid Email or Password</h2>
 		</div>
