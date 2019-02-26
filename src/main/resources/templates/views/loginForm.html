@@ -8,26 +8,45 @@
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-		<div class="alert alert-danger" th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}">
-    		Reason: <span th:text="${errorMsg}">Wrong input!</span>
-			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2>
-			<h2 >Invalid Email or Password</h2>
+<!-- 		<div class="alert alert-danger" -->
+<!-- 			th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'Bad credentials'}"> -->
+<!-- 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2> -->
+<!-- 		</div> -->
+<!-- 		<div class="alert alert-danger" -->
+<!-- 			th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'User is disabled'}"> -->
+<!-- 			<h2 th:text="#{label.loginForm.alert2}">Invalid Token</h2> -->
+<!-- 		</div> -->
+		
+		
+		<div  class="alert alert-danger" th:if="${param.error}">
+			<h2  th:text="${session.AUTH_ERROR_MSG}">123</h2 >
 		</div>
+
+		
 		<form action="#" th:action="@{/login}" method="post">
 
 			<div class="form-group">
-<!-- 				<p th:text="${email}"></p> -->
-				<label for="email" class="form-control-label">Email</label> 
-				<input	type="text" class="form-control" id="email" name="username" />
+				<!-- 				<p th:text="${email}"></p> -->
+				<label for="email" class="form-control-label">Email</label> <input
+					type="text" class="form-control" id="email" name="username" />
 			</div>
-			
+
 			<div class="form-group">
-				<label for="password" class="form-control-label" th:text="#{label.loginForm.password}">Password</label> 
-				<input	type="password" class="form-control" id="password" name="password" />
-			</div>		
-	
-			<input type="submit" value="Submit" class="btn btn-primary" th:value="#{value.loginForm.submit}">
+				<label for="password" class="form-control-label"
+					th:text="#{label.loginForm.password}">Password</label> <input
+					type="password" class="form-control" id="password" name="password" />
+			</div>
+
+			<input type="submit" value="Submit" class="btn btn-primary"
+				th:value="#{value.loginForm.submit}">
 		</form>
 	</div>
 </body>
+
+		<!-- 		<div class="alert alert-danger" th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"> -->
+		<!--     		Reason: <span th:text="${errorMsg}">Wrong input!</span> -->
+		<!-- 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2> -->
+		<!-- 			<h2 >Invalid Email or Password</h2> -->
+		<!-- 		</div> -->
+
 </html>
