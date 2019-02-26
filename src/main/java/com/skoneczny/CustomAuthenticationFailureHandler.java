@@ -19,28 +19,34 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
-	
+
 	private final static String USERNAME_PARAMETER = "username";
-	@Autowired MessageSource messageSource; 
+	@Autowired
+	MessageSource messageSource;
 	
+	//https://www.intertech.com/Blog/understanding-spring-mvc-model-and-session-attributes/
+
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		
-		 String lastUserName = request.getParameter(USERNAME_PARAMETER);
-		
-			if(exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
-				request.getSession().setAttribute("AUTH_ERROR_MSG",
-		        		messageSource.getMessage("label.loginForm.alert1", null, Locale.getDefault()));				
-		        response.sendRedirect(request.getContextPath() + "/login?error");
-				
-			   } else if (exception.getClass().isAssignableFrom(DisabledException.class)) {
-				   request.getSession().setAttribute("AUTH_ERROR_MSG",
-			        		messageSource.getMessage("label.loginForm.alert2", null, Locale.getDefault()));
-			        response.sendRedirect(request.getContextPath() + "/login?error");
-				   
-			   }		
-			
+
+		request.getSession().removeAttribute("EMAIL");
+		String email = request.getParameter(USERNAME_PARAMETER);
+
+		if (exception.getClass().isAssignableFrom(BadCredentialsException.class)) {
+			request.getSession().setAttribute("AUTH_ERROR_MSG",
+					messageSource.getMessage("label.loginForm.alert1", null, Locale.getDefault()));
+			request.getSession().setAttribute("EMAIL", email);
+			response.sendRedirect(request.getContextPath() + "/login?error");
+
+		} else if (exception.getClass().isAssignableFrom(DisabledException.class)) {
+			request.getSession().setAttribute("AUTH_ERROR_MSG",
+					messageSource.getMessage("label.loginForm.alert2", null, Locale.getDefault()));
+			request.getSession().setAttribute("EMAIL", email);
+			response.sendRedirect(request.getContextPath() + "/login?error_token=true");
+
+		}
+
 	}
 
 }
