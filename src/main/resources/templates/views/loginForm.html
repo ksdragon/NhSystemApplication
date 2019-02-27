@@ -8,48 +8,35 @@
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-<!-- 		<div class="alert alert-danger" -->
-<!-- 			th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'Bad credentials'}"> -->
-<!-- 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2> -->
-<!-- 		</div> -->
-<!-- 		<div class="alert alert-danger" -->
-<!-- 			th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'User is disabled'}"> -->
-<!-- 			<h2 th:text="#{label.loginForm.alert2}">Invalid Token</h2> -->
-<!-- 		</div> -->
 
+		<!-- 		Wyœwietlanie alertu po przejœciu przez spring security i CustomAuthenticationFailureHandler -->
+		<!-- 		generuje alert w zale¿noœci od rodzaju wyj¹tku jaki zosta³ przechwycocy przez kasê powy¿ej -->
+		<div class="alert alert-danger row justify-content-between"
+			th:if="${param.error}">
 
-		<div class="alert alert-danger row justify-content-between" th:if="${param.error}">
-			
 			<div th:if="${param.error}">
 				<h2 th:text="${session.AUTH_ERROR_MSG}">Error</h2>
 			</div>
 		</div>
 		<div class="alert alert-danger row justify-content-between"
-				th:if="${param.error_token}">
-				<div>
-					<h2 th:text="${session.AUTH_ERROR_MSG}">Error</h2>
-				</div>
-				<div>
-					<a th:href="@{/resetToken(email=${session.EMAIL})}"
-						th:text="#{labelBt.loginForm.resetToken}" class="btn btn-primary">Reset
-						token</a>
-				</div>
-			
+			th:if="${param.error_token}">
+			<div>
+				<h2 th:text="${session.AUTH_ERROR_MSG}">Error</h2>
+			</div>
+			<div>
+				<a th:href="@{/resetToken(email=${session.EMAIL})}"
+					th:text="#{labelBt.loginForm.resetToken}" class="btn btn-primary">Reset
+					token</a>
+			</div>
+
 		</div>
 
-		<!-- 		<div class="alert alert-danger" -->
-<!-- 		th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'Bad credentials'}"> -->
-<!-- 			<div><h2  th:text="${session.AUTH_ERROR_MSG}">123</h2 ></div> -->
-<!-- 		</div> -->
-		
-
-		
 		<form action="#" th:action="@{/login}" method="post">
 
-			<div class="form-group">
-				<!-- 				<p th:text="${email}"></p> -->
+			<div class="form-group">			
 				<label for="email" class="form-control-label">Email</label> <input
-					type="text" class="form-control" id="email" name="username"  th:value="${session.EMAIL}"/>
+					type="text" class="form-control" id="email" name="username"
+					th:value="${session.EMAIL}" />
 			</div>
 
 			<div class="form-group">
@@ -59,22 +46,34 @@
 			</div>
 
 			<div class="row">
-			<div class="form-group "><input type="submit" value="Submit" class="btn btn-primary"
-				th:value="#{value.loginForm.submit}"></div>
-			<div class="form-group ">
-				<a th:href="@{/resetPassword(email=${session.EMAIL})}"
-					th:text="#{labelBt.loginForm.resetPassword}"
-					class="btn btn-primary">Reset password</a>
+				<div class="form-group ">
+					<input type="submit" value="Submit" class="btn btn-primary"
+						th:value="#{value.loginForm.submit}">
+				</div>
+				<div class="form-group ">
+					<a th:href="@{/resetPassword(email=${session.EMAIL})}"
+						th:text="#{labelBt.loginForm.resetPassword}"
+						class="btn btn-primary">Reset password</a>
+				</div>
 			</div>
-			</div>	
 		</form>
 	</div>
 </body>
 
-		<!-- 		<div class="alert alert-danger" th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"> -->
-		<!--     		Reason: <span th:text="${errorMsg}">Wrong input!</span> -->
-		<!-- 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2> -->
-		<!-- 			<h2 >Invalid Email or Password</h2> -->
-		<!-- 		</div> -->
+<!-- 		Generowanie alarmów z wykorzystaniem session atribute ${session['SPRING_SECURITY_LAST_EXCEPTION'].message -->
+<!-- 		<div class="alert alert-danger" -->
+<!-- 			th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'Bad credentials'}"> -->
+<!-- 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2> -->
+<!-- 		</div> -->
+<!-- 		<div class="alert alert-danger" -->
+<!-- 			th:if="${param.error} and ${session['SPRING_SECURITY_LAST_EXCEPTION'].message == 'User is disabled'}"> -->
+<!-- 			<h2 th:text="#{label.loginForm.alert2}">Invalid Token</h2> -->
+<!-- 		</div> -->
+
+<!-- 		<div class="alert alert-danger" th:if="${param.error}" th:with="errorMsg=${session['SPRING_SECURITY_LAST_EXCEPTION'].message}"> -->
+<!--     		Reason: <span th:text="${errorMsg}">Wrong input!</span> -->
+<!-- 			<h2 th:text="#{label.loginForm.alert1}">Invalid Email or Password</h2> -->
+<!-- 			<h2 >Invalid Email or Password</h2> -->
+<!-- 		</div> -->
 
 </html>
