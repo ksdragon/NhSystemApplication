@@ -45,8 +45,21 @@ public class LoginController {
 			
 		}else
 		{
-			return "views/login";
+			return "views/login"; //dopisać alert? 
 		}	
-		
 	}
+		@GetMapping("/resetPassword")
+		public String resetPassword(@RequestParam String email, WebRequest request) {
+			logger.info("Reset password for: " + email);
+			
+			if(userService.isUserPresent(email)) {
+				
+			}
+			
+			return "views/login";	
+		}
+		
+	
+	
+	
 }
