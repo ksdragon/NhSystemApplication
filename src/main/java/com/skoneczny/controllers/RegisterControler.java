@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
@@ -16,15 +17,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skoneczny.api.IUserService;
 import com.skoneczny.entites.User;
 import com.skoneczny.entites.VerificationToken;
 import com.skoneczny.event.OnRegistrationCompleteEvent;
+import com.skoneczny.repositories.VerificationTokenRepository;
 
 
 @Controller
 public class RegisterControler {
+	
+	private final Logger logger = Logger.getLogger(RegisterControler.class);
 	
 	// Activate a New Account by Email
 	@Autowired
@@ -35,6 +40,9 @@ public class RegisterControler {
 	
 	@Autowired
 	private IUserService userService;
+	
+	@Autowired
+	private VerificationTokenRepository verificationTokenRepository;
 	
 	
 	
@@ -73,7 +81,7 @@ public class RegisterControler {
 	
 	@GetMapping("/registrationConfirm")
 	public String confirmRegistration
-	  (WebRequest request, Model model, @RequestParam("token") String token) {
+	  (WebRequest request, Model model, @RequestParam("token") String token, RedirectAttributes redirectAttributes) {
 	  
 	    Locale locale = request.getLocale();
 	     
@@ -91,9 +99,12 @@ public class RegisterControler {
 	        model.addAttribute("message", messageValue);
 	        return "views/badUser.html";			//  "redirect:/badUser.html?lang=" + locale.getLanguage();
 	    } 
-	     
+	    
+	    logger.info("Activated complet and delete token");
+	    verificationTokenRepository.delete(verificationToken);	    
 	    user.setEnabled(true); 
 	    userService.saveRegisteredUser(user); 
+	    redirectAttributes.addFlashAttribute("verificationTokenSuccess", "Success");	    
 	    return  "redirect:/login";// "redirect:/loginForm.html?lang=" + request.getLocale().getLanguage(); 
 	}
 

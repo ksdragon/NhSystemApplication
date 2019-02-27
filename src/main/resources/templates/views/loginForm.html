@@ -28,8 +28,24 @@
 					th:text="#{labelBt.loginForm.resetToken}" class="btn btn-primary">Reset
 					token</a>
 			</div>
-
+		
+<!-- 		Alert z kontrolera login po restarcie tokena. -->
 		</div>
+		<div class="alert alert-danger row justify-content-between"
+			th:if="${message} == 'Success'">
+			<h2 th:text="#{label.loginForm.alertSuccessResetToken}">Success reset token.</h2>
+		</div>
+		
+		<div class="alert alert-danger row justify-content-between"
+			th:if="${message} == 'UnSuccess'">
+			<h2 th:text="#{label.loginForm.alertUnSuccessResetToken}">Unsuccess reset token.</h2>
+		</div>
+		
+		<div class="alert alert-danger row justify-content-between"
+			th:if="${verificationTokenSuccess} == 'Success'">
+			<h2 th:text="#{label.loginForm.alertSuccessVerificationToken}">Success verification token.</h2>
+		</div>
+		
 
 		<form action="#" th:action="@{/login}" method="post">
 

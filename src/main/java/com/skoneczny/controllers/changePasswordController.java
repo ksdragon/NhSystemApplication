@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skoneczny.api.IPasswordService;
 import com.skoneczny.api.IUserService;
@@ -34,16 +35,23 @@ public class changePasswordController {
 		return "views/changePasswordForm";
 	}
 	
+	//dorobić anotacje weryfikacyjną hasło tak aby jako parametr przyjmowała wyrażenie reguralne.
+	//przeprowadzić walidację siły hasła.
+	
 	@PostMapping("/changePassword")
-	public String changePassword(@Valid Password password,Principal principal) {
+	public String changePassword(@Valid Password password,Principal principal, RedirectAttributes redirectAttributes) {
 		String email = principal.getName();
 		boolean correctPassword = iPasswordService.isCorrectPassword(email,password.getOldPassword());
 		boolean correctNewPassword = iPasswordService.isCorrectNewPassword(password.getNewPassword(), password.getRepeatPassword());
 		if(correctNewPassword & correctPassword) {
 			userService.setNewPassword(email,password.getNewPassword());
+			redirectAttributes.addFlashAttribute("changePasswordSuccess", "Success");
 			logger.info("Change password for: " + email);
+			return "redirect:/changePassword";
 		}
-		return "views/changePasswordForm";
+		logger.info("Password not changed for: " + email);
+		redirectAttributes.addFlashAttribute("changePasswordUnSuccess", "UnSuccess");
+		return "redirect:/changePassword";
 	}
 
 }

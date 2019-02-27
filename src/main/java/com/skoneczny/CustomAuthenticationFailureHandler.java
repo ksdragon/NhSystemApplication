@@ -33,6 +33,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	// SPRING_SECURITY_LAST_EXCEPTION.authentication.principal - the way to keep
 	// username after submit, use in template.
 	// https://www.intertech.com/Blog/understanding-spring-mvc-model-and-session-attributes/
+	// zapoznać się ze thymeleaf security dialect 5
 
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,

@@ -64,7 +64,7 @@
 		</dependency>
 		<dependency>
 		    <groupId>org.thymeleaf.extras</groupId>
-		    <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+		    <artifactId>thymeleaf-extras-springsecurity5</artifactId>		    
 		</dependency>
 		<!-- biblioteka działa w połączeniu z nz.net.ultraq.thymeleaf w Spring Boot 2 -->
 		<dependency>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skoneczny.api.IUserService;
 import com.skoneczny.api.IVerificationToken;
@@ -27,7 +28,7 @@ public class LoginController {
 	private IVerificationToken iVerificationToken;
 	
 	@GetMapping("/resetToken")
-	public String resetToken(@RequestParam String email, WebRequest request) {
+	public String resetToken(@RequestParam String email, WebRequest request, RedirectAttributes redirectAttributes) {
 		
 		logger.info("Send activate link for : " + email);
 		
@@ -39,13 +40,16 @@ public class LoginController {
 		        eventPublisher.publishEvent(new OnRegistrationCompleteEvent
 		          (getRegistered, request.getLocale(), appUrl));
 		    } catch (Exception me) {
-		        return "views/login";  
-		        }		
+		    	logger.info("Exception occured after send activate link on : " + email);
+		        return "redirect:/login";  
+		        }
+			redirectAttributes.addFlashAttribute("message", "Success");
 			return "redirect:/login";
 			
 		}else
 		{
-			return "views/login"; //dopisać alert? 
+			redirectAttributes.addFlashAttribute("message", "UnSuccess");
+			return "views/login"; 
 		}	
 	}
 		@GetMapping("/resetPassword")
