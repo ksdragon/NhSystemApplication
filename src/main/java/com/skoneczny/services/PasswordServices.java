@@ -33,4 +33,8 @@ public class PasswordServices implements IPasswordService {
 		return encoder.matches(oldPassword,	user.getPassword());
 	}
 
+	@Override
+	public boolean isCorrectNewPassword(String newPassword, String repeatPassword) {		
+		return newPassword.equals(repeatPassword);
+	}
 }

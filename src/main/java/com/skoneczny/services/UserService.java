@@ -138,6 +138,14 @@ public class UserService implements IUserService {
 		vtUser = tokenRepository.findByUser(user);		
 		tokenRepository.deleteById(vtUser.getId());
 		userRepository.delete(user);		
+	}
+
+	@Override
+	public void setNewPassword(String email, String newPassword) {
+		User user = findOne(email);	
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		user.setPassword(encoder.encode(newPassword));
+		userRepository.save(user);
 	}	
 		
 }

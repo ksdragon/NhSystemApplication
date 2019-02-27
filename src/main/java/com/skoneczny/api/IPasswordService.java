@@ -9,4 +9,6 @@ public interface IPasswordService {
 	Password createPassword(@Valid Password password);
 
 	boolean isCorrectPassword(String email, String oldPassword);
+	
+	boolean isCorrectNewPassword(String newPassword,String repeatPassword);
 }

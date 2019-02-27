@@ -4,6 +4,7 @@ import java.security.Principal;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import com.skoneczny.api.IPasswordService;
 import com.skoneczny.api.IUserService;
 import com.skoneczny.entites.Password;
+import com.skoneczny.entites.User;
 
 @Controller
 public class changePasswordController {
+	
+	private final Logger logger = Logger.getLogger(changePasswordController.class);
 	
 	@Autowired
 	private IUserService userService;
@@ -33,7 +37,12 @@ public class changePasswordController {
 	@PostMapping("/changePassword")
 	public String changePassword(@Valid Password password,Principal principal) {
 		String email = principal.getName();
-		iPasswordService.isCorrectPassword(email,password.getOldPassword());
+		boolean correctPassword = iPasswordService.isCorrectPassword(email,password.getOldPassword());
+		boolean correctNewPassword = iPasswordService.isCorrectNewPassword(password.getNewPassword(), password.getRepeatPassword());
+		if(correctNewPassword & correctPassword) {
+			userService.setNewPassword(email,password.getNewPassword());
+			logger.info("Change password for: " + email);
+		}
 		return "views/changePasswordForm";
 	}
 

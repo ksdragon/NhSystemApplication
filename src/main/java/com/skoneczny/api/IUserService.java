@@ -21,6 +21,8 @@ public interface IUserService {
 
 	User createUser(@Valid User user);
 
-	User findOne(String email);	
+	User findOne(String email);
+
+	void setNewPassword(String email, String newPassword);	
 
 }
