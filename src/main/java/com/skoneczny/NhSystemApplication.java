@@ -21,11 +21,11 @@ public class NhSystemApplication implements CommandLineRunner{
 	}
 
 	@Override
-	public void run(String... args) throws Exception {
-		// TODO Auto-generated method stub
-		{
+	public void run(String... args) throws Exception {		
+		{	
+			if(!userService.isUserPresent("admin@mail.com")) {
 			User newAdmin = new User("admin@mail.com","Admin","123456");
-			userService.createAdmin(newAdmin);
+			userService.createAdmin(newAdmin);}
 		}
 	}
 	

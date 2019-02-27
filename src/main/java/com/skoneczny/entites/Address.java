@@ -27,7 +27,7 @@ public class Address {
 	@Size(min = 2, max = 30)
 	private String city;	
 	@ValidZipCode
-	private String zipCode;
+	private String zipCode = "";
 	@Size(min = 2, max = 30)
 	private String country;
 	
