@@ -20,6 +20,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import com.skoneczny.annotation.ValidEmail;
+import com.skoneczny.annotation.ValidPassword;
 
 ;
 
@@ -36,8 +37,9 @@ public class User {
 	@Size(min = 2, max = 30)
 	private String lastName;
 	@Temporal(TemporalType.DATE)
-	private Date birthday;	
-	@Size(min = 4)
+	private Date birthday;		
+	//@Size(min = 4)
+	@ValidPassword
 	private String password;
 	
 	@Valid

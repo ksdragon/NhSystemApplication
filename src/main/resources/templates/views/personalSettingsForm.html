@@ -125,10 +125,10 @@
 							<tr class="text-right">
 								<td><input type="hidden" th:field="*{phones[__${phoneStat.index}__].id}" ></td>
 								<td><input type="hidden" th:field="*{phones[__${phoneStat.index}__].user}" ></td>		
-								<td><label for="name" class="form-control-label text-right" th:text="#{label.personalSettings.type}">Type</label></td>
-								<td><input size="20" class="form-control col-sm-3" type="text" th:field="*{phones[__${phoneStat.index}__].type}" >								
+								<td ><label for="name" class="form-control-label text-right" th:text="#{label.personalSettings.type}">Type</label></td>
+								<td><input size="20" class="form-control" type="text" th:field="*{phones[__${phoneStat.index}__].type}" >								
 								<td><label for="name" class="form-control-label" th:text="#{label.personalSettings.phone}">Phone</label></td>
-								<td><input class="form-control" type="text" th:field="*{phones[__${phoneStat.index}__].phone}" >
+								<td class="col-3"><input class="form-control" type="text" th:field="*{phones[__${phoneStat.index}__].phone}" >
 									<div class="text-left text-danger" th:if="${#fields.hasErrors('phones[__${phoneStat.index}__].phone')}" 
 											th:errors="*{phones[__${phoneStat.index}__].phone}"></div>
 								</td>
