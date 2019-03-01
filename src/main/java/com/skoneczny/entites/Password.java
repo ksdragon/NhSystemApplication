@@ -15,6 +15,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.skoneczny.annotation.ValidPassword;
+
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 public class Password {
@@ -24,6 +26,7 @@ public class Password {
 	private Long id;
 	private String email;
 	private String oldPassword;
+	@ValidPassword
 	private String newPassword;
 	private String repeatPassword;
     @CreatedDate

@@ -81,8 +81,6 @@ public class UserService implements IUserService {
 	}
 
 	public void updateUser(@Valid User user) {
-//		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-//		user.setPassword(encoder.encode(user.getPassword()));
 		Role userRole = new Role("USER");
 		List<Role> roles = new ArrayList<>();
 		roles.add(userRole);
@@ -113,23 +111,6 @@ public class UserService implements IUserService {
 	 public void deleteUserEntity(User user) {
 		 userRepository.delete(user); 
 	 } 
-	 
-	//@Transactional
-	public void deleteUser1(String email) {
-		Role userRole = new Role();
-		List<User> users = new ArrayList<>();
-		User user = findOne(email);
-		users.add(user);
-//		user.setAdress(address);
-		userRole.setUsers(users);		
-//		user.setRoles(null);
-//		userRepository.save(user);
-		VerificationToken vtUser = new VerificationToken();
-		vtUser = tokenRepository.findByUser(user);
-		vtUser.setUser(null);		
-		tokenRepository.delete(vtUser);
-		userRepository.delete(user);		
-	}
 	
 	public void deleteUser(String email) {		
 		User user = findOne(email);		

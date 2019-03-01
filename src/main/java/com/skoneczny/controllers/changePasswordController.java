@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -39,7 +40,10 @@ public class changePasswordController {
 	//przeprowadzić walidację siły hasła.
 	
 	@PostMapping("/changePassword")
-	public String changePassword(@Valid Password password,Principal principal, RedirectAttributes redirectAttributes) {
+	public String changePassword(@Valid Password password,BindingResult result, Principal principal, RedirectAttributes redirectAttributes) {
+		if (result.hasErrors()){
+            return "views/changePasswordForm";
+        }
 		String email = principal.getName();
 		boolean correctPassword = iPasswordService.isCorrectPassword(email,password.getOldPassword());
 		boolean correctNewPassword = iPasswordService.isCorrectNewPassword(password.getNewPassword(), password.getRepeatPassword());

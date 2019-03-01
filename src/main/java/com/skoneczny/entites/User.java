@@ -19,6 +19,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import com.skoneczny.annotation.ValidEmail;
 import com.skoneczny.annotation.ValidPassword;
 
@@ -86,8 +88,8 @@ public class User {
 	}
 	public String getPassword() {
 		return password;
-	}
-	public void setPassword(String password) {
+	}	
+	public void setPassword(String password) {		
 		this.password = password;
 	}
 	public List<Task> gettasks() {
