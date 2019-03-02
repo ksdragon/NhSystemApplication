@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.validation.ConstraintValidator;
@@ -27,6 +28,7 @@ import org.passay.WhitespaceRule;
 import org.passay.dictionary.WordListDictionary;
 import org.passay.dictionary.WordLists;
 import org.passay.dictionary.sort.ArraysSort;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.skoneczny.controllers.changePasswordController;
 
@@ -34,6 +36,8 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
 	private DictionaryRule dictionaryRule;
 	private final Logger logger = Logger.getLogger(changePasswordController.class);
+	//check if password is crypted 
+	private Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2[aby]?\\$\\d{1,2}\\$[.\\/A-Za-z0-9]{53}$");
 
 	@Override
 	public void initialize(ValidPassword constraintAnnotation) {
@@ -95,24 +99,28 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 					// no common passwords
 					dictionaryRule));
 			
-			RuleResult result = validator.validate(new PasswordData(password));
-			
-			if (result.isValid()) {
-				logger.info("Validation password return true");
-				return true;				
-			} 
-//			else {
-//				System.out.println("Invalid password:");
-//				for (String msg : validator.getMessages(result)) {
-//					System.out.println(msg);
+			if (!BCRYPT_PATTERN.matcher(password).matches()){				
+				RuleResult result = validator.validate(new PasswordData(password));				
+				if (result.isValid()) {
+					logger.info("Validation password return true");
+					return true;				
+				} 
+//				else {
+//					System.out.println("Invalid password:");
+//					for (String msg : validator.getMessages(result)) {
+//						System.out.println(msg);
+//					}
 //				}
-//			}
-
-			List<String> messages = validator.getMessages(result);
-			String messageTemplate = messages.stream().collect(Collectors.joining(","));
-			context.buildConstraintViolationWithTemplate(messageTemplate).addConstraintViolation()
-					.disableDefaultConstraintViolation();
-
+				
+				List<String> messages = validator.getMessages(result);
+				String messageTemplate = messages.stream().collect(Collectors.joining(","));
+				context.buildConstraintViolationWithTemplate(messageTemplate).addConstraintViolation()
+						.disableDefaultConstraintViolation();			
+			}else
+			{
+				return true;
+			}
+			
 		} catch (IOException e) {
 			logger.error("Validation has error." + e.getMessage());
 			e.printStackTrace();
