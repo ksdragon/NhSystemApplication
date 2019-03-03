@@ -5,10 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.skoneczny.CustomAuthenticationFailureHandler;
+import com.skoneczny.annotation.PasswordConstraintValidator;
 import com.skoneczny.api.IUserService;
 import com.skoneczny.api.IVerificationToken;
 import com.skoneczny.entites.User;
@@ -52,15 +55,36 @@ public class LoginController {
 			return "views/login"; 
 		}	
 	}
+		@GetMapping("/login")
+		public String showLoginPage() {			
+			return "views/loginForm";
+		}
+		
+//		@PostMapping("/login")
+//		public String loginPage(@RequestParam String email) {
+//			logger.info("Post login page for : " + email);
+//			return "views/loginForm";
+//		}
+		
+		
 		@GetMapping("/resetPassword")
-		public String resetPassword(@RequestParam String email, WebRequest request) {
-			logger.info("Reset password for: " + email);
+		public String resetPassword(@RequestParam(defaultValue="") String email) {		
+			logger.info("Reset Password page for: " + email);
+			return "views/resetPasswordForm";	
+		}
+		
+		@PostMapping("/resetPassword")
+		public String postResetPassword(@RequestParam(defaultValue="") String email, WebRequest request,  RedirectAttributes redirectAttributes) {
+			logger.info("postResetPassword for: " + email);
+			
+			PasswordConstraintValidator passwordGenerate = new PasswordConstraintValidator();
+			String generateRanndomPassword = passwordGenerate.generateRanndomPassword();
+			boolean valid = passwordGenerate.isValid(generateRanndomPassword, null);
 			
 			if(userService.isUserPresent(email)) {
-				
-			}
-			
-			return "views/login";	
+				redirectAttributes.addFlashAttribute("message", generateRanndomPassword + " " + valid);			
+			}			
+			return "redirect:/resetPassword";	
 		}
 		
 	

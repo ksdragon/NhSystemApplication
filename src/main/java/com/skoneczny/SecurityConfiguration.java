@@ -54,7 +54,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 //		.defaultSuccessUrl("/profile").and().logout().logoutSuccessUrl("/login");
 //		
 		
-				http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "/css/**", "/webjars/**","/webjars/").permitAll()
+				http.authorizeRequests().antMatchers("/register", "/", "/about", "/login", "resetPassword", "/css/**", "/webjars/**","/webjars/").permitAll()
 		    	.antMatchers("/profile").hasAnyRole("USER,ADMIN")
 		    	.antMatchers("/personalSettings").hasAnyRole("USER,ADMIN")
 		    	.antMatchers("/addTask").hasAnyRole("USER,ADMIN")

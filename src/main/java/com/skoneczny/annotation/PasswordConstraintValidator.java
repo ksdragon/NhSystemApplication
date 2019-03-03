@@ -21,26 +21,30 @@ import org.passay.EnglishCharacterData;
 import org.passay.LengthRule;
 import org.passay.MessageResolver;
 import org.passay.PasswordData;
+import org.passay.PasswordGenerator;
 import org.passay.PasswordValidator;
 import org.passay.PropertiesMessageResolver;
+import org.passay.Rule;
 import org.passay.RuleResult;
 import org.passay.WhitespaceRule;
 import org.passay.dictionary.WordListDictionary;
 import org.passay.dictionary.WordLists;
 import org.passay.dictionary.sort.ArraysSort;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import com.skoneczny.controllers.changePasswordController;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 
 	private DictionaryRule dictionaryRule;
 	private final Logger logger = Logger.getLogger(changePasswordController.class);
-	//check if password is crypted 
+	// check if password is crypted
 	private Pattern BCRYPT_PATTERN = Pattern.compile("^\\$2[aby]?\\$\\d{1,2}\\$[.\\/A-Za-z0-9]{53}$");
 
 	@Override
 	public void initialize(ValidPassword constraintAnnotation) {
+		dictionaryRuleReader();
+	}
+
+	private void dictionaryRuleReader() {
 		try {
 			String invalidPasswordList = this.getClass().getResource("/invalid-password-list.txt").getFile();
 			dictionaryRule = new DictionaryRule(new WordListDictionary(WordLists.createFromReader(
@@ -68,6 +72,14 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 
 	}
 
+	public String generateRanndomPassword() {
+		List<CharacterRule> listRule = listOfCharacterRulePasswordValidation();
+		PasswordGenerator generator = new PasswordGenerator();
+		String password = generator.generatePassword(16, listRule);
+		return password;
+
+	}
+
 	/*
 	 * Validation restriction with MessageResolver
 	 */
@@ -76,51 +88,30 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 		try {
 			Properties localProperties = getLocalProperties();
 			MessageResolver resolver = new PropertiesMessageResolver(localProperties);
-			PasswordValidator validator = new PasswordValidator(resolver, Arrays.asList(
+			PasswordValidator validator = new PasswordValidator(resolver, listOfRulePasswordValidation());
 
-					// at least 8 characters
-					new LengthRule(8, 30),
-
-					// at least one upper-case character
-					new CharacterRule(EnglishCharacterData.UpperCase, 1),
-
-					// at least one lower-case character
-					new CharacterRule(EnglishCharacterData.LowerCase, 1),
-
-					// at least one digit character
-					new CharacterRule(EnglishCharacterData.Digit, 1),
-
-					// at least one symbol (special character)
-					new CharacterRule(EnglishCharacterData.Special, 1),
-
-					// no whitespace
-					new WhitespaceRule(),
-
-					// no common passwords
-					dictionaryRule));
-			
-			if (!BCRYPT_PATTERN.matcher(password).matches()){				
-				RuleResult result = validator.validate(new PasswordData(password));				
+			if (!BCRYPT_PATTERN.matcher(password).matches()) {
+				RuleResult result = validator.validate(new PasswordData(password));
 				if (result.isValid()) {
 					logger.info("Validation password return true");
-					return true;				
-				} 
+					return true;
+				}
 //				else {
 //					System.out.println("Invalid password:");
 //					for (String msg : validator.getMessages(result)) {
 //						System.out.println(msg);
 //					}
 //				}
-				
+
 				List<String> messages = validator.getMessages(result);
 				String messageTemplate = messages.stream().collect(Collectors.joining(","));
+				if(context != null) {
 				context.buildConstraintViolationWithTemplate(messageTemplate).addConstraintViolation()
-						.disableDefaultConstraintViolation();			
-			}else
-			{
+						.disableDefaultConstraintViolation();}
+			} else {
 				return true;
 			}
-			
+
 		} catch (IOException e) {
 			logger.error("Validation has error." + e.getMessage());
 			e.printStackTrace();
@@ -129,4 +120,48 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
 		return false;
 	}
 
+	public List<Rule> listOfRulePasswordValidation() {
+		if (dictionaryRule == null) {
+			dictionaryRuleReader();
+		}
+		return Arrays.asList(
+
+				// at least 8 characters
+				new LengthRule(8, 30),
+
+				// at least one upper-case character
+				new CharacterRule(EnglishCharacterData.UpperCase, 1),
+
+				// at least one lower-case character
+				new CharacterRule(EnglishCharacterData.LowerCase, 1),
+
+				// at least one digit character
+				new CharacterRule(EnglishCharacterData.Digit, 1),
+
+				// at least one symbol (special character)
+				new CharacterRule(EnglishCharacterData.Special, 1),
+
+				// no whitespace
+				new WhitespaceRule(),
+
+				// no common passwords
+				dictionaryRule);
+	}
+
+	public List<CharacterRule> listOfCharacterRulePasswordValidation() {
+		return Arrays.asList(
+
+				// at least one upper-case character
+				new CharacterRule(EnglishCharacterData.UpperCase, 1),
+
+				// at least one lower-case character
+				new CharacterRule(EnglishCharacterData.LowerCase, 1),
+
+				// at least one digit character
+				new CharacterRule(EnglishCharacterData.Digit, 1),
+
+				// at least one symbol (special character)
+				new CharacterRule(EnglishCharacterData.Special, 1));
+
+	}
 }

@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skoneczny.api.IPasswordService;
@@ -77,6 +78,6 @@ public class changePasswordController {
 		
 //		logger.info("Password not changed for: " + email);
 //		redirectAttributes.addFlashAttribute("changePasswordUnSuccess", "UnSuccess");
-	}
+	}	
 
 }
