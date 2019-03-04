@@ -11,4 +11,5 @@ public interface IPasswordService {
 	boolean isCorrectPassword(String email, String oldPassword);
 	
 	boolean isCorrectNewPassword(String newPassword,String repeatPassword);
+	
 }
