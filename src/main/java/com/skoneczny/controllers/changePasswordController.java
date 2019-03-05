@@ -6,6 +6,7 @@ import java.util.Locale;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.hibernate.query.criteria.internal.predicate.IsEmptyPredicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
@@ -69,8 +70,9 @@ public class changePasswordController {
 		}		
 		if (result.hasErrors()){
 			return "views/changePasswordForm";
-		}
-
+		}		
+			
+			iPasswordService.createPassword(password, userService.findOne(email));
 			userService.setNewPassword(email,password.getNewPassword());
 			redirectAttributes.addFlashAttribute("changePasswordSuccess", "Success");
 			logger.info("Change password for: " + email);

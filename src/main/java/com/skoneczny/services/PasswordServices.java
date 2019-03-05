@@ -22,7 +22,8 @@ public class PasswordServices implements IPasswordService {
 	private PasswordRepository passwordRepository;
 	
 	@Override
-	public Password createPassword(@Valid Password password) {
+	public Password createPassword(@Valid Password password, User user) {
+		password.setUser(user);
 		return passwordRepository.save(password);
 	}
 	

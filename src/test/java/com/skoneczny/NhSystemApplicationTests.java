@@ -50,8 +50,9 @@ public class NhSystemApplicationTests {
 //			pass.setId(1L);
 //			pass.setNewPassword("12345");
 //			pass.setEmail("one@one.pl");
-			Password pass1 = new Password("one@one.pl","1234","12345","12345");
-			iPasswordService.createPassword(pass1);
+			User newUser = new User("testUser@mail.com", "testUser", "123456");
+			Password pass1 = new Password(newUser,"1234","12345","12345");
+			iPasswordService.createPassword(pass1,newUser);
 		}
 //
 //		Task userTask = new Task("03/01/2018", "00:11", "11:00", "You need to work today");

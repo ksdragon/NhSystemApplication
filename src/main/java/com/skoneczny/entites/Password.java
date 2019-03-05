@@ -7,8 +7,11 @@ import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.Valid;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -24,7 +27,11 @@ public class Password {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Long id;
-	private String email;
+	@Valid
+	@ManyToOne
+	@JoinColumn(name="USER_EMAIL")
+	private User user;
+	//private String email;
 	private String oldPassword;
 	@ValidPassword
 	private String newPassword;
@@ -39,8 +46,8 @@ public class Password {
 	
 	public Password() {}
 		
-	public Password(String email, String oldPassword, String newPassword, String repeatPassword) {		
-		this.email = email;
+	public Password(User user, String oldPassword, String newPassword, String repeatPassword) {		
+		this.user = user;
 		this.oldPassword = oldPassword;
 		this.newPassword = newPassword;
 		this.repeatPassword = repeatPassword;
@@ -50,14 +57,22 @@ public class Password {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
+	}	
 	
-	public String getEmail() {
-		return email;
+	public User getUser() {
+		return user;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+
+	public void setUser(User user) {
+		this.user = user;
 	}
+
+//	public String getEmail() {
+//		return email;
+//	}
+//	public void setEmail(String email) {
+//		this.email = email;
+//	}
 	public String getOldPassword() {
 		return oldPassword;
 	}
