@@ -20,6 +20,11 @@
 function selectYear(str) {
 		
 		var xhttp; //deklaracja pustej zmienej
+		if(email == ""){
+		var email = /*[[${email}]]*/ 'default';
+		//var email = $('#email').val();
+		return;
+		}
 		if (str == "") {
 	    document.getElementById("table").innerHTML = "";
 	    return;
@@ -41,12 +46,21 @@ function selectYear(str) {
 	      this.responseText;
 	    }
 	  };
-	  xhttp.open("GET", "/profileYear?selectedYear="+str, true);
+	  xhttp.open("GET", "/profileYear?selectedYear="+str+"&email=one@one4.pl" , true);
 	  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	  xhttp.send(); 
 }
 
 </script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+
+    var message = /*[[${email}]]*/ 'default';
+    console.log(message);
+
+/*]]>*/
+</script>
+
 </head>
 <body>
 
@@ -57,8 +71,10 @@ function selectYear(str) {
 				th:text="#{labelBt.profile.addTask}" class="btn btn-primary">AddTask</a>
 			</div>
 			<div class="form-group blu-margin">
+					<br>
+					<label class="form-control-label" for="selectedYear" th:text="#{label.profile.ListYears}">Select Year</label>
 					<select class="form-control" id="selectedYear" name="selectedYear" onchange="selectYear(this.value)">
-						<option value="0">Select Date</option>
+						<option th:value="${allYear}" th:text="#{label.option.profile.ListYears}">Select Date</option>
 						<option th:each="year : ${years}" 
 							th:value="${year}" 
 							th:text="${year}"							

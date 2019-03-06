@@ -66,10 +66,16 @@ public class TaskService {
 	}*/
 	
 	public List<Task> findUserTasksYear(User user, String year) {		
+		if(!year.equals("All")) {
 		return taskRepository.findByUser(user)
 				.stream()
 				.filter(task -> Objects.equals(task.getDate().substring(0,4), year))
 				.collect(Collectors.toList());
+		}else {
+			return taskRepository.findByUser(user)
+					.stream()					
+					.collect(Collectors.toList());
+		}
 	}
 
 }
