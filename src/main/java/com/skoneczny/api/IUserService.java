@@ -1,9 +1,11 @@
 package com.skoneczny.api;
 
 
+import java.util.List;
+
 import javax.validation.Valid;
 
-
+import com.skoneczny.entites.Role;
 import com.skoneczny.entites.User;
 import com.skoneczny.entites.VerificationToken;
 
@@ -23,6 +25,8 @@ public interface IUserService {
 
 	User findOne(String email);
 
-	void setNewPassword(String email, String newPassword);	
+	void setNewPassword(String email, String newPassword);
+
+	void setRole(List<Role> roles, User user);	
 
 }

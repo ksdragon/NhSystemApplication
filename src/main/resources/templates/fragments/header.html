@@ -22,7 +22,7 @@
       <li class="nav-item"   sec:authorize="isAuthenticated()"  >
         <a class="nav-link" href="/profile" th:text="#{label.header.tasks}">Tasks</a>
       </li>
-        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')">
         <a class="nav-link" href="/users" th:text="#{label.header.users}">Users</a>
       </li>  <li class="nav-item">
         <a class="nav-link" href="/" th:text="#{label.header.about}">About</a>

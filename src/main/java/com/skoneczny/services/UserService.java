@@ -127,6 +127,14 @@ public class UserService implements IUserService {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		user.setPassword(encoder.encode(newPassword));
 		userRepository.save(user);
+	}
+	
+	
+
+	@Override
+	public void setRole(List<Role> roles, User user) {		
+		user.setRoles(roles);	
+		userRepository.save(user);
 	}	
 		
 }

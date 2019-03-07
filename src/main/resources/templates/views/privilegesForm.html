@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{fragments/main_layout}">
+<head>
+<title th:text="#{label.privileges.title}">Privileges Page</title>
+<script>
+// $(document).ready(function () {
+
+//     $("#selectedYear").change(function (event) {
+
+//         //stop submit the form, we will post it manually.
+//         event.preventDefault();
+
+//         selectYear();
+
+//     });
+
+// });
+// function selectYear(str) {
+		
+// 		var xhttp; //deklaracja pustej zmienej
+// 		if(email == ""){
+// 		var email = /*[[${email}]]*/ 'default';
+// 		//var email = $('#email').val();
+// 		return;
+// 		}
+// 		if (str == "") {
+// 	    document.getElementById("table").innerHTML = "";
+// 	    return;
+// 	  	}
+	
+// 		//create object XMLHttpRequest
+// 		if (window.XMLHttpRequest) {
+// 		   // code for modern browsers
+// 		   xhttp = new XMLHttpRequest();
+// 		 } else {
+// 		   // code for old IE browsers
+// 		   xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+// 		}
+	  
+// 		//w³aœciwoœc któr¹ posiada obiekt xhttp 
+// 	  xhttp.onreadystatechange = function() {
+// 	    if (this.readyState == 4 && this.status == 200) {
+// 	      document.getElementById("table").innerHTML =
+// 	      this.responseText;
+// 	    }
+// 	  };
+// 	  xhttp.open("GET", "/profileYear?selectedYear="+str+"&email=one@one4.pl" , true);
+// 	  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+// 	  xhttp.send(); 
+// }
+
+</script>
+
+</head>
+<body>
+
+	<div layout:fragment="content" class="container mySpace">
+		<div class="card">
+			<div class="card card-body" id="table">
+				<table class="table table-hover">
+					<thead>
+						<tr>
+							<th>Email</th>
+							<th th:text="#{label.personalSettings.name}">Name</th>
+							<th th:text="#{label.personalSettings.lastName}">Surname</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="userData :${user}">
+							<td th:text="${userData.email}"></td>
+							<td th:text="${userData.name}"></td>
+							<td th:text="${userData.lastName}"></td>
+						</tr>
+					</tbody>
+
+				</table>
+
+			</div>
+			<br>
+<!-- 			<div class="form-group blu-margin"> -->
+<!-- 				<br> <label class="form-control-label" for="selectRole" -->
+<!-- 					th:text="#{label.privileges.selectRole}">Select Role</label> <select -->
+<!-- 					class="form-control" id="selectRole" name="selectRole"> -->
+<!-- 					<option th:value="${currentRole}" -->
+<!-- 						th:text="#{label.option.privileges.selectRole}">Select -->
+<!-- 						Role</option> -->
+<!-- 					<option th:each="role : ${roles}"  -->
+<!-- 						th:value="${role.name}" -->
+<!-- 						th:text="${role.name}"></option> -->
+<!-- 				</select> -->
+<!-- 			</div> -->
+			
+				<form  th:action="@{/privileges}" method="post">								
+					<input type="hidden" name="email" th:value="${user.email}">
+				<div class="form-check" th:each="role : ${roles}">
+<!-- 					<div class="form-check" th:each="roleUser : ${currentRole}"> -->
+<!-- 						<p th:if="${role.name} == ${roleUser.name} or ${role.name} == "> -->
+						<input class="form-check-input" type="checkbox"	name="roles" th:value="${role.name}" th:checked="${#lists.contains(currentRole, role)}"/>
+						<label class="form-check-label" th:text="#{label.privileges.selectRole} + ' ' + ${role.name}">Choose privileges</label>
+<!-- 						</p> 									 -->
+<!-- 					</div> -->
+				</div>
+				<br>
+				<div class="form-group">
+					<input type="submit" value="Submit" th:value="#{value.privileges.submit}" class="btn btn-primary">
+					</div>
+			</form>
+			
+			
+<!-- 			<form  th:action="@{/privileges}" method="post">								 -->
+<!-- 					<input type="hidden" name="email" th:value="${user.email}"> -->
+<!-- 				<div th:each="role : ${roles}"> -->
+<!-- 					<div class="form-check" th:each="roleUser : ${currentRole}"> -->
+<!-- 						<p th:if="${role.name} == ${roleUser.name} or ${role.name} == "> -->
+<!-- 						<input class="form-check-input" type="checkbox"	name="roles" th:value="${role.name}" th:checked="${role.name} == ${roleUser.name}" /> -->
+<!-- 						<label class="form-check-label" th:text="#{label.privileges.selectRole} + ' ' + ${role.name}">Choose privileges</label> -->
+<!-- 						</p> 									 -->
+<!-- 					</div> -->
+<!-- 				</div> -->
+<!-- 				<br> -->
+<!-- 				<div class="form-group"> -->
+<!-- 					<input type="submit" value="Submit" th:value="#{value.privileges.submit}" class="btn btn-primary"> -->
+<!-- 					</div> -->
+<!-- 			</form> -->
+		</div>
+	</div>
+</body>
+</html>
