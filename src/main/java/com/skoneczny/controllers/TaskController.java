@@ -40,7 +40,7 @@ public class TaskController {
 						
 		model.addAttribute("email", email);		
 		Task newTask = new Task();
-		newTask.setDate(localDateTime.format(formatterDay));
+		newTask.setStartDate(localDateTime.format(formatterDay));
 		newTask.setStartTime(localDateTime.format(formatterTimeHourMinute));
 		model.addAttribute("task", newTask);
 		return "views/taskForm";

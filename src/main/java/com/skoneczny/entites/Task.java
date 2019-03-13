@@ -1,5 +1,7 @@
 package com.skoneczny.entites;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.lang.NonNull;
@@ -19,15 +22,20 @@ public class Task {
 	private Long id;	
 	@NotEmpty
 	@NonNull
-	private String date;
+	private String startDate;
 	@NotEmpty
 	@Column(nullable = false)
 	private String startTime;
 	@NotEmpty
 	@Column(nullable = false)
-	private String stopTime;
+	private String duration;
 	@NotEmpty
-	@Column(length=1000, nullable = false)
+	@Column(nullable = false)
+	private String stopDate;
+	@NotEmpty
+	@Column(nullable = false)
+	private String stopTime;	
+	@Column(length=1000)
 	private String description;
 	@Column(name = "approved", nullable = false)
 	private Boolean isApproved = false;
@@ -35,25 +43,21 @@ public class Task {
 	@JoinColumn(name="USER_EMAIL")
 	private User user;
 	
+	@OneToMany
+	private List<CategoryTask> categoryTasks;	
 	
 	
-	public boolean isApproved() {
-		return isApproved;
-	}
-	public void setApproved(boolean isApproved) {
-		this.isApproved = isApproved;
-	}
 	public Long getId() {
 		return id;
 	}
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getDate() {
-		return date;
+	public String getStartDate() {
+		return startDate;
 	}
-	public void setDate(String date) {
-		this.date = date;
+	public void setStartDate(String date) {
+		this.startDate = date;
 	}
 	public String getStartTime() {
 		return startTime;
@@ -78,23 +82,60 @@ public class Task {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}	
+	
+	public String getDuration() {
+		return duration;
 	}
-	public Task(String date, String startTime, String stopTime, String description, Boolean isApproved,  User user) {
-		this.date = date;
-		this.startTime = startTime;
-		this.stopTime = stopTime;
-		this.description = description;
-		this.user = user;
+	public void setDuration(String duration) {
+		this.duration = duration;
+	}
+	public String getStopDate() {
+		return stopDate;
+	}
+	public void setStopDate(String stopDate) {
+		this.stopDate = stopDate;
+	}
+	public Boolean getIsApproved() {
+		return isApproved;
+	}
+	public void setIsApproved(Boolean isApproved) {
 		this.isApproved = isApproved;
 	}
+	public List<CategoryTask> getCategoryTasks() {
+		return categoryTasks;
+	}
+	public void setCategoryTasks(List<CategoryTask> categoryTasks) {
+		this.categoryTasks = categoryTasks;
+	}
+	
+	
+	
+	public Task(Long id, @NotEmpty String startDate, @NotEmpty String startTime, @NotEmpty String duration,
+			@NotEmpty String stopDate, @NotEmpty String stopTime, String description, Boolean isApproved, User user,
+			List<CategoryTask> categoryTasks) {
+		super();
+		this.id = id;
+		this.startDate = startDate;
+		this.startTime = startTime;
+		this.duration = duration;
+		this.stopDate = stopDate;
+		this.stopTime = stopTime;
+		this.description = description;
+		this.isApproved = isApproved;
+		this.user = user;
+		this.categoryTasks = categoryTasks;
+	}
 	public Task(String date, String startTime, String stopTime, String description) {
-		this.date = date;
+		this.startDate = date;
 		this.startTime = startTime;
 		this.stopTime = stopTime;
 		this.description = description;
 	}
 	public Task() {
 	}
+	
+	
 	
 	
  }

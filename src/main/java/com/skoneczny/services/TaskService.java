@@ -46,7 +46,7 @@ public class TaskService {
 		List<String> yList = new ArrayList<>();
 		List<Task> tasks = taskRepository.findByUser(user);
 		for (Task task : tasks) {
-			yList.add(task.getDate().substring(0,4));			
+			yList.add(task.getStartDate().substring(0,4));			
 		}
 		TreeSet<String> yeasList = new  TreeSet<String>(yList);
 		yeasList = (TreeSet<String>)yeasList.descendingSet();
@@ -70,7 +70,7 @@ public class TaskService {
 		if(!year.equals("All")) {
 		return taskRepository.findByUser(user)
 				.stream()
-				.filter(task -> Objects.equals(task.getDate().substring(0,4), year))
+				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
 				.collect(Collectors.toList());
 		}else {
 			return taskRepository.findByUser(user)
