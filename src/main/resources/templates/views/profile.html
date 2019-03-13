@@ -20,11 +20,11 @@
 function selectYear(str) {
 		
 		var xhttp; //deklaracja pustej zmienej
-		if(email == ""){
-		var email = /*[[${email}]]*/ 'default';
-		//var email = $('#email').val();
-		return;
-		}
+// 		if(email == ""){
+// 		var email = /*[[${email}]]*/ 'default';
+// 		//var email = $('#email').val();
+// 		return;
+// 		}
 		if (str == "") {
 	    document.getElementById("table").innerHTML = "";
 	    return;
@@ -46,7 +46,7 @@ function selectYear(str) {
 	      this.responseText;
 	    }
 	  };
-	  xhttp.open("GET", "/profileYear?selectedYear="+str+"&email=one@one4.pl" , true);
+	  xhttp.open("GET", "/profileYear?selectedYear="+str+"&email=" + email , true);
 	  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	  xhttp.send(); 
 }
@@ -55,8 +55,8 @@ function selectYear(str) {
 <script th:inline="javascript">
 /*<![CDATA[*/
 
-    var message = /*[[${email}]]*/ 'default';
-    console.log(message);
+    var email = /*[[${email}]]*/ 'default';
+    console.log(email);
 
 /*]]>*/
 </script>

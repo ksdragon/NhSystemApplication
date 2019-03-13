@@ -1,5 +1,12 @@
 package com.skoneczny.controllers;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -16,7 +23,10 @@ import com.skoneczny.services.UserService;
 
 @Controller
 public class TaskController {
-
+		
+	private final DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	private final DateTimeFormatter formatterTimeHourMinute = DateTimeFormatter.ofPattern("HH:mm");
+	
 	@Autowired
 	private TaskService taskService;
 	
@@ -26,8 +36,13 @@ public class TaskController {
 	@GetMapping("/addTask")
 	public String taskFrom(String email, Model model, HttpSession session) {
 		
-		session.setAttribute("email", email);
-		model.addAttribute("task", new Task());
+		LocalDateTime localDateTime = LocalDateTime.now();
+						
+		model.addAttribute("email", email);		
+		Task newTask = new Task();
+		newTask.setDate(localDateTime.format(formatterDay));
+		newTask.setStartTime(localDateTime.format(formatterTimeHourMinute));
+		model.addAttribute("task", newTask);
 		return "views/taskForm";
 	}
 	
@@ -38,6 +53,6 @@ public class TaskController {
 		}
 		String email = (String)session.getAttribute("email");
 		taskService.addTask(task, userService.findOne(email));
-		return "redirect:/profile";
+		return "redirect:/profile?email=" + email;
 	}
 }
