@@ -4,6 +4,23 @@
 	layout:decorate="~{fragments/main_layout}">
 <head>
 <title th:text="#{label.tasks.title}">Tasks Form</title>
+<script th:inline="javascript">
+            /*<![CDATA[*/
+            function showStopTime() {
+            	
+                var startT = /*[[${task.startTime}]]*/;
+                var d = new Date();
+                console.log(d);
+                var duration =  $("#duration").val();
+                console.log(duration);
+                var stopT = startT + duration
+                $("#stopTime").val(stopT);
+                         
+            }
+            /*]]>*/
+           // dadaone do inputa onkeyup="showStopTime()"
+</script>
+
 </head>
 <body>
 
@@ -11,29 +28,43 @@
 		<form th:action="@{/addTask}" th:object="${task}" method="post">
 
 			<div class="form-group">
-				<label for="Date" class="form-control-label" th:text="#{label.tasks.data}">Date</label> <input
-					type="date" class="form-control" th:field="*{date}" id="date" />
-				<div class="text text-danger" th:if="${#fields.hasErrors('date')}"
-					th:errors="*{date}"></div>
+				<label for="startDate" class="form-control-label" th:text="#{label.tasks.startDate}">Start Date</label> <input
+					type="date" class="form-control" th:field="*{startDate}" id="startDate" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('startDate')}"
+					th:errors="*{startDate}"></div>
 			</div>
 			<div class="form-group">
-				<label for="startTime" class="form-control-label" th:text="#{label.tasks.startTime}">StartTime</label>
+				<label for="startTime" class="form-control-label" th:text="#{label.tasks.startTime}">Start Time</label>
 				<input type="time" class="form-control" th:field="*{startTime}"
 					id="startTime" />
 				<div class="text text-danger"
 					th:if="${#fields.hasErrors('startTime')}" th:errors="*{startTime}"></div>
-
 			</div>
 			<div class="form-group">
+				<label for="stopDate" class="form-control-label" th:text="#{label.tasks.stopDate}">Stop Date</label> <input
+					type="date" class="form-control" th:field="*{stopDate}" id="stopDate" />
+				<div class="text text-danger" th:if="${#fields.hasErrors('stopDate')}"
+					th:errors="*{stopDate}"></div>
+			</div>
+			
+			<div class="form-group">
 				<label for="stopTime" class="form-control-label" th:text="#{label.tasks.stopTime}">Stop Time</label> <input
-					type="time" class="form-control" th:field="*{stopTime}"
+					type="time" class="form-control" th:field="*{stopTime}" 
 					id="stopTime" />
 				<div class="text text-danger"
 					th:if="${#fields.hasErrors('stopTime')}" th:errors="*{stopTime}"></div>
                </div>
+               <div class="form-group">
+				<label for="duration" class="form-control-label" th:text="#{label.tasks.duration}">Duration</label> <input
+					type="time" class="form-control" th:field="*{duration}"  
+					id="duration" />
+				<div class="text text-danger"
+					th:if="${#fields.hasErrors('duration')}" th:errors="*{duration}"></div>
+               </div>
+               
 				<div class="form-group">
 					<label for="description" class="form-control-label" th:text="#{label.tasks.description}">Description</label>
-					<textarea   class="form-control" th:field="*{description}"
+					<textarea   class="form-control" th:field="*{description}" 
 						id="description">  </textarea>
 					<div class="text text-danger"
 						th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>

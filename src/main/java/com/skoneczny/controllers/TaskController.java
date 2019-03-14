@@ -17,6 +17,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import com.skoneczny.entites.CategoryTask;
 import com.skoneczny.entites.Task;
 import com.skoneczny.services.TaskService;
 import com.skoneczny.services.UserService;
@@ -39,9 +40,10 @@ public class TaskController {
 		LocalDateTime localDateTime = LocalDateTime.now();
 						
 		model.addAttribute("email", email);		
-		Task newTask = new Task();
+		Task newTask = new Task();		
 		newTask.setStartDate(localDateTime.format(formatterDay));
 		newTask.setStartTime(localDateTime.format(formatterTimeHourMinute));
+		
 		model.addAttribute("task", newTask);
 		return "views/taskForm";
 	}

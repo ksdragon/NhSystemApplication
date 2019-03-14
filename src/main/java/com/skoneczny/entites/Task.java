@@ -1,6 +1,5 @@
 package com.skoneczny.entites;
 
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.lang.NonNull;
@@ -42,9 +40,9 @@ public class Task {
 	@ManyToOne
 	@JoinColumn(name="USER_EMAIL")
 	private User user;
-	
-	@OneToMany
-	private List<CategoryTask> categoryTasks;	
+	@ManyToOne
+	@JoinColumn(name = "id_taskCategory")
+	private CategoryTask categoryTasks;	
 	
 	
 	public Long getId() {
@@ -102,10 +100,10 @@ public class Task {
 	public void setIsApproved(Boolean isApproved) {
 		this.isApproved = isApproved;
 	}
-	public List<CategoryTask> getCategoryTasks() {
+	public CategoryTask getCategoryTasks() {
 		return categoryTasks;
 	}
-	public void setCategoryTasks(List<CategoryTask> categoryTasks) {
+	public void setCategoryTasks(CategoryTask categoryTasks) {
 		this.categoryTasks = categoryTasks;
 	}
 	
@@ -113,7 +111,7 @@ public class Task {
 	
 	public Task(Long id, @NotEmpty String startDate, @NotEmpty String startTime, @NotEmpty String duration,
 			@NotEmpty String stopDate, @NotEmpty String stopTime, String description, Boolean isApproved, User user,
-			List<CategoryTask> categoryTasks) {
+			CategoryTask categoryTasks) {
 		super();
 		this.id = id;
 		this.startDate = startDate;
@@ -124,7 +122,7 @@ public class Task {
 		this.description = description;
 		this.isApproved = isApproved;
 		this.user = user;
-		this.categoryTasks = categoryTasks;
+//		this.categoryTasks = categoryTasks;
 	}
 	public Task(String date, String startTime, String stopTime, String description) {
 		this.startDate = date;

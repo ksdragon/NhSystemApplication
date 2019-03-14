@@ -51,7 +51,7 @@ public class UserService implements IUserService {
 		List<Role> roles = new ArrayList<>();
 		roles.add(userRole);
 		Address address = new Address();
-//		address.setZipCode("00-000");
+		address.setZipCode("00-000");
 		address.setUser(user);		
 		List<Address> addresses = new ArrayList<Address>();
 		addresses.add(address);
