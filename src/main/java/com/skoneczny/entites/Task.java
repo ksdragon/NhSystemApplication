@@ -27,14 +27,14 @@ public class Task {
 	@NotEmpty
 	@Column(nullable = false)
 	private String duration;
-	@NotEmpty
-	@Column(nullable = false)
+//	@NotEmpty
+//	@Column(nullable = false)
 	private String stopDate;
-	@NotEmpty
-	@Column(nullable = false)
+//	@NotEmpty
+//	@Column(nullable = false)
 	private String stopTime;	
 	@Column(length=1000)
-	private String description;
+	private String description;	
 	@Column(name = "approved", nullable = false)
 	private Boolean isApproved = false;
 	@ManyToOne
@@ -111,8 +111,7 @@ public class Task {
 	
 	public Task(Long id, @NotEmpty String startDate, @NotEmpty String startTime, @NotEmpty String duration,
 			@NotEmpty String stopDate, @NotEmpty String stopTime, String description, Boolean isApproved, User user,
-			CategoryTask categoryTasks) {
-		super();
+			CategoryTask categoryTasks) {		
 		this.id = id;
 		this.startDate = startDate;
 		this.startTime = startTime;
@@ -122,10 +121,10 @@ public class Task {
 		this.description = description;
 		this.isApproved = isApproved;
 		this.user = user;
-//		this.categoryTasks = categoryTasks;
+		this.categoryTasks = categoryTasks;
 	}
-	public Task(String date, String startTime, String stopTime, String description) {
-		this.startDate = date;
+	public Task(String startDate, String startTime, String stopTime, String description) {
+		this.startDate = startDate;
 		this.startTime = startTime;
 		this.stopTime = stopTime;
 		this.description = description;

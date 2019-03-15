@@ -11,14 +11,18 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.skoneczny.entites.CategoryTask;
 import com.skoneczny.entites.Task;
+import com.skoneczny.repositories.CategoryTaskRepository;
 import com.skoneczny.services.TaskService;
 import com.skoneczny.services.UserService;
 
@@ -34,8 +38,11 @@ public class TaskController {
 	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private CategoryTaskRepository categoryTask;
+	
 	@GetMapping("/addTask")
-	public String taskFrom(String email, Model model, HttpSession session) {
+	public String taskFrom(String email, Model model) {
 		
 		LocalDateTime localDateTime = LocalDateTime.now();
 						
@@ -43,17 +50,17 @@ public class TaskController {
 		Task newTask = new Task();		
 		newTask.setStartDate(localDateTime.format(formatterDay));
 		newTask.setStartTime(localDateTime.format(formatterTimeHourMinute));
-		
+		model.addAttribute("categoryTask",categoryTask.findAll());
 		model.addAttribute("task", newTask);
 		return "views/taskForm";
 	}
 	
 	@PostMapping("/addTask")
-	public String addTask(@Valid Task task, BindingResult bindingResult, HttpSession session) {
+	public String addTask(@Valid Task task,String email, BindingResult bindingResult) {
 		if(bindingResult.hasErrors()) {
 			return "views/taskForm";
 		}
-		String email = (String)session.getAttribute("email");
+		
 		taskService.addTask(task, userService.findOne(email));
 		return "redirect:/profile?email=" + email;
 	}
