@@ -10,7 +10,7 @@
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th th:text="#{label.profile.data}">Date</th>
+							<th th:text="#{label.profile.startDate}">Date</th>
 							<th th:text="#{label.profile.startTime}">Start Time</th>
 							<th th:text="#{label.profile.stopTime}">Stop Time</th>
 							<th th:text="#{label.profile.approved}">Approved</th>
@@ -20,11 +20,11 @@
 					</thead>
 					<tbody>
 						<tr th:each="task:${tasks}">
-							<td th:text="${task.date}"></td>
+							<td th:text="${task.startDate}"></td>
 							<td th:text="${task.startTime}"></td>
 							<td th:text="${task.stopTime}"></td>
-							<td th:if="${task.approved == true}">Yes</td>
-							<td th:if="${task.approved} == false">No</td>
+							<td th:if="${task.isApproved}">Yes</td>
+							<td th:unless="${task.isApproved}">No</td>
 							<td th:text="${task.description}"></td>
 							<td><a th:href="@{/deleteTask(id=${task.id})}"
 								th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a>
