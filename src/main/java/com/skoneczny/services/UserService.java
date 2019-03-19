@@ -116,8 +116,10 @@ public class UserService implements IUserService {
 		User user = findOne(email);		
 		user.setRoles(null);
 		VerificationToken vtUser = new VerificationToken();
-		vtUser = tokenRepository.findByUser(user);		
-		tokenRepository.deleteById(vtUser.getId());
+		if(tokenRepository.findByUser(user) != null) {		
+			vtUser = tokenRepository.findByUser(user);
+			tokenRepository.deleteById(vtUser.getId());
+		}
 		userRepository.delete(user);		
 	}
 

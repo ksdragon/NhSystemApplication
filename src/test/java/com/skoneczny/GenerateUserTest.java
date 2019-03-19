@@ -33,9 +33,11 @@ public class GenerateUserTest {
 	@Before
 	public void init() {
 		{			
-			listUser = generateManyUser();
-			listTask = generateManyTasks();
-			listUser.forEach(x ->  generateManyTasks(x));					
+			listUser = generateManyUser();			
+			listTask = generateManyTasks();			
+			for (User user : listUser) {
+				generateManyTasks(user);
+			}
 		}		
 		
 	}

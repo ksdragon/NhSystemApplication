@@ -36,7 +36,9 @@ public class GenerateUser {
 		user.setPassword(encoder.encode("123456"));		
 		user.setName(getRandomFirstName());
 		user.setLastName(getRandomLastName());
-		user.setEmail(getRandomEmail());
+		int r = random.nextInt(9);
+		String email = r + getNextEmail();
+		user.setEmail(email);		
 		user.setBirthday(getRandomBirthtDate());
 		Role userRole = new Role("USER");
 		List<Role> roles = new ArrayList<>();
@@ -53,8 +55,8 @@ public class GenerateUser {
 	}
 	
 		
-	private String getRandomEmail() {		
-		return getNext(getEmails());
+	private String getNextEmail() {		
+		return getRandom(getEmails());
 	}
 	
 

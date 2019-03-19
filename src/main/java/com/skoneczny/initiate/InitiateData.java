@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.skoneczny.api.InitiateDataApi;
 import com.skoneczny.entites.Task;
@@ -11,6 +12,7 @@ import com.skoneczny.entites.User;
 import com.skoneczny.services.TaskService;
 import com.skoneczny.services.UserService;
 
+@Service
 public class InitiateData implements InitiateDataApi {
 
 	@Autowired
