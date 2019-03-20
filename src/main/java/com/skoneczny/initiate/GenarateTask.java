@@ -36,7 +36,7 @@ public class GenarateTask {
 		task.setDuration(randomTimeSpanInMinutes.toString());		
 		Long durationInMinutes = new Long(randomTimeSpanInMinutes.getMinute());
 		LocalTime randomStartTime =  getRandomTimeSpanInMinutes();
-				
+		task.setStartTime(randomStartTime.toString());		
 		if(randomStartTime.plusMinutes(durationInMinutes).isAfter(timeAllDay)) {
 			LocalTime stopTime = randomStartTime.plusMinutes(durationInMinutes).minusMinutes(1440l);
 			task.setStopDate(randomStartDate.plusDays(1l).toString());	
@@ -48,7 +48,7 @@ public class GenarateTask {
 		}
 		CategoryTask randomcategoryTasks = getRandomcategoryTasks(categoryTasks.findAll());
 		task.setCategoryTasks(randomcategoryTasks);
-		task.setDescription(randomcategoryTasks.getName() + "time duration: " + randomTimeSpanInMinutes.toString());		
+		task.setDescription(randomcategoryTasks.getName() + " time duration: " + randomTimeSpanInMinutes.toString());		
 		return task;
 	}	
 
