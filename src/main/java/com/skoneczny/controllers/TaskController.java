@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.skoneczny.api.ITaskService;
 import com.skoneczny.entites.CategoryTask;
 import com.skoneczny.entites.Task;
 import com.skoneczny.repositories.CategoryTaskRepository;
@@ -33,7 +34,7 @@ public class TaskController {
 	private final DateTimeFormatter formatterTimeHourMinute = DateTimeFormatter.ofPattern("HH:mm");
 	
 	@Autowired
-	private TaskService taskService;
+	private ITaskService taskService;
 	
 	@Autowired
 	private UserService userService;
@@ -57,13 +58,11 @@ public class TaskController {
 	
 	@PostMapping("/addTask")
 	public String addTask(@Valid Task task,String email, BindingResult bindingResult) {
+		
+		boolean checkTimeStopIsCorrect = taskService.checkTimeStopIsCorrect(task);
 		if(bindingResult.hasErrors()) {
 			return "views/taskForm";
 		}
-		
-		
-		
-		
 		taskService.addTask(task, userService.findOne(email));
 		return "redirect:/profile?email=" + email;
 	}

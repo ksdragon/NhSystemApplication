@@ -6,9 +6,12 @@ import java.util.Objects;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.skoneczny.api.ITaskService;
 import com.skoneczny.entites.Task;
 import com.skoneczny.entites.User;
 import com.skoneczny.repositories.TaskRepository;
@@ -20,19 +23,20 @@ import com.skoneczny.repositories.TaskRepository;
  *
  */
 @Service
-public class TaskService {
+public class TaskService implements ITaskService{
 	
 	@Autowired TaskRepository taskRepository;
 	
+	@Override
 	public void addTask(Task task, User user) {
 		task.setUser(user);
 		taskRepository.save(task);
 	}
-	
+	@Override
 	public List<Task> findUserTask(User user){
 		return taskRepository.findByUser(user);
 	}
-
+	@Override
 	public void deleteTask(Long id) {
 		taskRepository.deleteById(id);		
 	}
@@ -42,6 +46,7 @@ public class TaskService {
 	 *@param user
 	 *@return lista lat posortowana malejąco
 	 */
+	@Override
 	public TreeSet<String> getAllYeas(User user){
 		List<String> yList = new ArrayList<>();
 		List<Task> tasks = taskRepository.findByUser(user);
@@ -65,7 +70,7 @@ public class TaskService {
 		}
 		return tList;
 	}*/
-	
+	@Override
 	public List<Task> findUserTasksYear(User user, String year) {		
 		if(!year.equals("All")) {
 		return taskRepository.findByUser(user)
@@ -77,6 +82,11 @@ public class TaskService {
 					.stream()					
 					.collect(Collectors.toList());
 		}
+	}
+	@Override
+	public boolean checkTimeStopIsCorrect(@Valid Task task) {
+			
+		return false;
 	}
 
 }
