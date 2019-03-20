@@ -61,6 +61,9 @@ public class TaskController {
 			return "views/taskForm";
 		}
 		
+		
+		
+		
 		taskService.addTask(task, userService.findOne(email));
 		return "redirect:/profile?email=" + email;
 	}

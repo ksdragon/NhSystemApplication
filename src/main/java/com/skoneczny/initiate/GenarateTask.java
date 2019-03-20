@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.Random;
@@ -26,25 +27,26 @@ public class GenarateTask {
 	private static final int TIME_IN_MINUTES = 300;
 	private final LocalTime timeAllDay = LocalTime.parse("23:59:59");
 	private final Random random = new Random(); 
-	private final SimpleDateFormat formatDuration = new SimpleDateFormat("HH:mm");	
+	private final SimpleDateFormat formatDuration = new SimpleDateFormat("HH:mm");
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
 	
 	public Task generate() {		
 		Task task = new Task();
 		LocalDate randomStartDate = getRandomDate();
 		task.setStartDate(randomStartDate.toString());
 		LocalTime randomTimeSpanInMinutes = getRandomTimeSpanInMinutes();		
-		task.setDuration(randomTimeSpanInMinutes.toString());		
+		task.setDuration(randomTimeSpanInMinutes.format(formatter).toString());		
 		Long durationInMinutes = new Long(randomTimeSpanInMinutes.getMinute());
 		LocalTime randomStartTime =  getRandomTimeSpanInMinutes();
-		task.setStartTime(randomStartTime.toString());		
+		task.setStartTime(randomStartTime.format(formatter).toString());		
 		if(randomStartTime.plusMinutes(durationInMinutes).isAfter(timeAllDay)) {
 			LocalTime stopTime = randomStartTime.plusMinutes(durationInMinutes).minusMinutes(1440l);
 			task.setStopDate(randomStartDate.plusDays(1l).toString());	
-			task.setStopTime(stopTime.toString());			
+			task.setStopTime(stopTime.format(formatter).toString());			
 		}else
 		{
 			task.setStopDate(randomStartDate.toString());
-			task.setStopTime(randomStartTime.plusMinutes(durationInMinutes).toString());
+			task.setStopTime(randomStartTime.plusMinutes(durationInMinutes).format(formatter).toString());
 		}
 		CategoryTask randomcategoryTasks = getRandomcategoryTasks(categoryTasks.findAll());
 		task.setCategoryTasks(randomcategoryTasks);
