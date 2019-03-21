@@ -1,6 +1,7 @@
 package com.skoneczny.services;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -9,6 +10,10 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.skoneczny.api.ITaskService;
@@ -88,5 +93,24 @@ public class TaskService implements ITaskService{
 			
 		return false;
 	}
+	
+    public Page<?> findPaginated(Pageable pageable, List<?> listToPage) {
+        int pageSize = pageable.getPageSize();
+        int currentPage = pageable.getPageNumber();
+        int startItem = currentPage * pageSize;
+        List<?> list;
+ 
+        if (listToPage.size() < startItem) {
+            list = Collections.emptyList();
+        } else {
+            int toIndex = Math.min(startItem + pageSize, listToPage.size());
+            list = listToPage.subList(startItem, toIndex);
+        }
+ 
+        Page<?> taskPage
+          = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), listToPage.size());
+ 
+        return taskPage;
+    }
 
 }

@@ -113,6 +113,15 @@ function selectYear(str) {
 					</tbody>
 
 				</table>
+				<hr/>
+				
+				<ul th:if="${tasks.totalPages > 0}" class="nav nav-pills">
+					<li class="nav-item" 
+						th:each=" pageNumber : ${pageNumbers}">
+					<a th:href="@{/profile(page=${pageNumber}, email=${email})}" th:text="${pageNumber}" class="nav-link"
+					th:classappend="${pageNumber==tasks.number + 1}?'active':''" ></a>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>	
