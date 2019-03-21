@@ -45,6 +45,13 @@
 						</tr>
 					</tbody>
 				</table>
+				<ul th:if="${users.totalPages > 0}" class="nav nav-pills">
+					<li class="nav-item" 
+						th:each=" pageNumber : ${pageNumbers}">
+					<a th:href="@{/users(page=${pageNumber})}" th:text="${pageNumber}" class="nav-link"
+					th:classappend="${pageNumber==users.number + 1}?'active':''" ></a>
+					</li>
+				</ul>
 			</div>
 		</div>
 	</div>

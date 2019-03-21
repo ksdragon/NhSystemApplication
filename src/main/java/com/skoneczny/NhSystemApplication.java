@@ -36,9 +36,11 @@ public class NhSystemApplication implements CommandLineRunner{
 			if(!userService.isUserPresent("admin@mail.com")) {
 			Role roleAdmin = new Role("ADMIN");
 			Role roleUser = new Role("USER");
+			Role menagerUser = new Role("MENAGER");
 			List<Role> roles = new ArrayList<>();
 			roles.add(roleAdmin);
 			roles.add(roleUser);
+			roles.add(menagerUser);
 			roleRepository.saveAll(roles);
 			User newAdmin = new User("admin@mail.com","Admin","123456");
 			userService.createAdmin(newAdmin);
