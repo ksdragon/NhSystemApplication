@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.Random;
@@ -36,7 +37,7 @@ public class GenarateTask {
 		task.setStartDate(randomStartDate.toString());
 		LocalTime randomTimeSpanInMinutes = getRandomTimeSpanInMinutes();		
 		task.setDuration(randomTimeSpanInMinutes.format(formatter).toString());		
-		Long durationInMinutes = new Long(randomTimeSpanInMinutes.getMinute());
+		Long durationInMinutes = new Long(randomTimeSpanInMinutes.get(ChronoField.MINUTE_OF_DAY));
 		LocalTime randomStartTime =  getRandomTimeSpanInMinutes();
 		task.setStartTime(randomStartTime.format(formatter).toString());		
 		if(randomStartTime.plusMinutes(durationInMinutes).isAfter(timeAllDay)) {

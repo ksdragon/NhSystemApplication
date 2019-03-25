@@ -24,14 +24,23 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
 	$(document).ready(function(){
+		var checkTimeStopIsCorrect = /*[[${checkTimeStopIsCorrect}]]*/;
+		if(checkTimeStopIsCorrect == null){
+			checkTimeStopIsCorrect = true
+		}
+        console.log(checkTimeStopIsCorrect);
 		checkUncheck();
-		$("#stopDayTime").hide();
-		});
+		if(checkTimeStopIsCorrect){
+			$("#stopDayTime").hide();			
+		}else{
+			$('#dateOverDay').attr('checked', true);
+		}
+	});
 	function checkUncheck() { 
     $('#dateOverDay').click(function() {
-        if (this.checked) {
+        if (this.checked) {        	
             $("#stopDayTime").show();
-        } else {
+        } else {        	
             $("#stopDayTime").hide();
         }
     }); 
@@ -72,13 +81,13 @@
 						th:errors="*{stopDate}"></div>
 				</div>
 			
-				<div class="form-group">
-					<label for="stopTime" class="form-control-label" th:text="#{label.tasks.stopTime}">Stop Time</label> <input
-						type="time" class="form-control" th:field="*{stopTime}" 
-						id="stopTime" />
-					<div class="text text-danger"
-						th:if="${#fields.hasErrors('stopTime')}" th:errors="*{stopTime}"></div>
-               </div>
+<!-- 				<div class="form-group"> -->
+<!-- 					<label for="stopTime" class="form-control-label" th:text="#{label.tasks.stopTime}">Stop Time</label> <input -->
+<!-- 						type="time" class="form-control" th:field="*{stopTime}"  -->
+<!-- 						id="stopTime" /> -->
+<!-- 					<div class="text text-danger" -->
+<!-- 						th:if="${#fields.hasErrors('stopTime')}" th:errors="*{stopTime}"></div> -->
+<!--                </div> -->
                </div>
                <div class="form-group">
 				<label for="duration" class="form-control-label" th:text="#{label.tasks.duration}">Duration</label> <input
@@ -89,14 +98,18 @@
                </div>
                <div class="form-group">
 <!-- 					<label for="categoryTask" class="form-control-label" th:text="#{label.tasks.categoryTask}">categoryTask</label> -->
-					<select   class="form-control" name="categoryTask" id="categoryTask">  
+					<select   class="form-control" name="categoryTasks" id="categoryTasks">  
 						<option  th:text="#{label.option.profile.categoryTask}">Select category task</option>
 						<option th:each="category : ${categoryTask}" 
 							th:value="${category.id}" 
 							th:text="${category.name}"							
 							></option>
-					</select>				
-				</div>
+					</select>
+					<div class="text text-danger"
+						th:if="${#fields.hasErrors('categoryTasks')}">
+							<p th:each="err : ${#fields.hasErrors('categoryTasks')}" th:text="#{NotNull.task.categoryTasks}" >...</p>
+						</div>									
+					</div>
                
 				<div class="form-group">
 					<label for="description" class="form-control-label" th:text="#{label.tasks.description}">Description</label>
@@ -104,7 +117,7 @@
 						id="description">  </textarea>
 					<div class="text text-danger"
 						th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
-				</div>
+					</div>
 				<div class="form-group row justify-content-between">
 					<input type="submit" value="Submit" class="btn btn-primary" th:value="#{value.tasks.submit}"/>
 					

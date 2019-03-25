@@ -1,16 +1,20 @@
 package com.skoneczny.controllers;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.skoneczny.api.ITaskService;
 import com.skoneczny.entites.CategoryTask;
@@ -32,6 +37,7 @@ public class TaskController {
 		
 	private final DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	private final DateTimeFormatter formatterTimeHourMinute = DateTimeFormatter.ofPattern("HH:mm");
+	private final Logger logger = Logger.getLogger(TaskController.class);
 	
 	@Autowired
 	private ITaskService taskService;
@@ -41,15 +47,17 @@ public class TaskController {
 	
 	@Autowired
 	private CategoryTaskRepository categoryTask;
+	@Autowired
+	private MessageSource messageSource;
 	
 	@GetMapping("/addTask")
 	public String taskFrom(String email, Model model) {
 		
-		LocalDateTime localDateTime = LocalDateTime.now();
-						
+		LocalDateTime localDateTime = LocalDateTime.now();						
 		model.addAttribute("email", email);		
 		Task newTask = new Task();		
 		newTask.setStartDate(localDateTime.format(formatterDay));
+		newTask.setStopDate(localDateTime.format(formatterDay));
 		newTask.setStartTime(localDateTime.format(formatterTimeHourMinute));
 		model.addAttribute("categoryTask",categoryTask.findAll());
 		model.addAttribute("task", newTask);
@@ -57,10 +65,23 @@ public class TaskController {
 	}
 	
 	@PostMapping("/addTask")
-	public String addTask(@Valid Task task,String email, BindingResult bindingResult) {
-		
-		boolean checkTimeStopIsCorrect = taskService.checkTimeStopIsCorrect(task);
-		if(bindingResult.hasErrors()) {
+	public String addTask(@Valid Task task, BindingResult bindingResult, String email, Model model) {		
+		model.addAttribute("categoryTask",categoryTask.findAll());
+		model.addAttribute("email", email);
+		if(LocalDate.parse(task.getStartDate()).isBefore(LocalDate.parse(task.getStopDate()))){
+			logger.warn("Day " + task.getStartDate() + " is before " + task.getStopDate());
+		}			
+		boolean checkTimeStopIsCorrect = taskService.checkTimeStopIsCorrect(task);		
+		if(checkTimeStopIsCorrect)task.setStopTime(taskService.startTimePlusDuration(task));
+		if(bindingResult.hasErrors() ) {		
+			return "views/taskForm";
+		}		
+		if(!checkTimeStopIsCorrect){
+			bindingResult.rejectValue(
+					"stopTime",
+					"error.task",
+					messageSource.getMessage("error.task.stopTime",null, Locale.getDefault()));
+			model.addAttribute("checkTimeStopIsCorrect", checkTimeStopIsCorrect);
 			return "views/taskForm";
 		}
 		taskService.addTask(task, userService.findOne(email));

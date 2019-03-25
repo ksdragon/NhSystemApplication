@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.lang.NonNull;
 
@@ -39,9 +40,10 @@ public class Task {
 	private Boolean isApproved = false;
 	@ManyToOne
 	@JoinColumn(name="USER_EMAIL")
-	private User user;
+	private User user;	
 	@ManyToOne
-	@JoinColumn(name = "id_taskCategory")
+	@NotNull
+	@JoinColumn(name = "id_taskCategory", nullable = false)
 	private CategoryTask categoryTasks;	
 	
 	

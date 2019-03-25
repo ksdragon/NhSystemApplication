@@ -1,5 +1,10 @@
 package com.skoneczny.services;
 
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -75,6 +80,7 @@ public class TaskService implements ITaskService{
 		}
 		return tList;
 	}*/
+	
 	@Override
 	public List<Task> findUserTasksYear(User user, String year) {		
 		if(!year.equals("All")) {
@@ -88,12 +94,18 @@ public class TaskService implements ITaskService{
 					.collect(Collectors.toList());
 		}
 	}
+	
 	@Override
 	public boolean checkTimeStopIsCorrect(@Valid Task task) {
-			
-		return false;
+			if(task.getDuration().isEmpty()) return false;			
+			LocalTime startTime = LocalTime.parse(task.getStartTime());
+			LocalTime durationTime = LocalTime.parse(task.getDuration());
+			long startTimeInMinuts = new Long(startTime.get(ChronoField.MINUTE_OF_DAY));			
+			long minuteDuration = new Long(durationTime.get(ChronoField.MINUTE_OF_DAY));
+			if(startTimeInMinuts + minuteDuration > 1440) return false; 
+			return true;
 	}
-	
+		
     public Page<?> findPaginated(Pageable pageable, List<?> listToPage) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
@@ -112,5 +124,14 @@ public class TaskService implements ITaskService{
  
         return taskPage;
     }
+	
+    @Override
+	public String startTimePlusDuration(@Valid Task task) {
+		LocalTime startTime = LocalTime.parse(task.getStartTime());
+		LocalTime durationTime = LocalTime.parse(task.getDuration());
+		Long minutesOfTheDuration = new Long(durationTime.get(ChronoField.MINUTE_OF_DAY));		
+		String stopTime = startTime.plusMinutes(minutesOfTheDuration).toString();
+		return stopTime;
+	}
 
 }

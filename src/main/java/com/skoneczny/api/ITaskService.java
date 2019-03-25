@@ -20,6 +20,8 @@ public interface ITaskService {
 	
 	public List<Task> findUserTasksYear(User user, String year);
 
-	boolean checkTimeStopIsCorrect(@Valid Task task);	
+	boolean checkTimeStopIsCorrect(@Valid Task task);
+
+	String startTimePlusDuration(@Valid Task task);	
 
 }
