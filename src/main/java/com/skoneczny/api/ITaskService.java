@@ -24,6 +24,8 @@ public interface ITaskService {
 
 	String startTimePlusDuration(@Valid Task task);
 
-	Task findTaskById(Long id);	
+	Task findTaskById(Long id);
+
+	void approvDeapprovTask(Long id);	
 
 }

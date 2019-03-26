@@ -110,4 +110,13 @@ public class TaskController {
 		model.addAttribute("task", taskById);
 		return "views/taskForm";
 	}
+	
+	@GetMapping("/approvTask")
+	public String approvTaskFrom(Long id, Model model, HttpSession session) {
+		Task taskById = taskService.findTaskById(id);
+		String email = taskById.getUser().getEmail();
+		taskService.approvDeapprovTask(id);		
+		return "redirect:/profile?email=" + email;
+		}	
+	
 }

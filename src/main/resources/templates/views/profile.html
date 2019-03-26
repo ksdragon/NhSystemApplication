@@ -96,8 +96,10 @@ function selectYear(str) {
 							<th th:text="#{label.profile.stopDate}">Stop Date</th>
 							<th th:text="#{label.profile.approved}">Approved</th>
 							<th th:text="#{label.profile.tasksCategory}">Category</th>
-							<th th:text="#{label.profile.delete}">Delete</th>
+							<th th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:text="#{label.profile.activate}">Activate</th>
 							<th th:text="#{label.profile.edit}">Edit</th>
+							<th th:text="#{label.profile.delete}">Delete</th>
+							
 						</tr>
 					</thead>
 					<tbody>
@@ -108,9 +110,16 @@ function selectYear(str) {
 							<td th:if="${task.isApproved}" th:text="#{label.profile.yes}">Yes</td>
 							<td th:unless="${task.isApproved}" th:text="#{label.profile.no}">No</td>
 							<td th:text="${task.categoryTasks.name}"></td>
-							<td><a th:href="@{/editTask(id=${task.id}, email=${task.user.email} )}"
+							<td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+								<a th:href="@{/approvTask(id=${task.id}, email=${task.user.email} )}"
+								th:text="#{label.profile.activate}" class="btn btn-dark">Activate</a></td>							
+							<td th:unless="${task.isApproved}"><a th:href="@{/editTask(id=${task.id}, email=${task.user.email} )}"
 								th:text="#{label.profile.edit}" class="btn btn-dark">Edit</a>
 							</td>
+							<td th:if="${task.isApproved}"><div 
+								class="center">-</div>
+							</td>
+							
 							<td><a th:href="@{/deleteTask(id=${task.id})}"
 								th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a>
 							</td>

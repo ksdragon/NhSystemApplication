@@ -138,5 +138,15 @@ public class TaskService implements ITaskService{
 		return taskRepository.findById(id).get();
 		
 	}
+	@Override
+	public void approvDeapprovTask(Long id) {
+		Task task = taskRepository.findById(id).get();		
+		if(task.getIsApproved()) {
+			task.setIsApproved(false);
+		}else {
+			task.setIsApproved(true);
+		}
+		taskRepository.save(task);
+	}
 
 }
