@@ -22,6 +22,8 @@ public interface ITaskService {
 
 	boolean checkTimeStopIsCorrect(@Valid Task task);
 
-	String startTimePlusDuration(@Valid Task task);	
+	String startTimePlusDuration(@Valid Task task);
+
+	Task findTaskById(Long id);	
 
 }

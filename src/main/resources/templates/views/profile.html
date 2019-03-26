@@ -66,9 +66,10 @@ function selectYear(str) {
 
 	<div layout:fragment="content" class="container mySpace">
 		<div class="form-group mb-2">						
-			<div>
+			<div class="row">
 			<a th:href="@{/addTask(email=${email})}"
 				th:text="#{labelBt.profile.addTask}" class="btn btn-primary">AddTask</a>
+				<h3 class="col" th:text="#{label.profile.listOfTaskFor} + ' ' + ${email}" >List of task for:</h3>
 			</div>
 			<div class="form-group blu-margin">
 					<br>
@@ -90,22 +91,26 @@ function selectYear(str) {
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th th:text="#{label.profile.startDate}">Date</th>
-							<th th:text="#{label.profile.startTime}">Start Time</th>
-							<th th:text="#{label.profile.stopTime}">Stop Time</th>
+							<th th:text="#{label.profile.startDate}">Start Date</th>
+							<th th:text="#{label.profile.duration}">Duration</th>
+							<th th:text="#{label.profile.stopDate}">Stop Date</th>
 							<th th:text="#{label.profile.approved}">Approved</th>
-							<th th:text="#{label.profile.description}">Description</th>
+							<th th:text="#{label.profile.tasksCategory}">Category</th>
 							<th th:text="#{label.profile.delete}">Delete</th>
+							<th th:text="#{label.profile.edit}">Edit</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr th:each="task:${tasks}">
 							<td th:text="${task.startDate}"></td>
-							<td th:text="${task.startTime}"></td>
-							<td th:text="${task.stopTime}"></td>
-							<td th:if="${task.isApproved}">Yes</td>
-							<td th:unless="${task.isApproved}">No</td>
-							<td th:text="${task.description}"></td>
+							<td th:text="${task.duration}"></td>
+							<td th:text="${task.stopDate}"></td>
+							<td th:if="${task.isApproved}" th:text="#{label.profile.yes}">Yes</td>
+							<td th:unless="${task.isApproved}" th:text="#{label.profile.no}">No</td>
+							<td th:text="${task.categoryTasks.name}"></td>
+							<td><a th:href="@{/editTask(id=${task.id}, email=${task.user.email} )}"
+								th:text="#{label.profile.edit}" class="btn btn-dark">Edit</a>
+							</td>
 							<td><a th:href="@{/deleteTask(id=${task.id})}"
 								th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a>
 							</td>

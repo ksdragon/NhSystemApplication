@@ -54,6 +54,10 @@
 	<div layout:fragment="content" class="container mySpace">
 		<form th:action="@{/addTask}" th:object="${task}" method="post">
 			<input type="hidden" name="email" th:value="${email}">
+			<input type="hidden" th:field="*{id}">
+			<input type="hidden" th:field="*{stopTime}">
+			<input type="hidden" name="user" th:value="${email}">
+			
 			<div class="form-group">
 				<label for="startDate" class="form-control-label" th:text="#{label.tasks.startDate}">Start Date</label> <input
 					type="date" class="form-control" th:field="*{startDate}" id="startDate" />
@@ -98,12 +102,15 @@
                </div>
                <div class="form-group">
 <!-- 					<label for="categoryTask" class="form-control-label" th:text="#{label.tasks.categoryTask}">categoryTask</label> -->
-					<select   class="form-control" name="categoryTasks" id="categoryTasks">  
-						<option  th:text="#{label.option.profile.categoryTask}">Select category task</option>
+<!-- 					<div th:if="${task.categoryTasks} ? i = ${task.categoryTasks} : 0 "></div> -->
+					<select  class="form-control" name="categoryTasks" id="categoryTasks">  
+<!-- 						<option th:if="${task.categoryTasks}" th:text="${task.categoryTasks.name}">Select category task</option> -->
+						<option value="" th:text="#{label.option.profile.categoryTask}">Select category task</option>							 
 						<option th:each="category : ${categoryTask}" 
 							th:value="${category.id}" 
-							th:text="${category.name}"							
-							></option>
+							th:text="${category.name}"
+							th:selected="${category.id} == ${task.categoryTasks.id}"											
+							></option>							
 					</select>
 					<div class="text text-danger"
 						th:if="${#fields.hasErrors('categoryTasks')}">

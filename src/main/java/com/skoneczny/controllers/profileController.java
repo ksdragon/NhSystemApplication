@@ -107,11 +107,6 @@ public class profileController {
 		model.addAttribute("tasks", taskService.findUserTasksYear(user, selectedYear));
 		
 		return "views/profile";
-	}*/
+	}*/	
 	
-	@GetMapping("/deleteTask")
-	public String taskFrom(Long id, Model model, HttpSession session) {
-		taskService.deleteTask(id);
-		return "redirect:/profile";
-	}
 }

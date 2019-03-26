@@ -133,5 +133,10 @@ public class TaskService implements ITaskService{
 		String stopTime = startTime.plusMinutes(minutesOfTheDuration).toString();
 		return stopTime;
 	}
+	@Override
+	public Task findTaskById(Long id) {
+		return taskRepository.findById(id).get();
+		
+	}
 
 }
