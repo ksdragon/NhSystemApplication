@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
 import nz.net.ultraq.thymeleaf.LayoutDialect;
 
@@ -77,5 +78,10 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 	@Bean
     public AuthenticationFailureHandler customAuthenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
+    }
+	
+	@Bean
+    public SpringDataDialect springDataDialect() {
+        return new SpringDataDialect();
     }
 }

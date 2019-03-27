@@ -60,6 +60,20 @@ function selectYear(str) {
 
 /*]]>*/
 </script>
+<style>
+table.table thead .sorted:after{
+	display: inline-block;
+	font-family: 'FontAwesome';
+	opacity: 0.8;
+	margin-left: 1em;
+}
+table.table thead .sorted.sorted-desc:after{
+	content: "\f15e";
+}
+table.table thead .sorted.sorted-asc:after{
+	content: "\f15d";
+}
+</style>
 
 </head>
 <body>
@@ -86,13 +100,13 @@ function selectYear(str) {
 		</div>
 		<br>
 		
-		<div class="card">
+		<div class="card" >
 			<div class="card card-body" id="table">
 				<table class="table table-hover">
 					<thead>
 						<tr>
-							<th th:text="#{label.profile.startDate}">Start Date</th>
-							<th th:text="#{label.profile.duration}">Duration</th>
+							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate">Start Date</a></th>
+							<th><a th:text="#{label.profile.duration}" class="sorted" sd:pagination-sort="duration">Duration</a></th>
 							<th th:text="#{label.profile.stopDate}">Stop Date</th>
 							<th th:text="#{label.profile.approved}">Approved</th>
 							<th th:text="#{label.profile.tasksCategory}">Category</th>
@@ -136,6 +150,57 @@ function selectYear(str) {
 					th:classappend="${pageNumber==tasks.number + 1}?'active':''" ></a>
 					</li>
 				</ul>
+				
+				<nav aria-label="Pagination" th:if="${tasks.totalPages gt 0}">
+				    <ul class="pagination justify-content-center font-weight-bold">
+				        <li class="page-item" th:classappend="${tasks.number eq 0} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/profile?page={pageNumber}&email={email} (pageNumber=${tasks.number lt 2 ? 1 : tasks.number}, email=${email})}"
+				               aria-label="Previous" title="Previous Page" data-toggle="tooltip">
+				                <span aria-hidden="true">&laquo;</span>
+				            </a>
+				        </li>
+				        <li class="page-item" th:classappend="${i eq tasks.number + 1} ? 'active'"
+				            th:each="i : ${#numbers.sequence( 1, tasks.totalPages, 1)}">
+				            <a class="page-link" th:href="@{/profile?page={pageNumber}&email={email}(pageNumber=${i}, email=${email})}" th:text="${i}"
+				               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+				        </li>
+				        <li class="page-item" th:classappend="${tasks.number + 1 eq tasks.totalPages} ? 'disabled'">
+				            <a class="page-link"
+				               th:href="@{/profile?page={pageNumber}&email={email}(pageNumber=${tasks.number + 2}, email=${email}) }"
+				               aria-label="Next" title="Next Page" data-toggle="tooltip">
+				                <span aria-hidden="true">&raquo;</span>
+				            </a>
+				        </li>
+				    </ul>
+				</nav>
+				
+				<div class="row">
+				    <div class="col-sm-6">
+				    	<div sd:pagination-summary="">info</div>
+				    </div>
+				    <div class="col-sm-6">
+				    <nav class="pull-right">
+						<ul class="pagination" sd:pagination-split="3" sd:pagination="full">
+							<!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+							<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+						   	<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+						</ul>
+					</nav>
+<!-- 					Show <span sd:page-size-selector="javascript"></span> entries -->							
+				    </div>
+				</div>
+				<div>
+				    <span sd:pagination-summary="compact">info</span>
+				    <div class="btn-group pager-compact" sd:pagination="compact-pager">
+				        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+				        <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-chevron-left"></span></a>
+				        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></a>
+				    </div>
+				</div>
+				
+				
+				
 			</div>
 		</div>
 	</div>	

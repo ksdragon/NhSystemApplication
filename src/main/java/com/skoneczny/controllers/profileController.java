@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,8 +41,9 @@ public class profileController {
 			@RequestParam(defaultValue="") String email,
 			@RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size,
-			Principal principal) {
-		int currentPage = page.orElse(1);
+			Principal principal,
+			@SortDefault("startDate") Pageable pageable) {
+		int currentPage = page.orElse(0/*1*/);
         int pageSize = size.orElse(5);
 		
         String year = Integer.toString(LocalDate.now().getYear());		
@@ -51,7 +54,7 @@ public class profileController {
 		model.addAttribute("email",user.getEmail());
 		model.addAttribute("allYear", allYear);
 		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year);
-		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage -1 , pageSize),findUserTasksYear);
+		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize),findUserTasksYear);
 		model.addAttribute("tasks", listPaged);
 		
 		int totalPages = listPaged.getTotalPages();
@@ -73,7 +76,8 @@ public class profileController {
 			HttpServletResponse response,
 			Principal principal,
 			@RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size
+			@RequestParam("size") Optional<Integer> size,
+			@SortDefault("startDate") Pageable pageable
 			) {
 		int currentPage = page.orElse(1);
         int pageSize = size.orElse(5);
