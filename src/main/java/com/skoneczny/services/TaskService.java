@@ -19,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.skoneczny.api.ITaskService;
@@ -105,11 +106,13 @@ public class TaskService implements ITaskService{
 			if(startTimeInMinuts + minuteDuration > 1440) return false; 
 			return true;
 	}
-		
+  
+    
     public Page<?> findPaginated(Pageable pageable, List<?> listToPage) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
+        Sort sort = pageable.getSort();        
         List<?> list;
  
         if (listToPage.size() < startItem) {
@@ -120,10 +123,12 @@ public class TaskService implements ITaskService{
         }
  
         Page<?> taskPage
-          = new PageImpl<>(list, PageRequest.of(currentPage, pageSize), listToPage.size());
+          = new PageImpl<>(list, PageRequest.of(currentPage, pageSize, sort), listToPage.size());
  
         return taskPage;
     }
+    
+    
 	
     @Override
 	public String startTimePlusDuration(@Valid Task task) {

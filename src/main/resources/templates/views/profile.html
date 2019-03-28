@@ -107,9 +107,9 @@ table.table thead .sorted.sorted-asc:after{
 						<tr>
 							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate">Start Date</a></th>
 							<th><a th:text="#{label.profile.duration}" class="sorted" sd:pagination-sort="duration">Duration</a></th>
-							<th th:text="#{label.profile.stopDate}">Stop Date</th>
-							<th th:text="#{label.profile.approved}">Approved</th>
+							<th th:text="#{label.profile.stopDate}">Stop Date</th>							
 							<th th:text="#{label.profile.tasksCategory}">Category</th>
+							<th th:text="#{label.profile.approved}">Approved</th>
 							<th th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:text="#{label.profile.activate}">Activate</th>
 							<th th:text="#{label.profile.edit}">Edit</th>
 							<th th:text="#{label.profile.delete}">Delete</th>
@@ -121,16 +121,18 @@ table.table thead .sorted.sorted-asc:after{
 							<td th:text="${task.startDate}"></td>
 							<td th:text="${task.duration}"></td>
 							<td th:text="${task.stopDate}"></td>
-							<td th:if="${task.isApproved}" th:text="#{label.profile.yes}">Yes</td>
-							<td th:unless="${task.isApproved}" th:text="#{label.profile.no}">No</td>
 							<td th:text="${task.categoryTasks.name}"></td>
+							<td th:if="${task.isApproved}" th:text="#{label.profile.yes}">Yes</td>
+							<td th:unless="${task.isApproved}" th:text="#{label.profile.no}">No</td>							
 							<td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
 								<a th:href="@{/approvTask(id=${task.id}, email=${task.user.email} )}"
 								th:text="#{label.profile.activate}" class="btn btn-dark">Activate</a></td>							
-							<td th:unless="${task.isApproved}"><a th:href="@{/editTask(id=${task.id}, email=${task.user.email} )}"
+							
+							<td th:unless="(${task.isApproved} and  ${#authorization.expression('hasRole(''USER'')')}) 
+											"><a th:href="@{/editTask(id=${task.id}, email=${task.user.email} )}"
 								th:text="#{label.profile.edit}" class="btn btn-dark">Edit</a>
 							</td>
-							<td th:if="${task.isApproved}"><div 
+							<td th:if="${task.isApproved} and ${#authorization.expression('hasRole(''USER'')')}"><div 
 								class="center">-</div>
 							</td>
 							
@@ -143,61 +145,112 @@ table.table thead .sorted.sorted-asc:after{
 				</table>
 				<hr/>
 				
-				<ul th:if="${tasks.totalPages > 0}" class="nav nav-pills">
-					<li class="nav-item" 
-						th:each=" pageNumber : ${pageNumbers}">
-					<a th:href="@{/profile(page=${pageNumber}, email=${email})}" th:text="${pageNumber}" class="nav-link"
-					th:classappend="${pageNumber==tasks.number + 1}?'active':''" ></a>
-					</li>
-				</ul>
+<!-- 				<ul th:if="${tasks.totalPages > 0}" class="nav nav-pills"> -->
+<!-- 					<li class="nav-item"  -->
+<!-- 						th:each=" pageNumber : ${pageNumbers}"> -->
+<!-- 					<a th:href="@{/profile(page=${pageNumber}, email=${email})}" th:text="${pageNumber}" class="nav-link" -->
+<!-- 					th:classappend="${pageNumber==tasks.number + 1}?'active':''" ></a> -->
+<!-- 					</li> -->
+<!-- 				</ul> -->
 				
-				<nav aria-label="Pagination" th:if="${tasks.totalPages gt 0}">
-				    <ul class="pagination justify-content-center font-weight-bold">
-				        <li class="page-item" th:classappend="${tasks.number eq 0} ? 'disabled'">
-				            <a class="page-link"
-				               th:href="@{/profile?page={pageNumber}&email={email} (pageNumber=${tasks.number lt 2 ? 1 : tasks.number}, email=${email})}"
-				               aria-label="Previous" title="Previous Page" data-toggle="tooltip">
-				                <span aria-hidden="true">&laquo;</span>
-				            </a>
-				        </li>
-				        <li class="page-item" th:classappend="${i eq tasks.number + 1} ? 'active'"
-				            th:each="i : ${#numbers.sequence( 1, tasks.totalPages, 1)}">
-				            <a class="page-link" th:href="@{/profile?page={pageNumber}&email={email}(pageNumber=${i}, email=${email})}" th:text="${i}"
-				               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
-				        </li>
-				        <li class="page-item" th:classappend="${tasks.number + 1 eq tasks.totalPages} ? 'disabled'">
-				            <a class="page-link"
-				               th:href="@{/profile?page={pageNumber}&email={email}(pageNumber=${tasks.number + 2}, email=${email}) }"
-				               aria-label="Next" title="Next Page" data-toggle="tooltip">
-				                <span aria-hidden="true">&raquo;</span>
-				            </a>
-				        </li>
-				    </ul>
-				</nav>
+<!-- 				<nav aria-label="Pagination" th:if="${tasks.totalPages gt 0}"> -->
+<!-- 				    <ul class="pagination justify-content-center font-weight-bold"> -->
+<!-- 				        <li class="page-item" th:classappend="${tasks.number eq 0} ? 'disabled'"> -->
+<!-- 				            <a class="page-link" -->
+<!-- 				               th:href="@{/profile?page={pageNumber}&email={email} (pageNumber=${tasks.number lt 2 ? 1 : tasks.number}, email=${email})}" -->
+<!-- 				               aria-label="Previous" title="Previous Page" data-toggle="tooltip"> -->
+<!-- 				                <span aria-hidden="true">&laquo;</span> -->
+<!-- 				            </a> -->
+<!-- 				        </li> -->
+<!-- 				        <li class="page-item" th:classappend="${i eq tasks.number + 1} ? 'active'" -->
+<!-- 				            th:each="i : ${#numbers.sequence( 1, tasks.totalPages, 1)}"> -->
+<!-- 				            <a class="page-link" th:href="@{/profile?page={pageNumber}&email={email}(pageNumber=${i}, email=${email})}" th:text="${i}" -->
+<!-- 				               th:title="${'Page '+ i}" data-toggle="tooltip"></a> -->
+<!-- 				        </li> -->
+<!-- 				        <li class="page-item" th:classappend="${tasks.number + 1 eq tasks.totalPages} ? 'disabled'"> -->
+<!-- 				            <a class="page-link" -->
+<!-- 				               th:href="@{/profile?page={pageNumber}&email={email}(pageNumber=${tasks.number + 2}, email=${email}) }" -->
+<!-- 				               aria-label="Next" title="Next Page" data-toggle="tooltip"> -->
+<!-- 				                <span aria-hidden="true">&raquo;</span> -->
+<!-- 				            </a> -->
+<!-- 				        </li> -->
+<!-- 				    </ul> -->
+<!-- 				</nav> -->
 				
 				<div class="row">
 				    <div class="col-sm-6">
-				    	<div sd:pagination-summary="">info</div>
+				    	<div sd:pagination-summary="compact" ></div>
 				    </div>
 				    <div class="col-sm-6">
 				    <nav class="pull-right">
 						<ul class="pagination" sd:pagination-split="3" sd:pagination="full">
-							<!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+<!-- 							Pagination created by SpringDataDialect, this content is just for mockup -->
 							<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
 						   	<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
 						</ul>
 					</nav>
-<!-- 					Show <span sd:page-size-selector="javascript"></span> entries -->							
+
 				    </div>
 				</div>
-				<div>
-				    <span sd:pagination-summary="compact">info</span>
-				    <div class="btn-group pager-compact" sd:pagination="compact-pager">
-				        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
-				        <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-chevron-left"></span></a>
-				        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></a>
-				    </div>
-				</div>
+<!-- 				 <div class="row"> -->
+<!-- 					<div class="col-sm-5"> -->
+<!-- 	                    <div class="pagination"><p>Wyœwitlono<span class="badge" -->
+<!-- 	                                                               th:text="${pageWrapp.size * (pageWrapp.number-1) + 1}"></span> z  -->
+<!-- 	                            <span class="badge" th:text="${pageWrapp.lastPage ? pageWrapp.totalElements : pageWrapp.size * (pageWrapp.number-1)+ pageWrapp.size}"></span> de  -->
+<!-- 	                            <span class="badge" -->
+<!-- 	                                  th:text="${pageWrapp.totalElements}"></span> -->
+<!-- 	                            <p>centros</p></div> -->
+<!-- 	                </div> -->
+                
+<!--                     <div class="col-sm-7"> -->
+<!--                     Pagination Bar -->
+<!--                     <div th:fragment='paginationbar'> -->
+<!--                         <div class="text-center"> -->
+<!--                             <ul class='pagination pagination-centered'> -->
+<!--                                 <li th:class="${pageWrapp.firstPage}?'disabled':''"> -->
+<!--                                     <span th:if='${pageWrapp.firstPage}'>- First</span> -->
+<!--                                     <a th:if='${not pageWrapp.firstPage}' th:href='@{${pageWrapp.url}(pageWrapp=0,size=${pageWrapp.size})}'>- -->
+<!--                                         First</a> -->
+<!--                                 </li> -->
+<!--                                 <li th:class="${pageWrapp.hasPreviousPage}? '' : 'disabled'"> -->
+<!--                                     <span th:if='${not pageWrapp.hasPreviousPage}'>«</span> -->
+<!--                                     <a th:if='${pageWrapp.hasPreviousPage}' -->
+<!--                                        th:href='@{${pageWrapp.url}(pageWrapp=${pageWrapp.number-2},size=${pageWrapp.size})}' -->
+<!--                                        title='Go to previous page'>«</a> -->
+<!--                                 </li> -->
+<!--                                 <li th:each='item : ${pageWrapp.items}' th:class="${item.current}? 'active' : ''"> -->
+<!--                                     <span th:if='${item.current}' th:text='${item.number}'>1</span> -->
+<!--                                     <a th:if='${not item.current}' -->
+<!--                                        th:href='@{${pageWrapp.url}(pageWrapp=${item.number-1},size=${pageWrapp.size})}'><span -->
+<!--                                             th:text='${item.number}'>1</span></a> -->
+<!--                                 </li> -->
+<!--                                 <li th:class="${pageWrapp.hasNextPage}? '' : 'disabled'"> -->
+<!--                                     <span th:if='${not pageWrapp.hasNextPage}'>»</span> -->
+<!--                                     <a th:if='${pageWrapp.hasNextPage}' -->
+<!--                                        th:href='@{${pageWrapp.url}(pageWrapp=${pageWrapp.number},size=${pageWrapp.size})}' -->
+<!--                                        title='Go to next page'>»</a> -->
+<!--                                 </li> -->
+<!--                                 <li th:class="${pageWrapp.lastPage}? 'disabled' : ''"> -->
+<!--                                     <span th:if='${pageWrapp.lastPage}'>Last -</span> -->
+<!--                                     <a th:if='${not pageWrapp.lastPage}' -->
+<!--                                        th:href='@{${pageWrapp.url}(pageWrapp=${pageWrapp.totalPages - 1},size=${pageWrapp.size})}'>Last -</a> -->
+<!--                                 </li> -->
+<!--                             </ul> -->
+<!--                         </div> -->
+<!--                     </div> -->
+<!--                   </div> -->
+                
+                
+                
+<!--                 </div>			 -->
+<!-- 				<div> -->
+<!-- 				    <span sd:pagination-summary="compact" th:text="#{label.profile.edit}">info</span> -->
+<!-- 				    <div class="btn-group pager-compact" sd:pagination="compact-pager" > -->
+<!-- 				        Pagination created by SpringDataDialect, this content is just for mockup -->
+<!-- 				        <a href="#" class="btn btn-default disabled"><span class="glyphicon glyphicon-chevron-left"></span></a> -->
+<!-- 				        <a href="#" class="btn btn-default"><span class="glyphicon glyphicon-chevron-right"></span></a> -->
+<!-- 				    </div> -->
+<!-- 				</div> -->
 				
 				
 				
