@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,13 +17,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.SortDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.resource.HttpResource;
 
 import com.skoneczny.entites.Task;
 import com.skoneczny.entites.User;
@@ -43,18 +42,23 @@ public class profileController {
 			@RequestParam(defaultValue="") String email,
 			@RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size,
-			@RequestParam("sort") Optional<String> sort,
+//			@RequestParam("sort") Optional<String> sort,
 			Principal principal,
 			HttpSession session,
-			HttpServletRequest request
+			HttpServletRequest request,
+			@SortDefault("startDate") Pageable pageable
 			) {		
+		
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
 				session.removeAttribute("currentPage");
 			}
-		} 
+		}
+		Sort sort = pageable.getSort();			
+//		int p = pageable.getPageNumber();
+//		Integer page = new Integer(p);
 		int clikedPage;
-		int currentPage = /*pageable.getPageNumber();*/ page.orElse(0/*1*/);		
+		int currentPage =  /*pageable.getPageNumber();*/ page.orElse(0/*1*/);		
 		if(session.getAttribute("currentPage") != null) {
 			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute("currentPage") ;
 			currentPage = clikedPage;
@@ -63,7 +67,7 @@ public class profileController {
 			clikedPage = currentPage;
 		}	
         int pageSize = /*pageable.getPageSize();*/ size.orElse(5);
-        String sortParam = sort.orElse("startDate");
+//        String sortParam = sort.orElse("startDate");
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
 		User user = userService.findOne(email);
@@ -71,9 +75,10 @@ public class profileController {
 		model.addAttribute("years", taskService.getAllYeas(user));
 		model.addAttribute("email",user.getEmail());
 		model.addAttribute("allYear", allYear);					
-		
-		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year);
-		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, Sort.by(sortParam)),findUserTasksYear);	
+		Pageable pageable2 = PageRequest.of(currentPage /*-1*/ , pageSize, sort/*Sort.by(sortParam)*/);
+		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year,pageable);
+		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(pageable,findUserTasksYear);
+
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
 		model.addAttribute("tasks", listPaged);
 //		model.addAttribute("pageWrapp", pageWrapp);
