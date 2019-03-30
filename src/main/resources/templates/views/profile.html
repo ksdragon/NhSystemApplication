@@ -39,7 +39,7 @@ function selectYear(str) {
 		   xhttp = new ActiveXObject("Microsoft.XMLHTTP");
 		}
 	  
-		//w³aœciwoœc któr¹ posiada obiekt xhttp 
+		//wï¿½aï¿½ciwoï¿½c ktï¿½rï¿½ posiada obiekt xhttp 
 	  xhttp.onreadystatechange = function() {
 	    if (this.readyState == 4 && this.status == 200) {
 	      document.getElementById("table").innerHTML =
@@ -88,7 +88,7 @@ function selectYear(str) {
 					<br>
 					<label class="form-control-label" for="selectedYear" th:text="#{label.profile.ListYears}">Select Year</label>
 					<select class="form-control" id="selectedYear" name="selectedYear" onchange="selectYear(this.value)">
-						<option th:value="${allYear}" th:text="#{label.option.profile.ListYears}">Select Date</option>
+						<option value="All" th:text="#{label.option.profile.ListYears}">Select Date</option>
 						<option th:each="year : ${years}" 
 							th:value="${year}" 
 							th:text="${year}"							
@@ -106,8 +106,8 @@ function selectYear(str) {
 						<tr>
 							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate">Start Date</a></th>
 							<th><a th:text="#{label.profile.duration}" class="sorted" sd:pagination-sort="duration">Duration</a></th>
-							<th th:text="#{label.profile.stopDate}">Stop Date</th>							
-							<th th:text="#{label.profile.tasksCategory}">Category</th>
+							<th><a  th:text="#{label.profile.stopDate}" class="sorted" sd:pagination-sort="stopDate">Stop Date</a></th>
+							<th><a  th:text="#{label.profile.tasksCategory}" class="sorted" sd:pagination-sort="categoryTasks">Category</a></th>						
 							<th th:text="#{label.profile.approved}">Approved</th>
 							<th th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:text="#{label.profile.activate}">Activate</th>
 							<th th:text="#{label.profile.edit}">Edit</th>
@@ -178,8 +178,13 @@ function selectYear(str) {
 				
 				<div class="row">
 				    <div class="col-sm-6">
-				    	<div sd:pagination-summary="compact" ></div>
-				    </div>
+	                    <div class="pagination"><p>Pokazano<span class="badge"
+	                                                               th:text="${tasks.size * tasks.number + 1}"></span> do
+	                            <span class="badge" th:text="${tasks.last ? tasks.totalElements : tasks.size * tasks.number + tasks.size}"></span> z 
+	                            <span class="badge"
+	                                  th:text="${tasks.totalElements}"></span>
+	                            <p>wpisÃ³w</p></div>
+	                </div>				    
 				    <div class="col-sm-6">
 				    <nav class="pull-right">
 						<ul class="pagination" sd:pagination-split="3" sd:pagination="full">
@@ -193,7 +198,7 @@ function selectYear(str) {
 				</div>
 <!-- 				 <div class="row"> -->
 <!-- 					<div class="col-sm-5"> -->
-<!-- 	                    <div class="pagination"><p>Wyœwitlono<span class="badge" -->
+<!-- 	                    <div class="pagination"><p>Wyï¿½witlono<span class="badge" -->
 <!-- 	                                                               th:text="${pageWrapp.size * (pageWrapp.number-1) + 1}"></span> z  -->
 <!-- 	                            <span class="badge" th:text="${pageWrapp.lastPage ? pageWrapp.totalElements : pageWrapp.size * (pageWrapp.number-1)+ pageWrapp.size}"></span> de  -->
 <!-- 	                            <span class="badge" -->
@@ -212,10 +217,10 @@ function selectYear(str) {
 <!--                                         First</a> -->
 <!--                                 </li> -->
 <!--                                 <li th:class="${pageWrapp.hasPreviousPage}? '' : 'disabled'"> -->
-<!--                                     <span th:if='${not pageWrapp.hasPreviousPage}'>«</span> -->
+<!--                                     <span th:if='${not pageWrapp.hasPreviousPage}'>ï¿½</span> -->
 <!--                                     <a th:if='${pageWrapp.hasPreviousPage}' -->
 <!--                                        th:href='@{${pageWrapp.url}(pageWrapp=${pageWrapp.number-2},size=${pageWrapp.size})}' -->
-<!--                                        title='Go to previous page'>«</a> -->
+<!--                                        title='Go to previous page'>ï¿½</a> -->
 <!--                                 </li> -->
 <!--                                 <li th:each='item : ${pageWrapp.items}' th:class="${item.current}? 'active' : ''"> -->
 <!--                                     <span th:if='${item.current}' th:text='${item.number}'>1</span> -->
@@ -224,10 +229,10 @@ function selectYear(str) {
 <!--                                             th:text='${item.number}'>1</span></a> -->
 <!--                                 </li> -->
 <!--                                 <li th:class="${pageWrapp.hasNextPage}? '' : 'disabled'"> -->
-<!--                                     <span th:if='${not pageWrapp.hasNextPage}'>»</span> -->
+<!--                                     <span th:if='${not pageWrapp.hasNextPage}'>ï¿½</span> -->
 <!--                                     <a th:if='${pageWrapp.hasNextPage}' -->
 <!--                                        th:href='@{${pageWrapp.url}(pageWrapp=${pageWrapp.number},size=${pageWrapp.size})}' -->
-<!--                                        title='Go to next page'>»</a> -->
+<!--                                        title='Go to next page'>ï¿½</a> -->
 <!--                                 </li> -->
 <!--                                 <li th:class="${pageWrapp.lastPage}? 'disabled' : ''"> -->
 <!--                                     <span th:if='${pageWrapp.lastPage}'>Last -</span> -->
