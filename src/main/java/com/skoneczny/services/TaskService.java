@@ -96,21 +96,23 @@ public class TaskService implements ITaskService{
 		}
 	}
 	
+
 	public List<Task> findUserTasksYear(User user, String year,Sort sort) {		
 		if(!year.equals("All")) {
 		return taskRepository.findByUser(user,sort)
+
 				.stream()
 				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
 				.collect(Collectors.toList());
 		}else {
-			return taskRepository.findByUser(user)
+			return taskRepository.findByUser(user,sort)
 					.stream()					
 					.collect(Collectors.toList());
 		}
 	}
 	
 	
-	
+
 	@Override
 	public boolean checkTimeStopIsCorrect(@Valid Task task) {
 			if(task.getDuration().isEmpty()) return false;			
@@ -123,11 +125,11 @@ public class TaskService implements ITaskService{
 	}
   
     
-    public Page<?> findPaginated(Pageable pageable, List<?> listToPage) {
+    public <T> Page<T> findPaginated(Pageable pageable, List<T> listToPage) {
         int pageSize = pageable.getPageSize();
         int currentPage = pageable.getPageNumber();
         int startItem = currentPage * pageSize;
-        Sort sort = pageable.getSort();        
+        Sort sort = pageable.getSort();       
         List<?> list;
  
         if (listToPage.size() < startItem) {
@@ -137,9 +139,9 @@ public class TaskService implements ITaskService{
             list = listToPage.subList(startItem, toIndex);
         }
  
-        Page<?> taskPage
-          = new PageImpl<>(list, PageRequest.of(currentPage, pageSize, sort), listToPage.size());
- 
+        Page<T> taskPage = new PageImpl<>(listToPage, PageRequest.of(currentPage, pageSize, sort), listToPage.size());
+//        Page<?> taskPage = new PageImpl<>(list, pageable, listToPage.size());
+        
         return taskPage;
     }
     
