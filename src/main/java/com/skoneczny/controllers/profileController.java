@@ -46,7 +46,8 @@ public class profileController {
 			@RequestParam("sort") Optional<String> sort,
 			Principal principal,
 			HttpSession session,
-			HttpServletRequest request
+			HttpServletRequest request,
+			Pageable pageable
 			) {		
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
@@ -61,7 +62,11 @@ public class profileController {
 		}else
 		{
 			clikedPage = currentPage;
-		}	
+		}
+		Sort sortP = pageable.getSort();
+		//Sort s = new Sort.Order(Direction.ASC, sort.orElse("aa"));
+		
+		
         int pageSize = /*pageable.getPageSize();*/ size.orElse(5);
         String sortParam = sort.orElse("startDate");
         String year = Integer.toString(LocalDate.now().getYear());		
@@ -70,10 +75,10 @@ public class profileController {
 		String allYear = "All";
 		model.addAttribute("years", taskService.getAllYeas(user));
 		model.addAttribute("email",user.getEmail());
-		model.addAttribute("allYear", allYear);					
+		model.addAttribute("allYear", allYear);				
 		
-		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year);
-		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, Sort.by(sortParam)),findUserTasksYear);	
+		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year,sortP);
+		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
 		model.addAttribute("tasks", listPaged);
 //		model.addAttribute("pageWrapp", pageWrapp);

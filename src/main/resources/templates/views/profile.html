@@ -61,17 +61,16 @@ function selectYear(str) {
 /*]]>*/
 </script>
 <style>
-table.table thead .sorted:after{
-	display: inline-block;
-	font-family: 'FontAwesome';
-	opacity: 0.8;
-	margin-left: 1em;
+.sorted-desc::after, .sorted-asc::after {
+    float: right;
 }
-table.table thead .sorted.sorted-desc:after{
-	content: "\f15e";
+
+.sorted-desc::after{
+    content:"\25BC";
 }
-table.table thead .sorted.sorted-asc:after{
-	content: "\f15d";
+
+.sorted-asc::after{
+    content: "\25B2";
 }
 </style>
 

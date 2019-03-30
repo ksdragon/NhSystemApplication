@@ -96,6 +96,21 @@ public class TaskService implements ITaskService{
 		}
 	}
 	
+	public List<Task> findUserTasksYear(User user, String year,Sort sort) {		
+		if(!year.equals("All")) {
+		return taskRepository.findByUser(user,sort)
+				.stream()
+				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
+				.collect(Collectors.toList());
+		}else {
+			return taskRepository.findByUser(user)
+					.stream()					
+					.collect(Collectors.toList());
+		}
+	}
+	
+	
+	
 	@Override
 	public boolean checkTimeStopIsCorrect(@Valid Task task) {
 			if(task.getDuration().isEmpty()) return false;			
