@@ -99,7 +99,7 @@ public class profileController {
 			@RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size,
 			@RequestParam("sort") Optional<String> sort,
-//			@RequestParam("selectedYear") Optional<String> selectedYear,
+			@RequestParam("selectedYear") Optional<String> selectedYear,
 			Principal principal,
 			HttpSession session,
 			HttpServletRequest request,
@@ -128,12 +128,12 @@ public class profileController {
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
 		User user = userService.findOne(email);
-		String allYear = "All";
+		//String allYear = "All";
 		model.addAttribute("years", taskService.getAllYeas(user));
 		model.addAttribute("email",user.getEmail());
-		model.addAttribute("allYear", allYear);				
+		//model.addAttribute("allYear", allYear);				
 		
-		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year,sortP);
+		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
 		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
 		model.addAttribute("tasks", listPaged);

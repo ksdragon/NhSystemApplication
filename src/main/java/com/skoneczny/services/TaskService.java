@@ -130,7 +130,7 @@ public class TaskService implements ITaskService{
         Sort sort = pageable.getSort();        
         List<?> list;
  
-        if (listToPage.size() < startItem) {
+        if (listToPage.size() <= startItem) {
             list = Collections.emptyList();
         } else {
             int toIndex = Math.min(startItem + pageSize, listToPage.size());
