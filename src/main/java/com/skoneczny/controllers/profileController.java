@@ -96,6 +96,7 @@ public class profileController {
 	public String showProfilePageByYears(
 			Model model,
 			@RequestParam(defaultValue="") String email,
+			@RequestParam(defaultValue="profileTableData") String returnPage,
 			@RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size,
 			@RequestParam("sort") Optional<String> sort,
@@ -152,7 +153,7 @@ public class profileController {
 //        }
 //		
 		
-		return "views/profileTableData";
+		return "views/" + returnPage;
 	}
 	
 	

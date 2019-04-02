@@ -2,64 +2,16 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{fragments/main_layout}">
-<head>
-<title th:text="#{label.profile.title}">Profile Page</title>
-<script>
-// $(document).ready(function () {
-
-//     $("#selectedYear").change(function (event) {
-
-//         //stop submit the form, we will post it manually.
-//         event.preventDefault();
-
-//         selectYear();
-
-//     });
-
-// });
-function selectYear(str) {
-		
-		var xhttp; //deklaracja pustej zmienej
-// 		if(email == ""){
-// 		var email = /*[[${email}]]*/ 'default';
-// 		//var email = $('#email').val();
-// 		return;
-// 		}
-		if (str == "") {
-	    document.getElementById("table").innerHTML = "";
-	    return;
-	  	}
 	
-		//create object XMLHttpRequest
-		if (window.XMLHttpRequest) {
-		   // code for modern browsers
-		   xhttp = new XMLHttpRequest();
-		 } else {
-		   // code for old IE browsers
-		   xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-		}
-	  
-		//w�a�ciwo�c kt�r� posiada obiekt xhttp 
-	  xhttp.onreadystatechange = function() {
-	    if (this.readyState == 4 && this.status == 200) {
-	      document.getElementById("table").innerHTML =
-	      this.responseText;
-	    }
-	  };
-	  xhttp.open("GET", "/profileYear?selectedYear="+str+"&email=" + email , true);
-	  //xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	  xhttp.send(); 
-}
-
-</script>
+<head>
+<script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script>
+<title th:text="#{label.profile.title}">Profile Page</title>
 <script th:inline="javascript">
 /*<![CDATA[*/
-
-    var email = /*[[${email}]]*/ 'default';
-    console.log(email);
-
+		  var email = /*[[${email}]]*/ 'default';
 /*]]>*/
 </script>
+
 <style>
 .sorted-desc::after, .sorted-asc::after {
     float: right;
@@ -143,9 +95,10 @@ function selectYear(str) {
 
 				</table>
 				
-			</div>
+				</div>	
+				
 			<hr/>				
-				<div class="row">
+				<div id="pageData" class="row">
 				    <div class="col-sm-6">
 	                    <div class="pagination"><p>Pokazano<span class="badge"
 	                                                               th:text="${tasks.size * tasks.number + 1}"></span> do
@@ -156,18 +109,22 @@ function selectYear(str) {
 	                </div>				    
 				    <div class="col-sm-6">
 				    <nav class="pull-right">
-						<ul class="pagination" sd:pagination-split="3" sd:pagination="full">
-<!-- 							Pagination created by SpringDataDialect, this content is just for mockup -->
-							<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
-						   	<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+						<ul class="pagination" sd:pagination-split="3" sd:pagination="full" sd:pagination-url="@{/profileYear}">
+
+							<li class="disabled"><a href="#"  aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+						   	<li class="active"><a href="#"  >1 <span class=""></span></a></li>
 						</ul>
 					</nav>
 				    </div>
-				</div>				
-		</div>
+				</div>
+			
+		</div>				
+		
 	</div>	
 </body>
 </html>
+<!-- 							sd:pagination-url="@{/profileYear}" -->
+<!-- 						<nav class="pull-right" th:with="randomId=${#strings.randomAlphanumeric(10)}"> -->
 
 <!-- 				<ul th:if="${tasks.totalPages > 0}" class="nav nav-pills"> -->
 <!-- 					<li class="nav-item"  -->
