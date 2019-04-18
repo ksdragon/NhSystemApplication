@@ -9,7 +9,21 @@
     	  $("p").click(function(){
     	    alert("The paragraph was clicked.");
     	  });
+    	  
+    	  $( document ).ajaxComplete(function() {
+    	   	  $( ".log" ).text( "Triggered ajaxComplete handler." );
+    	   	});
+    	  
+    	  $( ".trigger" ).click(function() {
+    	   	  $( ".result" ).load( "profileYear" );
+    	   	});
     	});
+    
+     
+    
+     
+     
+     
      </script>
 </head>
 <body>
@@ -19,6 +33,14 @@
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Nostrum maiores autem vel doloribus consequuntur harum commodi eos tenetur vitae asperiores!</p>
           
           </div>
+          
+           <div>
+	          	<div class="trigger">Trigger</div>
+				<div class="result"></div>
+				<div class="log"></div>
+	          	<br/>
+     		</div>
+          
      
      <div class="container"><br/>
             <div class="alert alert-success">

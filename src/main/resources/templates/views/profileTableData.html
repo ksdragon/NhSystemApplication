@@ -4,6 +4,13 @@
 <head>
 <!-- <title th:text="#{label.profile.title}">ProfileTableData Page</title> -->
 <style>
+<script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+		  var email = /*[[${email}]]*/ 'default';
+/*]]>*/
+</script>
+
 .sorted-desc::after, .sorted-asc::after {
     float: right;
 }
@@ -21,12 +28,12 @@
 			
 			<div id="table">
 				<table class="table table-hover">
-					<thead>
+					<thead class="headTable">
 						<tr>
-							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate">Start Date</a></th>
-							<th><a th:text="#{label.profile.duration}" class="sorted" sd:pagination-sort="duration">Duration</a></th>
-							<th><a  th:text="#{label.profile.stopDate}" class="sorted" sd:pagination-sort="stopDate">Stop Date</a></th>
-							<th><a  th:text="#{label.profile.tasksCategory}" class="sorted" sd:pagination-sort="categoryTasks">Category</a></th>						
+							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate" sd:pagination-url="@{/profileYear}">Start Date</a></th>
+							<th><a th:text="#{label.profile.duration}" class="sorted" sd:pagination-sort="duration" sd:pagination-url="@{/profileYear}">Duration</a></th>
+							<th><a  th:text="#{label.profile.stopDate}" class="sorted" sd:pagination-sort="stopDate" sd:pagination-url="@{/profileYear}">Stop Date</a></th>
+							<th><a  th:text="#{label.profile.tasksCategory}" class="sorted" sd:pagination-sort="categoryTasks" sd:pagination-url="@{/profileYear}">Category</a></th>						
 							<th th:text="#{label.profile.approved}">Approved</th>
 							<th th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:text="#{label.profile.activate}">Activate</th>
 							<th th:text="#{label.profile.edit}">Edit</th>
