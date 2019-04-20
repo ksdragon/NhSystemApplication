@@ -70,7 +70,8 @@ function onSortingOrder() {
 				// "http://localhost:8090/profileYear?email=6John@mail.com&returnPage=profileTableData&sort=startDate,desc"
 				if (!_href.includes("email=")) {
 					var urlSortingOrder = _href + "&email=" + email
-							+ "&returnPage=profileTableData" + '&selectedYear=' + selectedYear;
+							+ "&returnPage=profileTableData" 
+							+ '&selectedYear=' + selectedYear;
 				} else {
 					var urlSortingOrder = _href + '&selectedYear=' + selectedYear;
 				}
@@ -92,15 +93,18 @@ function onPaginationChangeData() {
 						var _returnPagePageData = "pageData";
 						
 						var urlProfileTableData = _href + "&email=" + email
-								+ "&returnPage=profileTableData" + "&selectedYear=" + selectedYear + "&sort=" + sortParam ;
+								+ "&returnPage=profileTableData" + "&selectedYear=" 
+								+ selectedYear + "&sort=" + sortParam ;
 						var urlPageData = _href + "&email=" + email
-								+ "&returnPage=pageData" + "&selectedYear=" + selectedYear + "&sort=" + sortParam;
+								+ "&returnPage=pageData" + "&selectedYear=" 
+								+ selectedYear + "&sort=" + sortParam;
 						selectPage(urlProfileTableData, _selectorByIdTableData);
 						selectPage(urlPageData, _selectorByIdPageBehavior);
 					});
 
 }
 
+// retrieve param from url.
 function getUrlVars(str) {
 	var vars = {};
 	if (str != null) {

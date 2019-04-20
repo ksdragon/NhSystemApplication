@@ -3,7 +3,13 @@ package com.skoneczny.api;
 import java.util.List;
 import java.util.TreeSet;
 
+import javax.servlet.ServletContext;
 import javax.validation.Valid;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import com.skoneczny.entites.Task;
 import com.skoneczny.entites.User;
@@ -26,6 +32,12 @@ public interface ITaskService {
 
 	Task findTaskById(Long id);
 
-	void approvDeapprovTask(Long id);	
+	void approvDeapprovTask(Long id);
+
+	List<Task> findUserTasksYear(User user, String year, Sort sortP);	
+
+	boolean createPdf(List<Task> findUserTasksYear, ServletContext context);
+
+	Page<?> findPaginated(Pageable pageable, List<?> listToPage);	
 
 }

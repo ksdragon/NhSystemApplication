@@ -62,11 +62,11 @@
 			</div>
 
 			<div class="row">
-				<div class="form-group ">
+				<div class="form-group">
 					<input type="submit" value="Submit" class="btn btn-primary"
-						th:value="#{value.loginForm.submit}">
+						th:value="#{value.loginForm.submit}" >
 				</div>
-				<div class="form-group ">
+				<div class="form-group " style="margin-left: 10px;">
 					<a th:href="@{/resetPassword(email=${session.EMAIL})}"					
 						th:text="#{labelBt.loginForm.resetPassword}"
 						class="btn btn-primary">Reset password</a>

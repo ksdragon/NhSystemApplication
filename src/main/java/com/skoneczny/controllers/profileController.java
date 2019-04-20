@@ -1,12 +1,16 @@
 package com.skoneczny.controllers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.OutputStream;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.skoneczny.api.ITaskService;
 import com.skoneczny.entites.Task;
 import com.skoneczny.entites.User;
 import com.skoneczny.services.TaskService;
@@ -27,10 +32,9 @@ import com.skoneczny.services.UserService;
 @Controller
 public class profileController {
 
-	@Autowired
-	private TaskService taskService;
-	@Autowired
-	private UserService userService;
+	@Autowired	private ITaskService taskService;
+	@Autowired	private UserService userService;
+	@Autowired	private ServletContext context;	
 	
 	
 	@GetMapping("/profile")
@@ -156,6 +160,51 @@ public class profileController {
 		return "views/" + returnPage;
 	}
 	
+	
+	@GetMapping("/createPdf")
+	public void createPdf (
+			@RequestParam("selectedYear") Optional<String> selectedYear,
+			@RequestParam(defaultValue="") String email, 
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			Pageable pageable) {
+				Sort sortP = pageable.getSort();
+				User user = userService.findOne(email);
+				String year = Integer.toString(LocalDate.now().getYear());	
+				List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
+				boolean isFlag = taskService.createPdf(findUserTasksYear,context);
+				if(isFlag) {
+					String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".pdf");
+					filedownload(fullPath,response,"userTasks.pdf");
+				}
+	
+	}
+
+	private void filedownload(String fullPath, HttpServletResponse response, String fileName) {
+		File file = new File(fullPath);
+		final int BUFFER_SIZE = 4096;
+		if(file.exists()) {
+			try {
+				FileInputStream inputStream = new FileInputStream(file);
+				String mimeType = context.getMimeType(fullPath);
+				response.setContentType(mimeType);
+				response.setHeader("content-disposition", "attachment; filename="+fileName);
+				OutputStream outputStream = response.getOutputStream();
+				byte[] buffer = new byte[BUFFER_SIZE];
+				int bytesRead = -1;
+				while((bytesRead = inputStream.read(buffer))!= -1) {
+					outputStream.write(buffer,0,bytesRead);
+				}
+				inputStream.close();
+				outputStream.close();
+				file.delete();
+				
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+	}
 	
 	/*@PostMapping("/profile")
 	public String showProfilePageByYear(Model model,@RequestParam("selectedYear") String selectedYear, Principal principal) {
