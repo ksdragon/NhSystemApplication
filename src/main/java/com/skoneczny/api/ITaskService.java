@@ -34,10 +34,10 @@ public interface ITaskService {
 
 	void approvDeapprovTask(Long id);
 
-	List<Task> findUserTasksYear(User user, String year, Sort sortP);	
-
-	boolean createPdf(List<Task> findUserTasksYear, ServletContext context);
-
+	List<Task> findUserTasksYear(User user, String year, Sort sortP);
+	
 	Page<?> findPaginated(Pageable pageable, List<?> listToPage);	
+
+	boolean createPdf(List<Task> findUserTasksYear, ServletContext context, String year);	
 
 }

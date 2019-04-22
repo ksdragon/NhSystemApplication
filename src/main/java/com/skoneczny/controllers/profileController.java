@@ -84,14 +84,7 @@ public class profileController {
 		
 		session.setAttribute("currentPage", clikedPage  );
 		session.setAttribute("emailSession", email);
-		
-//		int totalPages = listPaged.getTotalPages();
-//        if (totalPages > 0) {
-//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-//                .boxed()
-//                .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
+
 		return "views/profile";
 	
 	}
@@ -142,29 +135,23 @@ public class profileController {
 		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
 		model.addAttribute("tasks", listPaged);
-//		model.addAttribute("pageWrapp", pageWrapp);
-			
+//		model.addAttribute("pageWrapp", pageWrapp);			
 		
 		session.setAttribute("currentPage", clikedPage  );
 		session.setAttribute("emailSession", email);
-				
-//		int totalPages = listPaged.getTotalPages();
-//        if (totalPages > 0) {
-//            List<Integer> pageNumbers = IntStream.rangeClosed(1, totalPages)
-//                .boxed()
-//                .collect(Collectors.toList());
-//            model.addAttribute("pageNumbers", pageNumbers);
-//        }
-//		
-		
 		return "views/" + returnPage;
 	}
 	
 	
 	@GetMapping("/createPdf")
 	public void createPdf (
+			@RequestParam(defaultValue="") String email,
+			@RequestParam(defaultValue="profileTableData") String returnPage,
+			@RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam("sort") Optional<String> sort,
 			@RequestParam("selectedYear") Optional<String> selectedYear,
-			@RequestParam(defaultValue="") String email, 
+			Principal principal,
 			HttpServletRequest request, 
 			HttpServletResponse response, 
 			Pageable pageable) {
@@ -172,7 +159,7 @@ public class profileController {
 				User user = userService.findOne(email);
 				String year = Integer.toString(LocalDate.now().getYear());	
 				List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
-				boolean isFlag = taskService.createPdf(findUserTasksYear,context);
+				boolean isFlag = taskService.createPdf(findUserTasksYear,context,selectedYear.orElse(year));
 				if(isFlag) {
 					String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".pdf");
 					filedownload(fullPath,response,"userTasks.pdf");
@@ -204,17 +191,5 @@ public class profileController {
 			}
 		}
 		
-	}
-	
-	/*@PostMapping("/profile")
-	public String showProfilePageByYear(Model model,@RequestParam("selectedYear") String selectedYear, Principal principal) {
-		String email = principal.getName();
-		User user = userService.findOne(email);
-		model.addAttribute("years", taskService.getAllYeas(user));
-		model.addAttribute("email",user.getEmail());
-		model.addAttribute("tasks", taskService.findUserTasksYear(user, selectedYear));
-		
-		return "views/profile";
-	}*/	
-	
+	}	
 }

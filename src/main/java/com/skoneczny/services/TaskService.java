@@ -13,7 +13,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TreeSet;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
 import javax.swing.text.TabExpander;
@@ -121,7 +124,7 @@ public class TaskService implements ITaskService{
 				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
 				.collect(Collectors.toList());
 		}else {
-			return taskRepository.findByUser(user)
+			return taskRepository.findByUser(user,sort)
 					.stream()					
 					.collect(Collectors.toList());
 		}
@@ -187,9 +190,9 @@ public class TaskService implements ITaskService{
 		taskRepository.save(task);
 	}	
 	@Override
-	public boolean createPdf(List<Task> findUserTasksYear, ServletContext context) {
-		Document document = new Document(PageSize.A4,15,15,45,30);
-		document.addLanguage(Locale.getDefault().toString());
+	public boolean createPdf(List<Task> findUserTasksYear, ServletContext context, String year) {
+		Document document = new Document(PageSize.A4,15,15,45,30);		
+		//final String FONT = "resources/fonts/AbhayaLibre-Regular.ttf";
 		try {
 			String filePath = context.getRealPath("/resources/reports");
 			File file = new File(filePath);
@@ -199,25 +202,57 @@ public class TaskService implements ITaskService{
 			}
 			PdfWriter writer = PdfWriter.getInstance(
 					document,
-					new FileOutputStream(file+"/"+"userTasks"+".pdf"));
-			writer.setLanguage(Locale.getDefault().toString());
+					new FileOutputStream(file+"/"+"userTasks"+".pdf"));			
 			document.open();
 			
-			Font mainFont = FontFactory.getFont("Arial",BaseFont.IDENTITY_H,10,0, BaseColor.BLACK);
-			Paragraph paragraph = new Paragraph("Lista zadań",mainFont);
-			paragraph.setAlignment(Element.ALIGN_CENTER);
-			paragraph.setIndentationLeft(50);
+			Font raportFont = FontFactory.getFont(BaseFont.COURIER, BaseFont.CP1257, 16, Font.BOLD,BaseColor.BLACK);
+			Paragraph parRaport = new Paragraph("Raport godzin bosmańskich" ,raportFont);
+			parRaport.setAlignment(Element.ALIGN_CENTER);
+			parRaport.setIndentationLeft(50);
+			parRaport.setIndentationRight(50);
+			parRaport.setSpacingAfter(10);
+			document.add(parRaport);			
+			
+			
+			Font mainFont = FontFactory.getFont(BaseFont.COURIER, BaseFont.CP1257, 12, Font.NORMAL ,BaseColor.RED);
+			Paragraph paragraph = new Paragraph("Lista zadań dla użytkownika: " 
+								+ findUserTasksYear.get(0).getUser().getEmail() ,mainFont);
+			paragraph.setAlignment(Element.ALIGN_LEFT);
+			paragraph.setIndentationLeft(20);
 			paragraph.setIndentationRight(50);
 			paragraph.setSpacingAfter(10);
 			document.add(paragraph);
+			
+			Font yearFont = FontFactory.getFont(BaseFont.COURIER, BaseFont.CP1257, 12, Font.NORMAL ,BaseColor.BLACK);
+			Paragraph parYear = new Paragraph("Raport z" 
+								+ ((year.equals("All")) ? " wszystkich lat." : ": " + year)
+								,yearFont);
+			parYear.setAlignment(Element.ALIGN_LEFT);
+			parYear.setIndentationLeft(20);
+			parYear.setIndentationRight(50);
+			parYear.setSpacingAfter(10);
+			document.add(parYear);
+			
+			long sumHours = findUserTasksYear.stream().map(x -> new Long(getMinutesInLong(x.getDuration()))).mapToLong(Long::longValue).sum();
+			long h = Math.round(sumHours/60);
+			long m = Math.round((((double)sumHours/60) - Math.round(sumHours/60))*100);
+			Font sumHoursFont = FontFactory.getFont(BaseFont.COURIER, BaseFont.CP1257, 12, Font.NORMAL ,BaseColor.BLACK);
+			Paragraph parSumHours = new Paragraph("Przepracowano: " + h + " godzin i " + m + " minut"
+																
+								,sumHoursFont);
+			parSumHours.setAlignment(Element.ALIGN_LEFT);
+			parSumHours.setIndentationLeft(20);
+			parSumHours.setIndentationRight(50);
+			parSumHours.setSpacingAfter(10);
+			document.add(parSumHours);
 			
 			PdfPTable table = new PdfPTable(4);
 			table.setWidthPercentage(100);
 			table.setSpacingBefore(10f);
 			table.setSpacingAfter(10);
 			
-			Font tableHeader = FontFactory.getFont("Arial",10,BaseColor.BLACK);
-			Font tableBody = FontFactory.getFont("Arial",9,BaseColor.BLACK);
+			Font tableHeader = FontFactory.getFont(BaseFont.TIMES_ROMAN,BaseFont.CP1257,10,Font.NORMAL,BaseColor.BLACK);
+			Font tableBody = FontFactory.getFont(BaseFont.TIMES_ROMAN,BaseFont.CP1257,9,Font.NORMAL,BaseColor.BLACK);
 			
 			float[] columnWidths = {2f,2f,2f,2f};
 			table.setWidths(columnWidths);
@@ -252,7 +287,7 @@ public class TaskService implements ITaskService{
 			cStopDate.setExtraParagraphSpace(5f);
 			table.addCell(cStopDate);
 			
-			String sCategoryTask = messageSource.getMessage("label.tasks.stopDate", null, Locale.getDefault());
+			String sCategoryTask = messageSource.getMessage("label.tasks.categoryTask", null, Locale.getDefault());
 			PdfPCell cCategoryTask = new PdfPCell(new Paragraph(sCategoryTask, tableHeader));
 			cCategoryTask.setBorderColor(BaseColor.BLACK);
 			cCategoryTask.setPaddingLeft(10);
@@ -267,8 +302,7 @@ public class TaskService implements ITaskService{
 				cStartDateValue.setBorderColor(BaseColor.BLACK);
 				cStartDateValue.setPaddingLeft(10);
 				cStartDateValue.setHorizontalAlignment(Element.ALIGN_CENTER);
-				cStartDateValue.setVerticalAlignment(Element.ALIGN_CENTER);
-				cStartDateValue.setBackgroundColor(BaseColor.GRAY);
+				cStartDateValue.setVerticalAlignment(Element.ALIGN_CENTER);				
 				cStartDateValue.setExtraParagraphSpace(5f);
 				table.addCell(cStartDateValue);
 								
@@ -276,8 +310,7 @@ public class TaskService implements ITaskService{
 				cDurationValue.setBorderColor(BaseColor.BLACK);
 				cDurationValue.setPaddingLeft(10);
 				cDurationValue.setHorizontalAlignment(Element.ALIGN_CENTER);
-				cDurationValue.setVerticalAlignment(Element.ALIGN_CENTER);
-				cDurationValue.setBackgroundColor(BaseColor.GRAY);
+				cDurationValue.setVerticalAlignment(Element.ALIGN_CENTER);				
 				cDurationValue.setExtraParagraphSpace(5f);
 				table.addCell(cDurationValue);
 								
@@ -285,8 +318,7 @@ public class TaskService implements ITaskService{
 				cStopDateValue.setBorderColor(BaseColor.BLACK);
 				cStopDateValue.setPaddingLeft(10);
 				cStopDateValue.setHorizontalAlignment(Element.ALIGN_CENTER);
-				cStopDateValue.setVerticalAlignment(Element.ALIGN_CENTER);
-				cStopDateValue.setBackgroundColor(BaseColor.GRAY);
+				cStopDateValue.setVerticalAlignment(Element.ALIGN_CENTER);				
 				cStopDateValue.setExtraParagraphSpace(5f);
 				table.addCell(cStopDateValue);
 								
@@ -294,8 +326,7 @@ public class TaskService implements ITaskService{
 				cCategoryTaskValue.setBorderColor(BaseColor.BLACK);
 				cCategoryTaskValue.setPaddingLeft(10);
 				cCategoryTaskValue.setHorizontalAlignment(Element.ALIGN_CENTER);
-				cCategoryTaskValue.setVerticalAlignment(Element.ALIGN_CENTER);
-				cCategoryTaskValue.setBackgroundColor(BaseColor.GRAY);
+				cCategoryTaskValue.setVerticalAlignment(Element.ALIGN_CENTER);				
 				cCategoryTaskValue.setExtraParagraphSpace(5f);
 				table.addCell(cCategoryTaskValue);				
 			}
@@ -308,5 +339,9 @@ public class TaskService implements ITaskService{
 		}catch (Exception e) {
 			return false;
 		}				
+	}
+	private Long getMinutesInLong(String duration) {
+		LocalTime durationTime = LocalTime.parse(duration);	
+		return new Long(durationTime.get(ChronoField.MINUTE_OF_DAY));		
 	}
 }

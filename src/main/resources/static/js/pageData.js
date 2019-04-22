@@ -43,8 +43,10 @@ $(function() {
 	//alert(selectedYear);
 	onSortingOrder()
 	onPaginationChangeData();
+	onClickPdfDownloadRaportTasksUser();
 
 });
+
 function seleYear(year){
 	var urlSelectedYear = "/profileYear?selectedYear=" + year + "&email=" + email
 						+ "&returnPage=profileTableData" + "&sort=" + sortParam;
@@ -57,6 +59,25 @@ function seleYear(year){
 
 function selectPage1(obiekt) {
 	console.log(obiekt.href);
+}
+
+//function onClickPdfDownloadRaportTasksUser1(){	
+//			event.preventDefault()
+//			var urlcreatePdf = "/createPdf?selectedYear=" + year + "&email=" + email
+//			 + "&sort=" + sortParam;
+//			window.location.href = urlcreatePdf;
+//			};
+//}
+//
+
+function onClickPdfDownloadRaportTasksUser(){
+	$("#pdfRaportTasksUser").on(
+			"click",
+			function(event) {
+			event.preventDefault()
+			var urlcreatePdf = "/createPdf?selectedYear=" + selectedYear + "&email=" + email + "&sort=" + sortParam;
+			window.location.href = urlcreatePdf;
+			});
 }
 
 function onSortingOrder() {
