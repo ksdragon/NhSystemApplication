@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,11 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +36,7 @@ import com.skoneczny.services.UserService;
 @Controller
 public class profileController {
 
+	private final Logger logger = Logger.getLogger(profileController.class);
 	@Autowired	private ITaskService taskService;
 	@Autowired	private UserService userService;
 	@Autowired	private ServletContext context;	
@@ -166,7 +171,46 @@ public class profileController {
 				}
 	
 	}
-
+	
+	@GetMapping("/createExcel")
+	public void createExcel (
+			@RequestParam(defaultValue="") String email,
+			@RequestParam(defaultValue="profileTableData") String returnPage,
+			@RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam("sort") Optional<String> sort,
+			@RequestParam("selectedYear") Optional<String> selectedYear,
+			Principal principal,
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			Pageable pageable) {
+		Sort sortP = pageable.getSort();
+		User user = userService.findOne(email);
+		String year = Integer.toString(LocalDate.now().getYear());	
+		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
+		boolean isFlag = taskService.createExcel(findUserTasksYear,context,selectedYear.orElse(year));
+		if(isFlag) {
+			String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".xls");
+			filedownload(fullPath,response,"userTasks.xls");
+		}
+				
+	}
+	
+	@GetMapping("/createExcelAllUsersTasks")
+	public void createExcelAll(
+			@RequestParam Optional<List<User>> users,
+			@RequestParam("selectedYear") Optional<String> selectedYear,
+			HttpServletRequest request, 
+			HttpServletResponse response			
+			) {
+			logger.info("createExcelAllUsersTasks");
+			Sort sortP = new Sort(Direction.ASC,"startDate");
+			List<User> usersList = new ArrayList<User>(users.orElse(userService.findAll()));
+			String year = Integer.toString(LocalDate.now().getYear());
+						
+			
+	}
+	
 	private void filedownload(String fullPath, HttpServletResponse response, String fileName) {
 		File file = new File(fullPath);
 		final int BUFFER_SIZE = 4096;

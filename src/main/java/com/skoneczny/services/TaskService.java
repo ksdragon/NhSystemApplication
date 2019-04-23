@@ -1,7 +1,9 @@
 package com.skoneczny.services;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
@@ -22,6 +24,15 @@ import javax.servlet.ServletContext;
 import javax.swing.text.TabExpander;
 import javax.validation.Valid;
 
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
+import org.apache.poi.sl.usermodel.PaintStyle.SolidPaint;
+import org.apache.poi.ss.usermodel.FillPatternType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -29,6 +40,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.BaseColor;
@@ -343,5 +355,80 @@ public class TaskService implements ITaskService{
 	private Long getMinutesInLong(String duration) {
 		LocalTime durationTime = LocalTime.parse(duration);	
 		return new Long(durationTime.get(ChronoField.MINUTE_OF_DAY));		
+	}
+	@Override
+	public boolean createExcel(List<Task> findUserTasksYear, ServletContext context, String orElse) {
+		
+		try {
+			String filePath = context.getRealPath("/resources/reports");
+			File file = new File(filePath);
+			boolean exists = new File(filePath).exists();
+			if(!exists) {
+				new File(filePath).mkdirs();				
+				}
+			FileOutputStream outputStream = new FileOutputStream(file+"/"+"userTasks"+".xls");
+			HSSFWorkbook workbook = new HSSFWorkbook();
+			HSSFSheet workSheet = workbook.createSheet(findUserTasksYear.get(0).getUser().getEmail());
+			workSheet.setDefaultColumnWidth(30);
+			
+			HSSFCellStyle headerCellStyle = workbook.createCellStyle();
+			headerCellStyle.setFillForegroundColor(HSSFColorPredefined.BLUE.getIndex());
+			headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+			
+			HSSFRow headerRow = workSheet.createRow(0);
+			
+			String sStartDate = messageSource.getMessage("label.tasks.startDate", null, Locale.getDefault());
+			HSSFCell startDate = headerRow.createCell(0);
+			startDate.setCellValue(sStartDate);
+			startDate.setCellStyle(headerCellStyle);
+			
+			String sDuration = messageSource.getMessage("label.tasks.duration", null, Locale.getDefault());
+			HSSFCell duration = headerRow.createCell(1);
+			duration.setCellValue(sDuration);
+			duration.setCellStyle(headerCellStyle);
+			
+			String sStopDate = messageSource.getMessage("label.tasks.stopDate", null, Locale.getDefault());
+			HSSFCell stopDate = headerRow.createCell(2);
+			stopDate.setCellValue(sStopDate);
+			stopDate.setCellStyle(headerCellStyle);
+			
+			String sCategoryTask = messageSource.getMessage("label.tasks.categoryTask", null, Locale.getDefault());
+			HSSFCell categoryTask = headerRow.createCell(3);
+			categoryTask.setCellValue(sCategoryTask);
+			categoryTask.setCellStyle(headerCellStyle);
+			
+			int i =1;
+			for (Task task : findUserTasksYear) {	
+				HSSFRow bodyRow = workSheet.createRow(i);
+				
+				HSSFCellStyle bodyCellStyle = workbook.createCellStyle();
+				bodyCellStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex());				
+				
+				HSSFCell startDateValue = bodyRow.createCell(0);
+				startDateValue.setCellValue(task.getStartDate());
+				startDateValue.setCellStyle(bodyCellStyle);
+				
+				HSSFCell durationValue = bodyRow.createCell(1);				
+				durationValue.setCellValue(task.getDuration());
+				durationValue.setCellStyle(bodyCellStyle);
+				
+				HSSFCell stopDateValue = bodyRow.createCell(2);
+				stopDateValue.setCellValue(task.getStopDate());
+				stopDateValue.setCellStyle(bodyCellStyle);
+				
+				HSSFCell categoryTaskValue = bodyRow.createCell(3);
+				categoryTaskValue.setCellValue(task.getCategoryTasks().getName());
+				categoryTaskValue.setCellStyle(bodyCellStyle);
+				i++;				
+			}
+			
+			workbook.write(outputStream);
+			outputStream.flush();
+			outputStream.close();
+			return true;
+			
+		}catch (Exception e) {
+				return false;
+			}	
 	}
 }

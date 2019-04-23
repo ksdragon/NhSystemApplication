@@ -38,6 +38,8 @@ public interface ITaskService {
 	
 	Page<?> findPaginated(Pageable pageable, List<?> listToPage);	
 
-	boolean createPdf(List<Task> findUserTasksYear, ServletContext context, String year);	
+	boolean createPdf(List<Task> findUserTasksYear, ServletContext context, String year);
+
+	boolean createExcel(List<Task> findUserTasksYear, ServletContext context, String orElse);	
 
 }
