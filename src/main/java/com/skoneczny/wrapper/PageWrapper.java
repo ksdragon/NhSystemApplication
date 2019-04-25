@@ -1,4 +1,4 @@
-package com.skoneczny.controllers;
+package com.skoneczny.wrapper;
 
 import java.util.ArrayList;
 import java.util.List;

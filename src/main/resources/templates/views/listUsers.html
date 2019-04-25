@@ -8,16 +8,23 @@
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
-		<form action="/users" class="form-inline">
-			<div class="form-group mb-2">
-			<input type="text" class="form-control" name="name" placeholder="Search User"/>
-			<input type="submit" value="Search" class="btn btn-primary"/>
+		<div class="form-group mb-2">
+			<div class="row">
+				<form action="/users" class="form-inline">
+					<div class="form-group mb-2">
+					<input type="text" class="form-control" name="name" placeholder="Search User"/>
+					<input type="submit" value="Search" class="btn btn-primary"/>
+					</div>
+				</form>
+<!-- 				(users=${users}) -->
+				<a th:href="@{/createExcelAllUsersTasks}" 
+						style="float:right"><img th:src="@{/images/excel.png}" style="width:40px;margin-left: 10px;"></a>
 			</div>
-		</form>
+		</div>
 		<div class="card">
-			<div sec:authorize="hasRole('ROLE_ADMIN')">
-			   <a th:href="@{/admin/switchUser}">Switch User</a>
-			</div>
+<!-- 			<div sec:authorize="hasRole('ROLE_ADMIN')"> -->
+<!-- 			   <a th:href="@{/admin/switchUser}">Switch User</a> -->
+<!-- 			</div> -->
 			<div class="card card-body">
 				<table class="table table-hover">
 					<thead>

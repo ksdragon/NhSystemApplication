@@ -1,27 +1,18 @@
 package com.skoneczny.services;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.sql.Time;
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAmount;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.TreeSet;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
-import java.util.stream.Stream;
 
 import javax.servlet.ServletContext;
-import javax.swing.text.TabExpander;
 import javax.validation.Valid;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -29,9 +20,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
-import org.apache.poi.sl.usermodel.PaintStyle.SolidPaint;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -40,7 +29,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 import com.itextpdf.text.BaseColor;
@@ -58,6 +46,7 @@ import com.skoneczny.api.ITaskService;
 import com.skoneczny.entites.Task;
 import com.skoneczny.entites.User;
 import com.skoneczny.repositories.TaskRepository;
+import com.skoneczny.wrapper.TimeInLongValue;
 
 
 
@@ -149,9 +138,9 @@ public class TaskService implements ITaskService{
 			if(task.getDuration().isEmpty()) return false;			
 			LocalTime startTime = LocalTime.parse(task.getStartTime());
 			LocalTime durationTime = LocalTime.parse(task.getDuration());
-			long startTimeInMinuts = new Long(startTime.get(ChronoField.MINUTE_OF_DAY));			
+			long startTimeInMinutes = new Long(startTime.get(ChronoField.MINUTE_OF_DAY));			
 			long minuteDuration = new Long(durationTime.get(ChronoField.MINUTE_OF_DAY));
-			if(startTimeInMinuts + minuteDuration > 1440) return false; 
+			if(startTimeInMinutes + minuteDuration > 1440) return false; 
 			return true;
 	}
   
@@ -245,13 +234,15 @@ public class TaskService implements ITaskService{
 			parYear.setSpacingAfter(10);
 			document.add(parYear);
 			
-			long sumHours = findUserTasksYear.stream().map(x -> new Long(getMinutesInLong(x.getDuration()))).mapToLong(Long::longValue).sum();
-			long h = Math.round(sumHours/60);
-			long m = Math.round((((double)sumHours/60) - Math.round(sumHours/60))*100);
+			
+			TimeInLongValue timeinLongValue = getTimeinLongValue(findUserTasksYear);
+//			long sumHours = findUserTasksYear.stream().map(x -> new Long(getMinutesInLong(x.getDuration()))).mapToLong(Long::longValue).sum();
+//			long h = Math.round(sumHours/60);
+//			long m = Math.round((((double)sumHours/60) - Math.round(sumHours/60))*100);
+//			"Przepracowano: " + timeinLongValue.getH() + " godzin i " + timeinLongValue.getM() + " minut"
+			
 			Font sumHoursFont = FontFactory.getFont(BaseFont.COURIER, BaseFont.CP1257, 12, Font.NORMAL ,BaseColor.BLACK);
-			Paragraph parSumHours = new Paragraph("Przepracowano: " + h + " godzin i " + m + " minut"
-																
-								,sumHoursFont);
+			Paragraph parSumHours = new Paragraph(timeinLongValue.toStingHoursMinutes(),sumHoursFont);
 			parSumHours.setAlignment(Element.ALIGN_LEFT);
 			parSumHours.setIndentationLeft(20);
 			parSumHours.setIndentationRight(50);
@@ -368,59 +359,7 @@ public class TaskService implements ITaskService{
 				}
 			FileOutputStream outputStream = new FileOutputStream(file+"/"+"userTasks"+".xls");
 			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet workSheet = workbook.createSheet(findUserTasksYear.get(0).getUser().getEmail());
-			workSheet.setDefaultColumnWidth(30);
-			
-			HSSFCellStyle headerCellStyle = workbook.createCellStyle();
-			headerCellStyle.setFillForegroundColor(HSSFColorPredefined.BLUE.getIndex());
-			headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-			
-			HSSFRow headerRow = workSheet.createRow(0);
-			
-			String sStartDate = messageSource.getMessage("label.tasks.startDate", null, Locale.getDefault());
-			HSSFCell startDate = headerRow.createCell(0);
-			startDate.setCellValue(sStartDate);
-			startDate.setCellStyle(headerCellStyle);
-			
-			String sDuration = messageSource.getMessage("label.tasks.duration", null, Locale.getDefault());
-			HSSFCell duration = headerRow.createCell(1);
-			duration.setCellValue(sDuration);
-			duration.setCellStyle(headerCellStyle);
-			
-			String sStopDate = messageSource.getMessage("label.tasks.stopDate", null, Locale.getDefault());
-			HSSFCell stopDate = headerRow.createCell(2);
-			stopDate.setCellValue(sStopDate);
-			stopDate.setCellStyle(headerCellStyle);
-			
-			String sCategoryTask = messageSource.getMessage("label.tasks.categoryTask", null, Locale.getDefault());
-			HSSFCell categoryTask = headerRow.createCell(3);
-			categoryTask.setCellValue(sCategoryTask);
-			categoryTask.setCellStyle(headerCellStyle);
-			
-			int i =1;
-			for (Task task : findUserTasksYear) {	
-				HSSFRow bodyRow = workSheet.createRow(i);
-				
-				HSSFCellStyle bodyCellStyle = workbook.createCellStyle();
-				bodyCellStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex());				
-				
-				HSSFCell startDateValue = bodyRow.createCell(0);
-				startDateValue.setCellValue(task.getStartDate());
-				startDateValue.setCellStyle(bodyCellStyle);
-				
-				HSSFCell durationValue = bodyRow.createCell(1);				
-				durationValue.setCellValue(task.getDuration());
-				durationValue.setCellStyle(bodyCellStyle);
-				
-				HSSFCell stopDateValue = bodyRow.createCell(2);
-				stopDateValue.setCellValue(task.getStopDate());
-				stopDateValue.setCellStyle(bodyCellStyle);
-				
-				HSSFCell categoryTaskValue = bodyRow.createCell(3);
-				categoryTaskValue.setCellValue(task.getCategoryTasks().getName());
-				categoryTaskValue.setCellStyle(bodyCellStyle);
-				i++;				
-			}
+			createExcelSheetsBody(findUserTasksYear, workbook);
 			
 			workbook.write(outputStream);
 			outputStream.flush();
@@ -430,5 +369,236 @@ public class TaskService implements ITaskService{
 		}catch (Exception e) {
 				return false;
 			}	
+	}
+	
+	private void createExcelSheetsBody(List<Task> findUserTasksYear, HSSFWorkbook workbook) {
+		TimeInLongValue timeinLongValue = getTimeinLongValue(findUserTasksYear);
+		String sYes = messageSource.getMessage("global.settings.yes", null, Locale.getDefault());
+		String sNo = messageSource.getMessage("global.settings.no", null, Locale.getDefault());
+		
+		HSSFSheet workSheet = workbook.createSheet(findUserTasksYear.get(0).getUser().getEmail());
+		workSheet.setDefaultColumnWidth(30);
+		
+		HSSFCellStyle headerCellStyle = workbook.createCellStyle();
+		headerCellStyle.setFillForegroundColor(HSSFColorPredefined.GREY_40_PERCENT.getIndex());
+		headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
+		HSSFRow headerRow = workSheet.createRow(0);
+		
+		String sno = messageSource.getMessage("global.settings.numberOrdinal", null, Locale.getDefault());
+		HSSFCell nO = headerRow.createCell(0);
+		nO.setCellValue(sno);
+		nO.setCellStyle(headerCellStyle);
+		
+		String sStartDate = messageSource.getMessage("label.tasks.startDate", null, Locale.getDefault());
+		HSSFCell startDate = headerRow.createCell(1);
+		startDate.setCellValue(sStartDate);
+		startDate.setCellStyle(headerCellStyle);
+		
+		String sDuration = messageSource.getMessage("label.tasks.duration", null, Locale.getDefault());
+		HSSFCell duration = headerRow.createCell(2);
+		duration.setCellValue(sDuration);
+		duration.setCellStyle(headerCellStyle);
+		
+		String sStopDate = messageSource.getMessage("label.tasks.stopDate", null, Locale.getDefault());
+		HSSFCell stopDate = headerRow.createCell(3);
+		stopDate.setCellValue(sStopDate);
+		stopDate.setCellStyle(headerCellStyle);
+		
+		String sCategoryTask = messageSource.getMessage("label.tasks.categoryTask", null, Locale.getDefault());
+		HSSFCell categoryTask = headerRow.createCell(4);
+		categoryTask.setCellValue(sCategoryTask);
+		categoryTask.setCellStyle(headerCellStyle);
+		
+		String sHours = messageSource.getMessage("global.settings.hours", null, Locale.getDefault());
+		HSSFCell hours = headerRow.createCell(5);
+		hours.setCellValue(sHours);
+		hours.setCellStyle(headerCellStyle);
+		
+		String sMinutes = messageSource.getMessage("global.settings.minutes", null, Locale.getDefault());
+		HSSFCell minutes = headerRow.createCell(6);
+		minutes.setCellValue(sMinutes);
+		minutes.setCellStyle(headerCellStyle);
+		
+		String sIsApproved = messageSource.getMessage("label.tasks.timeApprovedHours", null, Locale.getDefault());
+		HSSFCell isApproved = headerRow.createCell(7);
+		isApproved.setCellValue(sIsApproved);
+		isApproved.setCellStyle(headerCellStyle);
+		
+		HSSFCellStyle bodyCellStyle = workbook.createCellStyle();
+		bodyCellStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex());
+		
+		int i =1;
+		for (Task task : findUserTasksYear) {
+			List<Task> listTaskUser = new ArrayList<Task>();
+			listTaskUser.add(task);
+			TimeInLongValue timeinLongPerUserValue = getTimeinLongValue(listTaskUser);
+			
+			HSSFRow bodyRow = workSheet.createRow(i);
+			
+			HSSFCell nOValue = bodyRow.createCell(0);
+			nOValue.setCellValue(i);
+			nOValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell startDateValue = bodyRow.createCell(1);
+			startDateValue.setCellValue(task.getStartDate());
+			startDateValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell durationValue = bodyRow.createCell(2);				
+			durationValue.setCellValue(task.getDuration());
+			durationValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell stopDateValue = bodyRow.createCell(3);
+			stopDateValue.setCellValue(task.getStopDate());
+			stopDateValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell categoryTaskValue = bodyRow.createCell(4);
+			categoryTaskValue.setCellValue(task.getCategoryTasks().getName());
+			categoryTaskValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell hoursValue = bodyRow.createCell(5);
+			hoursValue.setCellValue(timeinLongPerUserValue.getH());
+			hoursValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell minutesValue = bodyRow.createCell(6);
+			minutesValue.setCellValue(timeinLongPerUserValue.getM());
+			minutesValue.setCellStyle(bodyCellStyle);
+			
+			HSSFCell isApprovedValue = bodyRow.createCell(7);
+			isApprovedValue.setCellValue(task.getIsApproved()? sYes : sNo);
+			isApprovedValue.setCellStyle(bodyCellStyle);
+			
+			i++;				
+		}		
+		HSSFRow sumRow = workSheet.createRow(i);
+		String sSum = messageSource.getMessage("label.tasks.sum", null, Locale.getDefault());
+		HSSFCell sum = sumRow.createCell(0);
+		sum.setCellValue(sSum);
+		sum.setCellStyle(headerCellStyle);
+		
+		String sAllHourMinutes = messageSource.getMessage("timeInLongValue.toString",
+				new Object[] { timeinLongValue.getH(), timeinLongValue.getM() },
+				Locale.getDefault());
+		HSSFCell allHourMinutes = sumRow.createCell(1);
+		allHourMinutes.setCellValue(sAllHourMinutes);
+		allHourMinutes.setCellStyle(bodyCellStyle);
+		
+		for (int x=0; x<8; x++) {
+			workSheet.autoSizeColumn(x);
+		}
+	}
+	@Override
+	public boolean createExcelAllUsersTasks(List<User> usersList, String selectedYear, Sort sortP, ServletContext context) {
+		
+		try {
+			String filePath = context.getRealPath("/resources/reports");
+			File file = new File(filePath);
+			boolean exists = new File(filePath).exists();
+			if(!exists) {
+				new File(filePath).mkdirs();				
+				}
+			FileOutputStream outputStream = new FileOutputStream(file+"/"+"userAllTasks"+".xls");
+			HSSFWorkbook workbook = new HSSFWorkbook();	
+			String sHeaderRaport = messageSource.getMessage("label.tasks.raportAllUsers", null, Locale.getDefault());			
+			HSSFSheet workSheet = workbook.createSheet(sHeaderRaport);			
+			
+			int i =1;
+			for (User user: usersList ) {
+				List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
+				createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+				i++;
+			}
+			for (User user: usersList ) {
+				List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
+				createExcelSheetsBody(userTasks, workbook);
+			}
+			
+			
+			workbook.write(outputStream);
+			outputStream.flush();
+			outputStream.close();
+			return true;
+			
+		}catch (Exception e) {
+				return false;
+			}
+	}
+	private void createExcelSheetRaportAllUsers(HSSFWorkbook workbook, List<Task> userTasks, HSSFSheet workSheet, Integer i) {
+		TimeInLongValue timeinLongValue = getTimeinLongValue(userTasks);
+		
+		HSSFCellStyle headerCellStyle = workbook.createCellStyle();
+		headerCellStyle.setFillForegroundColor(HSSFColorPredefined.GREY_40_PERCENT.getIndex());
+		headerCellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
+		HSSFCellStyle bodyCellStyle = workbook.createCellStyle();
+		bodyCellStyle.setFillForegroundColor(HSSFColorPredefined.WHITE.getIndex());
+		
+		//Heder
+		HSSFRow headerRow = workSheet.createRow(0);		
+		
+		String sNo = messageSource.getMessage("global.settings.numberOrdinal", null, Locale.getDefault());
+		HSSFCell nO = headerRow.createCell(0);
+		nO.setCellValue(sNo);
+		nO.setCellStyle(headerCellStyle);
+		
+		String sUser = messageSource.getMessage("label.tasks.user", null, Locale.getDefault());
+		HSSFCell user = headerRow.createCell(1);
+		user.setCellValue(sUser);
+		user.setCellStyle(headerCellStyle);
+		
+		String sTimeApprovedHours = messageSource.getMessage("label.tasks.timeApprovedHours", null, Locale.getDefault());
+		HSSFCell timeApprovedHours = headerRow.createCell(2);
+		timeApprovedHours.setCellValue(sTimeApprovedHours);
+		timeApprovedHours.setCellStyle(headerCellStyle);
+		
+		String sHours = messageSource.getMessage("global.settings.hours", null, Locale.getDefault());
+		HSSFCell hours = headerRow.createCell(3);
+		hours.setCellValue(sHours);
+		hours.setCellStyle(headerCellStyle);
+		
+		String sMinutes = messageSource.getMessage("global.settings.minutes", null, Locale.getDefault());
+		HSSFCell minutes = headerRow.createCell(4);
+		minutes.setCellValue(sMinutes);
+		minutes.setCellStyle(headerCellStyle);
+		
+		
+		//Data		
+		HSSFRow bodyRow = workSheet.createRow(i);
+		workSheet.autoSizeColumn(i);
+		
+		HSSFCell nOValue = bodyRow.createCell(0);
+		nOValue.setCellValue(i);
+		nOValue.setCellStyle(bodyCellStyle);
+		
+		HSSFCell userValue = bodyRow.createCell(1);
+		userValue.setCellValue(userTasks.get(0).getUser().getEmail());
+		userValue.setCellStyle(bodyCellStyle);		
+		
+		String sAllHourMinutes = messageSource.getMessage("timeInLongValue.toString",
+				new Object[] { timeinLongValue.getH(), timeinLongValue.getM() },
+				Locale.getDefault());
+		HSSFCell timeApprovedHoursValue = bodyRow.createCell(2);				
+		timeApprovedHoursValue.setCellValue(sAllHourMinutes);
+		timeApprovedHoursValue.setCellStyle(bodyCellStyle);
+		
+		HSSFCell hoursValue = bodyRow.createCell(3);
+		hoursValue.setCellValue(timeinLongValue.getH());
+		hoursValue.setCellStyle(bodyCellStyle);
+		
+		HSSFCell minutesValue = bodyRow.createCell(4);
+		minutesValue.setCellValue(timeinLongValue.getM());
+		minutesValue.setCellStyle(bodyCellStyle);
+		
+		for (int x=0; x<5; x++) {
+			workSheet.autoSizeColumn(x);
+		}
+	}
+	
+	public TimeInLongValue getTimeinLongValue(List<Task> listTasks) {		
+		long sumHours = listTasks.stream().filter(x -> x.getIsApproved()).map(x -> new Long(getMinutesInLong(x.getDuration()))).mapToLong(Long::longValue).sum();
+		long h = Math.round(sumHours/60);
+		//long m = Math.round((((double)sumHours/60) - Math.round(sumHours/60))*100);
+		long m = Math.round(sumHours%60);		
+		return new TimeInLongValue(h, m);		
 	}
 }

@@ -40,6 +40,8 @@ public interface ITaskService {
 
 	boolean createPdf(List<Task> findUserTasksYear, ServletContext context, String year);
 
-	boolean createExcel(List<Task> findUserTasksYear, ServletContext context, String orElse);	
+	boolean createExcel(List<Task> findUserTasksYear, ServletContext context, String orElse);
+
+	boolean createExcelAllUsersTasks(List<User> usersList, String selectedYear, Sort sortP, ServletContext context);
 
 }

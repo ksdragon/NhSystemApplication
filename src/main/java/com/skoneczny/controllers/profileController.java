@@ -205,9 +205,13 @@ public class profileController {
 			) {
 			logger.info("createExcelAllUsersTasks");
 			Sort sortP = new Sort(Direction.ASC,"startDate");
-			List<User> usersList = new ArrayList<User>(users.orElse(userService.findAll()));
+			List<User> usersList = new ArrayList<User>(userService.findAll());
 			String year = Integer.toString(LocalDate.now().getYear());
-						
+			boolean isFlag = taskService.createExcelAllUsersTasks(usersList,selectedYear.orElse(year),sortP,context);
+			if(isFlag) {
+				String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userAllTasks"+".xls");
+				filedownload(fullPath,response,"userAllTasks.xls");
+			}
 			
 	}
 	
