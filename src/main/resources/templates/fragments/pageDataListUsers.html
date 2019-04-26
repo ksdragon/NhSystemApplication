@@ -11,18 +11,18 @@
 </head>
 <body>
 				
-				<div id="pageData" class="row container" th:fragment="pageData">
+				<div id="pageDataListUsers" class="row container" th:fragment="pageDataListUsers">
 				    <div class="col-sm-6">
 	                    <div class="pagination"><p>Pokazano<span class="badge"
-	                                                               th:text="${tasks.size * tasks.number + 1}"></span> do
-	                            <span class="badge" th:text="${tasks.last ? tasks.totalElements : tasks.size * tasks.number + tasks.size}"></span> z 
+	                                                               th:text="${users.size * users.number + 1}"></span> do
+	                            <span class="badge" th:text="${users.last ? users.totalElements : users.size * users.number + users.size}"></span> z 
 	                            <span class="badge"
-	                                  th:text="${tasks.totalElements}"></span>
+	                                  th:text="${users.totalElements}"></span>
 	                            <p>wpisów</p></div>
 	                </div>				    
 				    <div class="col-sm-6">
 				    <nav class="pull-right">
-						<ul class="pagination" sd:pagination-split="3" sd:pagination="full" sd:pagination-url="@{/profileYear}">
+						<ul class="pagination" sd:pagination-split="3" sd:pagination="full" >
 
 							<li class="disabled"><a href="#"  aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
 						   	<li class="active"><a href="#"  >1 <span class="sr-only">(current)</span></a></li>
@@ -30,7 +30,7 @@
 					</nav>
 				    </div>
 				</div>
-
+<!-- sd:pagination-url="@{/profileYear}" -->
 </body>
 </html>		
 				

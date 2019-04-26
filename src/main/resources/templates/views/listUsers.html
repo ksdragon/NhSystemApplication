@@ -27,7 +27,6 @@
 				
 			</div>
 			<div>
-<!-- 				doposaæ onclick -->
 				<a th:href="@{/createExcelAllUsersTasks}" id="createExcelAllUsersTasks"
 						style="float:right"><img th:src="@{/images/excel.png}" style="width:40px;margin-left: 10px;"></a>
 				<div th:replace="fragments/yearSelect :: yearSelect"></div>				
@@ -35,9 +34,6 @@
 			
 		</div>
 		<div class="card">
-<!-- 			<div sec:authorize="hasRole('ROLE_ADMIN')"> -->
-<!-- 			   <a th:href="@{/admin/switchUser}">Switch User</a> -->
-<!-- 			</div> -->
 			<div class="card card-body">
 				<table class="table table-hover">
 					<thead>
@@ -65,14 +61,19 @@
 						</tr>
 					</tbody>
 				</table>
-				<ul th:if="${users.totalPages > 0}" class="nav nav-pills">
-					<li class="nav-item" 
-						th:each=" pageNumber : ${pageNumbers}">
-					<a th:href="@{/users(page=${pageNumber})}" th:text="${pageNumber}" class="nav-link"
-					th:classappend="${pageNumber==users.number + 1}?'active':''" ></a>
-					</li>
-				</ul>
+					
+				
+				
+<!-- 				<ul th:if="${users.totalPages > 0}" class="nav nav-pills"> -->
+<!-- 					<li class="nav-item"  -->
+<!-- 						th:each=" pageNumber : ${pageNumbers}"> -->
+<!-- 					<a th:href="@{/users(page=${pageNumber})}" th:text="${pageNumber}" class="nav-link" -->
+<!-- 					th:classappend="${pageNumber==users.number + 1}?'active':''" ></a> -->
+<!-- 					</li> -->
+<!-- 				</ul> -->
 			</div>
+			<hr/>
+				<div th:replace="fragments/pageDataListUsers :: pageDataListUsers"></div>
 		</div>
 	</div>
 </body>

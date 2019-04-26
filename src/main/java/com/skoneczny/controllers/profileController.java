@@ -71,7 +71,7 @@ public class profileController {
 		}
 		Sort sortP = pageable.getSort();	
 		
-        String sortParam = sort.orElse("startDate");
+//        String sortParam = sort.orElse("startDate");
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
 		User user = userService.findOne(email);
@@ -127,7 +127,7 @@ public class profileController {
 		
 		
         int pageSize = /*pageable.getPageSize();*/ size.orElse(5);
-        String sortParam = sort.orElse("startDate");
+//        String sortParam = sort.orElse("startDate");
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
 		User user = userService.findOne(email);
