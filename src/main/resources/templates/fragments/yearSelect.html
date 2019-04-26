@@ -1,0 +1,26 @@
+<!-- <!DOCTYPE html> -->
+<!-- <html xmlns:th="http://www.thymeleaf.org" -->
+<!-- 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"> -->
+<!-- <head> -->
+<!-- <script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script> -->
+<!-- <script th:inline="javascript"> -->
+<!--  		  var email = /*[[${email}]]*/ 'default'; -->
+<!--  		  var selectedYear = 'All'; -->
+<!-- </script> -->
+<!-- </head> -->
+<!-- <body> -->				
+				<div th:fragment="yearSelect" class="form-group blu-margin">
+					<br>
+					<label class="form-control-label" for="selectedYear" th:text="#{label.profile.ListYears}">Select Year</label>
+					<select class="form-control" id="selectedYear" name="selectedYear" onchange="seleYear(this.value)">
+						<option value="All" th:text="#{label.option.profile.ListYears}">Select Date</option>
+						<option th:each="year : ${years}" 
+							th:value="${year}" 
+							th:text="${year}"							
+							></option>
+					</select>
+				</div>
+
+<!-- </body> -->
+<!-- </html>		 -->
+				

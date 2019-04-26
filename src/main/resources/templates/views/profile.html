@@ -42,17 +42,18 @@
 				<a id="pdfRaportTasksUser" th:href="@{/createPdf(email=${email})}"
 					style="float:right"><img th:src="@{/images/pdf-icon.png}" style="width:40px;margin-left: 10px;"></a>
 			</div>
-			<div class="form-group blu-margin">
-					<br>
-					<label class="form-control-label" for="selectedYear" th:text="#{label.profile.ListYears}">Select Year</label>
-					<select class="form-control" id="selectedYear" name="selectedYear" onchange="seleYear(this.value)">
-						<option value="All" th:text="#{label.option.profile.ListYears}">Select Date</option>
-						<option th:each="year : ${years}" 
-							th:value="${year}" 
-							th:text="${year}"							
-							></option>
-					</select>
-			</div>
+			<div th:replace="fragments/yearSelect :: yearSelect"></div>	
+<!-- 			<div class="form-group blu-margin"> -->
+<!-- 					<br> -->
+<!-- 					<label class="form-control-label" for="selectedYear" th:text="#{label.profile.ListYears}">Select Year</label> -->
+<!-- 					<select class="form-control" id="selectedYear" name="selectedYear" onchange="seleYear(this.value)"> -->
+<!-- 						<option value="All" th:text="#{label.option.profile.ListYears}">Select Date</option> -->
+<!-- 						<option th:each="year : ${years}"  -->
+<!-- 							th:value="${year}"  -->
+<!-- 							th:text="${year}"							 -->
+<!-- 							></option> -->
+<!-- 					</select> -->
+<!-- 			</div> -->
 
 		</div>
 		<br>
@@ -66,7 +67,7 @@
 							<th><a th:text="#{label.profile.duration}" class="sorted" sd:pagination-sort="duration" sd:pagination-url="@{/profileYear}">Duration</a></th>
 							<th><a  th:text="#{label.profile.stopDate}" class="sorted" sd:pagination-sort="stopDate" sd:pagination-url="@{/profileYear}">Stop Date</a></th>
 							<th><a  th:text="#{label.profile.tasksCategory}" class="sorted" sd:pagination-sort="categoryTasks" sd:pagination-url="@{/profileYear}">Category</a></th>						
-							<th th:text="#{label.profile.approved}">Approved</th>
+							<th><a th:text="#{label.profile.approved}" class="sorted" sd:pagination-sort="isApproved" sd:pagination-url="@{/profileYear}">Approved</a></th>
 							<th th:if="${#authorization.expression('hasRole(''ADMIN'')')}" th:text="#{label.profile.activate}">Activate</th>
 							<th th:text="#{label.profile.edit}">Edit</th>
 							<th th:text="#{label.profile.delete}">Delete</th>

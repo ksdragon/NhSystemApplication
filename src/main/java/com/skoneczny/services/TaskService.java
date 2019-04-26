@@ -79,6 +79,18 @@ public class TaskService implements ITaskService{
 	 *@param user
 	 *@return lista lat posortowana malejąco
 	 */
+	public TreeSet<String> getAllYeas(List<User> user){
+		List<String> yList = new ArrayList<>();
+		List<Task> tasks = taskRepository.findByUserIn(user);
+		for (Task task : tasks) {
+			yList.add(task.getStartDate().substring(0,4));			
+		}
+		TreeSet<String> yeasList = new  TreeSet<String>(yList);
+		yeasList = (TreeSet<String>)yeasList.descendingSet();
+		return yeasList;		
+	}
+	
+	
 	@Override
 	public TreeSet<String> getAllYeas(User user){
 		List<String> yList = new ArrayList<>();
@@ -192,7 +204,10 @@ public class TaskService implements ITaskService{
 	}	
 	@Override
 	public boolean createPdf(List<Task> findUserTasksYear, ServletContext context, String year) {
-		Document document = new Document(PageSize.A4,15,15,45,30);		
+		Document document = new Document(PageSize.A4,15,15,45,30);
+		String sYes = messageSource.getMessage("global.settings.yes", null, Locale.getDefault());
+		String sNo = messageSource.getMessage("global.settings.no", null, Locale.getDefault());
+		
 		//final String FONT = "resources/fonts/AbhayaLibre-Regular.ttf";
 		try {
 			String filePath = context.getRealPath("/resources/reports");
@@ -236,10 +251,6 @@ public class TaskService implements ITaskService{
 			
 			
 			TimeInLongValue timeinLongValue = getTimeinLongValue(findUserTasksYear);
-//			long sumHours = findUserTasksYear.stream().map(x -> new Long(getMinutesInLong(x.getDuration()))).mapToLong(Long::longValue).sum();
-//			long h = Math.round(sumHours/60);
-//			long m = Math.round((((double)sumHours/60) - Math.round(sumHours/60))*100);
-//			"Przepracowano: " + timeinLongValue.getH() + " godzin i " + timeinLongValue.getM() + " minut"
 			
 			Font sumHoursFont = FontFactory.getFont(BaseFont.COURIER, BaseFont.CP1257, 12, Font.NORMAL ,BaseColor.BLACK);
 			Paragraph parSumHours = new Paragraph(timeinLongValue.toStingHoursMinutes(),sumHoursFont);
@@ -249,7 +260,7 @@ public class TaskService implements ITaskService{
 			parSumHours.setSpacingAfter(10);
 			document.add(parSumHours);
 			
-			PdfPTable table = new PdfPTable(4);
+			PdfPTable table = new PdfPTable(5);
 			table.setWidthPercentage(100);
 			table.setSpacingBefore(10f);
 			table.setSpacingAfter(10);
@@ -257,7 +268,7 @@ public class TaskService implements ITaskService{
 			Font tableHeader = FontFactory.getFont(BaseFont.TIMES_ROMAN,BaseFont.CP1257,10,Font.NORMAL,BaseColor.BLACK);
 			Font tableBody = FontFactory.getFont(BaseFont.TIMES_ROMAN,BaseFont.CP1257,9,Font.NORMAL,BaseColor.BLACK);
 			
-			float[] columnWidths = {2f,2f,2f,2f};
+			float[] columnWidths = {2f,2f,2f,2f,2f};
 			table.setWidths(columnWidths);
 			
 			String sStartDate = messageSource.getMessage("label.tasks.startDate", null, Locale.getDefault());
@@ -300,6 +311,16 @@ public class TaskService implements ITaskService{
 			cCategoryTask.setExtraParagraphSpace(5f);
 			table.addCell(cCategoryTask);
 			
+			String stimeApprovedHours = messageSource.getMessage("label.tasks.timeApprovedHours", null, Locale.getDefault());
+			PdfPCell ctimeApprovedHours = new PdfPCell(new Paragraph(stimeApprovedHours, tableHeader));
+			ctimeApprovedHours.setBorderColor(BaseColor.BLACK);
+			ctimeApprovedHours.setPaddingLeft(10);
+			ctimeApprovedHours.setHorizontalAlignment(Element.ALIGN_CENTER);
+			ctimeApprovedHours.setVerticalAlignment(Element.ALIGN_CENTER);
+			ctimeApprovedHours.setBackgroundColor(BaseColor.GRAY);
+			ctimeApprovedHours.setExtraParagraphSpace(5f);
+			table.addCell(ctimeApprovedHours);
+			
 			for (Task task : findUserTasksYear) {				
 				PdfPCell cStartDateValue = new PdfPCell(new Paragraph(task.getStartDate(), tableBody));
 				cStartDateValue.setBorderColor(BaseColor.BLACK);
@@ -331,7 +352,16 @@ public class TaskService implements ITaskService{
 				cCategoryTaskValue.setHorizontalAlignment(Element.ALIGN_CENTER);
 				cCategoryTaskValue.setVerticalAlignment(Element.ALIGN_CENTER);				
 				cCategoryTaskValue.setExtraParagraphSpace(5f);
-				table.addCell(cCategoryTaskValue);				
+				table.addCell(cCategoryTaskValue);
+				
+				PdfPCell ctimeApprovedHoursValue = new PdfPCell(new Paragraph(task.getIsApproved()? sYes : sNo, tableBody));
+				ctimeApprovedHoursValue.setBorderColor(BaseColor.BLACK);
+				ctimeApprovedHoursValue.setPaddingLeft(10);
+				ctimeApprovedHoursValue.setHorizontalAlignment(Element.ALIGN_CENTER);
+				ctimeApprovedHoursValue.setVerticalAlignment(Element.ALIGN_CENTER);				
+				ctimeApprovedHoursValue.setExtraParagraphSpace(5f);
+				table.addCell(ctimeApprovedHoursValue);		
+				
 			}
 			
 			document.add(table);
@@ -358,8 +388,8 @@ public class TaskService implements ITaskService{
 				new File(filePath).mkdirs();				
 				}
 			FileOutputStream outputStream = new FileOutputStream(file+"/"+"userTasks"+".xls");
-			HSSFWorkbook workbook = new HSSFWorkbook();
-			createExcelSheetsBody(findUserTasksYear, workbook);
+			HSSFWorkbook workbook = new HSSFWorkbook();			
+			createExcelSheetsBody(findUserTasksYear, workbook,findUserTasksYear.get(0).getUser());
 			
 			workbook.write(outputStream);
 			outputStream.flush();
@@ -371,12 +401,12 @@ public class TaskService implements ITaskService{
 			}	
 	}
 	
-	private void createExcelSheetsBody(List<Task> findUserTasksYear, HSSFWorkbook workbook) {
+	private void createExcelSheetsBody(List<Task> findUserTasksYear, HSSFWorkbook workbook, User user) {
 		TimeInLongValue timeinLongValue = getTimeinLongValue(findUserTasksYear);
 		String sYes = messageSource.getMessage("global.settings.yes", null, Locale.getDefault());
 		String sNo = messageSource.getMessage("global.settings.no", null, Locale.getDefault());
 		
-		HSSFSheet workSheet = workbook.createSheet(findUserTasksYear.get(0).getUser().getEmail());
+		HSSFSheet workSheet = workbook.createSheet(user.getEmail());
 		workSheet.setDefaultColumnWidth(30);
 		
 		HSSFCellStyle headerCellStyle = workbook.createCellStyle();
@@ -504,13 +534,28 @@ public class TaskService implements ITaskService{
 			
 			int i =1;
 			for (User user: usersList ) {
-				List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
-				createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+				
+				//dopisać jak będzie all
+				if (!isEmptyForSelectedYear(selectedYear, user)) {
+					List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
+					createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+				}else {
+					List<Task> userTasks = new ArrayList<Task>();					
+					userTasks.add(new Task());
+					userTasks.get(0).setUser(user);
+					createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+				}
 				i++;
+				
+				
+//				List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
+//				createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+//				i++;
 			}
 			for (User user: usersList ) {
+				
 				List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
-				createExcelSheetsBody(userTasks, workbook);
+				createExcelSheetsBody(userTasks, workbook,user);
 			}
 			
 			
@@ -522,6 +567,13 @@ public class TaskService implements ITaskService{
 		}catch (Exception e) {
 				return false;
 			}
+	}
+	private boolean isEmptyForSelectedYear(String selectedYear, User user) {
+		if(selectedYear.equals("All")) {return false;}
+		return taskRepository.findByUser(user)
+		.stream()
+		.filter(task -> Objects.equals(task.getStartDate().substring(0,4), selectedYear))
+		.collect(Collectors.toList()).isEmpty();			
 	}
 	private void createExcelSheetRaportAllUsers(HSSFWorkbook workbook, List<Task> userTasks, HSSFSheet workSheet, Integer i) {
 		TimeInLongValue timeinLongValue = getTimeinLongValue(userTasks);
@@ -596,8 +648,7 @@ public class TaskService implements ITaskService{
 	
 	public TimeInLongValue getTimeinLongValue(List<Task> listTasks) {		
 		long sumHours = listTasks.stream().filter(x -> x.getIsApproved()).map(x -> new Long(getMinutesInLong(x.getDuration()))).mapToLong(Long::longValue).sum();
-		long h = Math.round(sumHours/60);
-		//long m = Math.round((((double)sumHours/60) - Math.round(sumHours/60))*100);
+		long h = Math.round(sumHours/60);		
 		long m = Math.round(sumHours%60);		
 		return new TimeInLongValue(h, m);		
 	}

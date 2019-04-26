@@ -4,22 +4,35 @@
 	layout:decorate="~{fragments/main_layout}">
 <head>
 <title th:text="#{label.usersPage.title}">Users Page</title>
+<script type="text/javascript" th:src="@{js/userList.js}" src="../static/js/userList.js"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+		  var email = /*[[${email}]]*/ 'default';
+		  var sortParam = 'startDate';
+		  var selectedYear = 'All'
+/*]]>*/
+</script>
 </head>
 <body>
 
 	<div layout:fragment="content" class="container mySpace">
 		<div class="form-group mb-2">
-			<div class="row">
+			<div>
 				<form action="/users" class="form-inline">
 					<div class="form-group mb-2">
 					<input type="text" class="form-control" name="name" placeholder="Search User"/>
 					<input type="submit" value="Search" class="btn btn-primary"/>
 					</div>
-				</form>
-<!-- 				(users=${users}) -->
-				<a th:href="@{/createExcelAllUsersTasks}" 
-						style="float:right"><img th:src="@{/images/excel.png}" style="width:40px;margin-left: 10px;"></a>
+				</form>				
+				
 			</div>
+			<div>
+<!-- 				doposaæ onclick -->
+				<a th:href="@{/createExcelAllUsersTasks}" id="createExcelAllUsersTasks"
+						style="float:right"><img th:src="@{/images/excel.png}" style="width:40px;margin-left: 10px;"></a>
+				<div th:replace="fragments/yearSelect :: yearSelect"></div>				
+			</div>
+			
 		</div>
 		<div class="card">
 <!-- 			<div sec:authorize="hasRole('ROLE_ADMIN')"> -->

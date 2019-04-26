@@ -44,4 +44,6 @@ public interface ITaskService {
 
 	boolean createExcelAllUsersTasks(List<User> usersList, String selectedYear, Sort sortP, ServletContext context);
 
+	TreeSet<String> getAllYeas(List<User> user);
+
 }

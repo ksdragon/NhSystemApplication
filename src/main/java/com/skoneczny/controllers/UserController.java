@@ -30,6 +30,7 @@ public class UserController {
 	@GetMapping("/users")
 	public String listUsers(Model model,
 			@RequestParam(defaultValue="") String name,
+			@RequestParam("selectedYear") Optional<String> selectedYear,
 			@RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size) {
 		int currentPage = page.orElse(1);
@@ -37,6 +38,7 @@ public class UserController {
 		List<User> listOfUser = userService.findByName(name);
 		Page<?> listOfUserPaged = taskService.findPaginated(PageRequest.of(currentPage -1 , pageSize), listOfUser);
 		model.addAttribute("users",listOfUserPaged);
+		model.addAttribute("years", taskService.getAllYeas(userService.findAll()));
 		
 		int totalPages = listOfUserPaged.getTotalPages();
         if (totalPages > 0) {
