@@ -38,7 +38,8 @@ function selectPage(str, selector) {
 
 $(function() {
 	onClickCreateExcelAllUsersTasks();
-
+	onPaginationChangeData()
+	onSortingOrder()
 });
 
 function seleYear(year){
@@ -62,22 +63,19 @@ function onClickCreateExcelAllUsersTasks(){
 }
 
 function onSortingOrder() {
-	$(".headTable th").on(
+	$(".headTableUserList th").on(
 			"click",
 			function(event) {
 				event.preventDefault()
 				var _href = this.getElementsByTagName('a')[0].href;
-				var _selectorByIdTableData = "table";
-				var _returnPageProfileTableData = "profileTableData";
-				// "http://localhost:8090/profileYear?email=6John@mail.com&returnPage=profileTableData&sort=startDate,desc"
-				if (!_href.includes("email=")) {
-					var urlSortingOrder = _href + "&email=" + email
-							+ "&returnPage=profileTableData" 
-							+ '&selectedYear=' + selectedYear;
-				} else {
-					var urlSortingOrder = _href + '&selectedYear=' + selectedYear;
-				}
-				sortParam = getUrlVars(_href)["sort"];
+				var _selectorByIdTableData = "tListUsers";
+				var _returnPageTableData = "usersListTableData";
+//				var getUrl = window.location;
+//				var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+				sortParam = getUrlVars(_href)["sort"];			
+
+					var urlSortingOrder = _href 
+							+ "&returnPage=" +  _returnPageTableData;			
 				selectPage(urlSortingOrder, _selectorByIdTableData);
 			});
 }
@@ -87,20 +85,26 @@ function onPaginationChangeData() {
 			.on(
 					"click",
 					function(event) {
-						event.preventDefault()
+						event.preventDefault()						
 						var _href = this.getElementsByTagName('a')[0].href;
-						var _selectorByIdTableData = "table";
-						var _selectorByIdPageBehavior = "pageData";
-						var _returnPageProfileTableData = "profileTableData";
-						var _returnPagePageData = "pageData";
+						var _selectorByIdTableData = "tListUsers";
+						var _selectorByIdPageBehavior = "pageDataListUsers";						
+						var _returnPageTableData = "usersListTableData";						
+						var _returnPagePageData = "usersListPageData";
+						pageParam = getUrlVars(_href)["page"];
+						var getUrl = window.location;
+						var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 						
-						var urlProfileTableData = _href + "&email=" + email
-								+ "&returnPage=profileTableData" + "&selectedYear=" 
-								+ selectedYear + "&sort=" + sortParam ;
-						var urlPageData = _href + "&email=" + email
-								+ "&returnPage=pageData" + "&selectedYear=" 
-								+ selectedYear + "&sort=" + sortParam;
-						selectPage(urlProfileTableData, _selectorByIdTableData);
+						var urlTableData = baseUrl 
+								+ "?returnPage="+ _returnPageTableData								
+								+ "&sort=" + sortParam 
+								+ "&page=" + pageParam;
+						var urlPageData = baseUrl 
+								+ "?returnPage=" + _returnPagePageData								
+								+ "&sort=" + sortParam
+								+ "&page=" + pageParam;					
+						
+						selectPage(urlTableData, _selectorByIdTableData);
 						selectPage(urlPageData, _selectorByIdPageBehavior);
 					});
 

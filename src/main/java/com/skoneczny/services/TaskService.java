@@ -1,7 +1,9 @@
 package com.skoneczny.services;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -59,6 +62,7 @@ public class TaskService implements ITaskService{
 	
 	@Autowired TaskRepository taskRepository;
 	@Autowired private MessageSource messageSource;
+	@Autowired	private ServletContext context;	
 	
 	@Override
 	public void addTask(Task task, User user) {
@@ -651,5 +655,31 @@ public class TaskService implements ITaskService{
 		long h = Math.round(sumHours/60);		
 		long m = Math.round(sumHours%60);		
 		return new TimeInLongValue(h, m);		
+	}
+	@Override
+	public void filedownload(String fullPath, HttpServletResponse response, String fileName) {
+		File file = new File(fullPath);
+		final int BUFFER_SIZE = 4096;
+		if(file.exists()) {
+			try {
+				FileInputStream inputStream = new FileInputStream(file);
+				String mimeType = context.getMimeType(fullPath);
+				response.setContentType(mimeType);
+				response.setHeader("content-disposition", "attachment; filename="+fileName);
+				OutputStream outputStream = response.getOutputStream();
+				byte[] buffer = new byte[BUFFER_SIZE];
+				int bytesRead = -1;
+				while((bytesRead = inputStream.read(buffer))!= -1) {
+					outputStream.write(buffer,0,bytesRead);
+				}
+				inputStream.close();
+				outputStream.close();
+				file.delete();
+				
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
 	}
 }

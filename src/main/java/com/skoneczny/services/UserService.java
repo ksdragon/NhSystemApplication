@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,10 +75,10 @@ public class UserService implements IUserService {
 		return userRepository.findAll();
 	}
 
-	public List<User> findByName(String name) {
+	public List<User> findByName(String name, Sort sortP) {
 //		List<String> namesList = new ArrayList<>(Arrays.asList(name.split(" ")));
 //		userRepository.findAll().forEach(x -> x.getName());
-		return userRepository.findByNameLike("%"+name+"%");
+		return userRepository.findByNameLike("%"+name+"%",sortP);
 	}
 
 	public void updateUser(@Valid User user) {

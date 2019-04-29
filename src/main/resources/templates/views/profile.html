@@ -5,6 +5,7 @@
 	
 <head>
 <script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script>
+<link rel="stylesheet" href="../../static/css/style.css" th:href="@{css/style.css}" />
 <title th:text="#{label.profile.title}">Profile Page</title>
 <script th:inline="javascript">
 /*<![CDATA[*/
@@ -13,21 +14,6 @@
 		  var selectedYear = 'All'
 /*]]>*/
 </script>
-
-<style>
-.sorted-desc::after, .sorted-asc::after {
-    float: right;
-}
-
-.sorted-desc::after{
-    content:"\25BC";
-}
-
-.sorted-asc::after{
-    content: "\25B2";
-}
-</style>
-
 </head>
 <body>
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.TreeSet;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -45,5 +46,7 @@ public interface ITaskService {
 	boolean createExcelAllUsersTasks(List<User> usersList, String selectedYear, Sort sortP, ServletContext context);
 
 	TreeSet<String> getAllYeas(List<User> user);
+
+	void filedownload(String fullPath, HttpServletResponse response, String fileName);
 
 }

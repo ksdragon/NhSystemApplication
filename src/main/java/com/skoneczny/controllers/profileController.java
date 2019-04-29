@@ -53,17 +53,18 @@ public class profileController {
 			HttpServletRequest request,
 			Pageable pageable
 			) {
+		String currentPageSessionName = "profileCurrentPageSessionAttribute";
 		int clikedPage;
 		int currentPage = page.orElse(0/*1*/);
 		int pageSize = size.orElse(5);
 		
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
-				session.removeAttribute("currentPage");
+				session.removeAttribute(currentPageSessionName);
 			}
 		}		
-		if(session.getAttribute("currentPage") != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute("currentPage") ;
+		if(session.getAttribute(currentPageSessionName) != null) {
+			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionName) ;
 			currentPage = clikedPage;
 		}else
 		{
@@ -87,7 +88,7 @@ public class profileController {
 //		model.addAttribute("pageWrapp", pageWrapp);
 			
 		
-		session.setAttribute("currentPage", clikedPage  );
+		session.setAttribute(currentPageSessionName, clikedPage);
 		session.setAttribute("emailSession", email);
 
 		return "views/profile";
@@ -107,16 +108,17 @@ public class profileController {
 			HttpSession session,
 			HttpServletRequest request,
 			Pageable pageable
-			) {		
+			) {
+		String currentPageSessionName = "profileCurrentPageSessionAttribute";
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
-				session.removeAttribute("currentPage");
+				session.removeAttribute(currentPageSessionName);
 			}
 		} 
 		int clikedPage;
 		int currentPage = /*pageable.getPageNumber();*/ page.orElse(0/*1*/);		
-		if(session.getAttribute("currentPage") != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute("currentPage") ;
+		if(session.getAttribute(currentPageSessionName) != null) {
+			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionName) ;
 			currentPage = clikedPage;
 		}else
 		{
@@ -142,7 +144,7 @@ public class profileController {
 		model.addAttribute("tasks", listPaged);
 //		model.addAttribute("pageWrapp", pageWrapp);			
 		
-		session.setAttribute("currentPage", clikedPage  );
+		session.setAttribute(currentPageSessionName, clikedPage  );
 		session.setAttribute("emailSession", email);
 		return "views/" + returnPage;
 	}
@@ -167,7 +169,7 @@ public class profileController {
 				boolean isFlag = taskService.createPdf(findUserTasksYear,context,selectedYear.orElse(year));
 				if(isFlag) {
 					String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".pdf");
-					filedownload(fullPath,response,"userTasks.pdf");
+					taskService.filedownload(fullPath,response,"userTasks.pdf");
 				}
 	
 	}
@@ -191,53 +193,8 @@ public class profileController {
 		boolean isFlag = taskService.createExcel(findUserTasksYear,context,selectedYear.orElse(year));
 		if(isFlag) {
 			String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".xls");
-			filedownload(fullPath,response,"userTasks.xls");
+			taskService.filedownload(fullPath,response,"userTasks.xls");
 		}
 				
-	}
-	
-	@GetMapping("/createExcelAllUsersTasks")
-	public void createExcelAll(
-			@RequestParam Optional<List<User>> users,
-			@RequestParam("selectedYear") Optional<String> selectedYear,
-			HttpServletRequest request, 
-			HttpServletResponse response			
-			) {
-			logger.info("createExcelAllUsersTasks");
-			Sort sortP = new Sort(Direction.ASC,"startDate");
-			List<User> usersList = new ArrayList<User>(userService.findAll());
-			String year = Integer.toString(LocalDate.now().getYear());
-			boolean isFlag = taskService.createExcelAllUsersTasks(usersList,selectedYear.orElse(year),sortP,context);
-			if(isFlag) {
-				String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userAllTasks"+".xls");
-				filedownload(fullPath,response,"userAllTasks.xls");
-			}
-			
-	}
-	
-	private void filedownload(String fullPath, HttpServletResponse response, String fileName) {
-		File file = new File(fullPath);
-		final int BUFFER_SIZE = 4096;
-		if(file.exists()) {
-			try {
-				FileInputStream inputStream = new FileInputStream(file);
-				String mimeType = context.getMimeType(fullPath);
-				response.setContentType(mimeType);
-				response.setHeader("content-disposition", "attachment; filename="+fileName);
-				OutputStream outputStream = response.getOutputStream();
-				byte[] buffer = new byte[BUFFER_SIZE];
-				int bytesRead = -1;
-				while((bytesRead = inputStream.read(buffer))!= -1) {
-					outputStream.write(buffer,0,bytesRead);
-				}
-				inputStream.close();
-				outputStream.close();
-				file.delete();
-				
-			}catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
 	}	
 }
