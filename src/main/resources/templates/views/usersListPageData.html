@@ -12,7 +12,7 @@
 <body>
 				
 				<div id="pageDataListUsers" class="row container" th:fragment="pageDataListUsers">
-				    <div class="col-sm-6">
+				    <div class="col-sm-5">
 	                    <div class="pagination"><p>Pokazano<span class="badge"
 	                                                               th:text="${users.size * users.number + 1}"></span> do
 	                            <span class="badge" th:text="${users.last ? users.totalElements : users.size * users.number + users.size}"></span> z 
@@ -20,8 +20,8 @@
 	                                  th:text="${users.totalElements}"></span>
 	                            <p>wpisów</p></div>
 	                </div>				    
-				    <div class="col-sm-6">
-				    <nav class="pull-right">
+				    <div class="col-sm-4 text-center">
+				    <nav class="pull-right text-center">
 						<ul class="pagination" sd:pagination-split="3" sd:pagination="full" >
 
 							<li class="disabled"><a href="#"  aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
@@ -29,8 +29,11 @@
 						</ul>
 					</nav>
 				    </div>
+				    <div class="col-sm-3 float-right">
+				    	<div th:replace="fragments/sizePageSelect :: sizePageSelectFragment"></div>				    				    
+				    </div>
 				</div>
-<!-- sd:pagination-url="@{/profileYear}" -->
+
 </body>
 </html>		
 				

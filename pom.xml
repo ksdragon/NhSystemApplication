@@ -94,6 +94,7 @@
 		    <groupId>io.github.jpenren</groupId>
 		    <artifactId>thymeleaf-spring-data-dialect</artifactId>
 		    <version>3.4.0</version>
+		    <scope>compile</scope>
 		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

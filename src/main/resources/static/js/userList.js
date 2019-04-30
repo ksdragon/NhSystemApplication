@@ -26,6 +26,7 @@ function selectPage(str, selector) {
 			document.getElementById(selector).innerHTML = this.responseText;
 			onSortingOrder();
 			onPaginationChangeData();
+			fillSizePageSelect();			
 
 		}
 	};
@@ -40,6 +41,7 @@ $(function() {
 	onClickCreateExcelAllUsersTasks();
 	onPaginationChangeData()
 	onSortingOrder()
+	fillSizePageSelect();	
 });
 
 function seleYear(year){
@@ -75,7 +77,8 @@ function onSortingOrder() {
 				sortParam = getUrlVars(_href)["sort"];			
 
 					var urlSortingOrder = _href 
-							+ "&returnPage=" +  _returnPageTableData;			
+							+ "&returnPage=" +  _returnPageTableData
+							+ "&size=" + sizeParam;			
 				selectPage(urlSortingOrder, _selectorByIdTableData);
 			});
 }
@@ -98,11 +101,13 @@ function onPaginationChangeData() {
 						var urlTableData = baseUrl 
 								+ "?returnPage="+ _returnPageTableData								
 								+ "&sort=" + sortParam 
-								+ "&page=" + pageParam;
+								+ "&page=" + pageParam
+								+ "&size=" + sizeParam;
 						var urlPageData = baseUrl 
 								+ "?returnPage=" + _returnPagePageData								
 								+ "&sort=" + sortParam
-								+ "&page=" + pageParam;					
+								+ "&page=" + pageParam
+								+ "&size=" + sizeParam;
 						
 						selectPage(urlTableData, _selectorByIdTableData);
 						selectPage(urlPageData, _selectorByIdPageBehavior);
@@ -125,6 +130,46 @@ function getUrlVars(str) {
 				});
 	}
 	return vars;
+}
+function fillSizePageSelect(){
+	var options = [1,2, 5, 10, 15, 20,50,100];
+	$('#sizePageSelect').empty();
+	$.each(options, function(i, p) {
+	    $('#sizePageSelect').append($('<option></option>').val(p).html(p));
+	});
+	$('#sizePageSelect').val(sizeParam);
+}
+function sizePageSelect(sizeP){
+	sizeParam = sizeP;
+	onSizeNumberOfRow()
+}
+
+function onSizeNumberOfRow() {
+//	$("#sizePageSelect").on(
+//			"onchange",
+//			function(event) {
+//				event.preventDefault()
+//				var _href = this.getElementsByTagName('a')[0].href;
+				var _selectorByIdTableData = "tListUsers";
+				var _returnPageTableData = "usersListTableData";
+				var _returnPagePageData = "usersListPageData";
+				var _selectorByIdPageBehavior = "pageDataListUsers";
+				var getUrl = window.location;
+				var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+//				sortParam = getUrlVars(_href)["sort"];
+				var urlPageData = baseUrl 
+					+ "?returnPage=" + _returnPagePageData								
+//					+ "&sort=" + sortParam
+					+ "&page=" + 0
+					+ "&size=" + sizeParam;
+				var urlSortingOrder = baseUrl 
+					+ "?returnPage=" +  _returnPageTableData
+//					+ "&sort=" + sortParam
+					+ "&page=" + 0
+					+ "&size=" + sizeParam;			
+				selectPage(urlSortingOrder, _selectorByIdTableData);
+				selectPage(urlPageData, _selectorByIdPageBehavior);
+//			});
 }
 
 //var _innerText = this.innerText;

@@ -67,6 +67,7 @@ public class UserController {
 		List<User> listOfUser = userService.findByName(name,sortP);		
 		Page<User> listOfUserPaged = (Page<User>) taskService.findPaginated(PageRequest.of(currentPage, pageSize,sortP), listOfUser);
 		model.addAttribute("users",listOfUserPaged);
+		model.addAttribute("size",pageSize);
 		model.addAttribute("years", taskService.getAllYeas(userService.findAll()));
 		session.setAttribute(currentPageSessionName, clikedPage);
 
