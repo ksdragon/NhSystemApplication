@@ -12,7 +12,7 @@
 <body>
 				
 				<div id="pageData" class="row container" th:fragment="pageData">
-				    <div class="col-sm-6">
+				    <div class="col-sm-5">
 	                    <div class="pagination"><p>Pokazano<span class="badge"
 	                                                               th:text="${tasks.size * tasks.number + 1}"></span> do
 	                            <span class="badge" th:text="${tasks.last ? tasks.totalElements : tasks.size * tasks.number + tasks.size}"></span> z 
@@ -20,7 +20,7 @@
 	                                  th:text="${tasks.totalElements}"></span>
 	                            <p>wpisów</p></div>
 	                </div>				    
-				    <div class="col-sm-6">
+				    <div class="col-sm-4">
 				    <nav class="pull-right">
 						<ul class="pagination" sd:pagination-split="3" sd:pagination="full" sd:pagination-url="@{/profileYear}">
 
@@ -28,6 +28,9 @@
 						   	<li class="active"><a href="#"  >1 <span class="sr-only">(current)</span></a></li>
 						</ul>
 					</nav>
+				    </div>
+				    <div class="col-sm-3 float-right">
+				    	<div th:replace="fragments/sizePageSelect :: sizePageSelectFragment"></div>				    				    
 				    </div>
 				</div>
 

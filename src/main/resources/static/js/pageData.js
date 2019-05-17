@@ -1,6 +1,15 @@
-/**
- * 
- */
+$(function() {
+	registerAllListener();
+	onClickPdfDownloadRaportTasksUser();
+
+});
+
+function registerAllListener(){
+	onSortingOrder();
+	onPaginationChangeData();
+	fillSizePageSelect();
+	onChangeSizePageSelect();
+}
 
 function selectPage(str, selector) {
 
@@ -24,8 +33,7 @@ function selectPage(str, selector) {
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			document.getElementById(selector).innerHTML = this.responseText;
-			onSortingOrder();
-			onPaginationChangeData();
+			registerAllListener();
 
 		}
 	};
@@ -35,17 +43,6 @@ function selectPage(str, selector) {
 	// "application/x-www-form-urlencoded");
 	xhttp.send();
 }
-
-$(function() {
-	// $(window).on('load', function () {
-	// var email= email;
-//	 alert(email); });
-	//alert(selectedYear);
-	onSortingOrder()
-	onPaginationChangeData();
-	onClickPdfDownloadRaportTasksUser();
-
-});
 
 function seleYear(year){
 	var urlSelectedYear = "/profileYear?selectedYear=" + year + "&email=" + email
@@ -113,16 +110,48 @@ function onPaginationChangeData() {
 						var _returnPageProfileTableData = "profileTableData";
 						var _returnPagePageData = "pageData";
 						
-						var urlProfileTableData = _href + "&email=" + email
-								+ "&returnPage=profileTableData" + "&selectedYear=" 
-								+ selectedYear + "&sort=" + sortParam ;
-						var urlPageData = _href + "&email=" + email
-								+ "&returnPage=pageData" + "&selectedYear=" 
-								+ selectedYear + "&sort=" + sortParam;
+						var urlProfileTableData = _href 
+								+ "&email=" + email
+								+ "&returnPage=profileTableData" 
+								+ "&selectedYear="	+ selectedYear 
+								+ "&sort=" + sortParam 
+								+ "&size=" + sizeParam;
+						var urlPageData = _href 
+								+ "&email=" + email
+								+ "&returnPage=pageData" 
+								+ "&selectedYear=" 	+ selectedYear 
+								+ "&sort=" + sortParam
+								+ "&size=" + sizeParam;
 						selectPage(urlProfileTableData, _selectorByIdTableData);
 						selectPage(urlPageData, _selectorByIdPageBehavior);
 					});
 
+}
+
+function onSizeNumberOfRow() {	
+	var _selectorByIdTableData = "table";
+	var _returnPageTableData = "profileTableData";
+	var _returnPagePageData = "pageData";
+	var _selectorByIdPageBehavior = "pageData";
+	let sActionName = "profileYear"
+	var getUrl = window.location;	
+	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
+			+ sActionName;
+	var urlPageData = baseUrl 
+		+ "?returnPage=" + _returnPagePageData
+		+ "&email=" + email
+		+ "&sort=" + sortParam
+		+ "&page=" + 0 
+		+ "&size=" + sizeParam;
+	var urlSortingOrder = baseUrl 
+		+ "?returnPage=" + _returnPageTableData
+		+ "&email=" + email
+		+ "&sort=" + sortParam
+		+ "&page=" + 0 
+		+ "&size=" + sizeParam;
+	selectPage(urlSortingOrder, _selectorByIdTableData);
+	selectPage(urlPageData, _selectorByIdPageBehavior);
+	//			});
 }
 
 // retrieve param from url.

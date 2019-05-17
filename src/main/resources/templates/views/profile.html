@@ -5,13 +5,15 @@
 	
 <head>
 <script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script>
+<script type="text/javascript" th:src="@{js/pageSize.js}" src="../static/js/pageSize.js"></script>
 <link rel="stylesheet" href="../../static/css/style.css" th:href="@{css/style.css}" />
 <title th:text="#{label.profile.title}">Profile Page</title>
 <script th:inline="javascript">
 /*<![CDATA[*/
 		  var email = /*[[${email}]]*/ 'default';
 		  var sortParam = 'startDate';
-		  var selectedYear = 'All'
+		  var selectedYear = 'All';
+		  var sizeParam = /*[[${size}]]*/ 'default';
 /*]]>*/
 </script>
 </head>

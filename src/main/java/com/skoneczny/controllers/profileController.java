@@ -85,6 +85,7 @@ public class profileController {
 		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
 		model.addAttribute("tasks", listPaged);
+		model.addAttribute("size",pageSize);
 //		model.addAttribute("pageWrapp", pageWrapp);
 			
 		
@@ -143,7 +144,7 @@ public class profileController {
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
 		model.addAttribute("tasks", listPaged);
 //		model.addAttribute("pageWrapp", pageWrapp);			
-		
+		model.addAttribute("size",pageSize);
 		session.setAttribute(currentPageSessionName, clikedPage  );
 		session.setAttribute("emailSession", email);
 		return "views/" + returnPage;
