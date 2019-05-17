@@ -51,7 +51,7 @@ public class UserController {
 		String currentPageSessionName = "userListCurrentPageSessionAttribute";
 		int clikedPage;
 		int currentPage = page.orElse(0);
-        int pageSize = size.orElse(2);
+        int pageSize = size.orElse(5);
         if(session.getAttribute(currentPageSessionName) != null) {
 			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionName) ;
 			currentPage = clikedPage;

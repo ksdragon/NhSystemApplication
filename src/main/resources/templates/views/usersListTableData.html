@@ -27,7 +27,7 @@
 							<td><a th:href="@{/profile(email=${user.email})}" th:text="#{labelBt.usersPage.work}" class="btn btn-dark">View task</a> </td>
 							<td><a th:href="@{/addTask(email=${user.email})}" th:text="#{labelBt.usersPage.addTask}" class="btn btn-dark">AddTask</a> </td>							
 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/privileges(email=${user.email})}" th:text="#{labelBt.usersPage.privileges}" class="btn btn-dark">Add privileges</a> </td>
-							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/deleteUser(email=${user.email})}" th:text="#{labelBt.usersPage.delete}" class="btn btn-dark">Delete</a> </td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/deleteUser(email=${user.email})}" th:text="#{labelBt.usersPage.delete}" class="btn btn-dark delBtn">Delete</a> </td>
 						</tr>
 					</tbody>
 				</table>	

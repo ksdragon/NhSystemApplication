@@ -2,6 +2,7 @@
 $(function() {
 	onClickCreateExcelAllUsersTasks();
 	registerAllListener();
+	
 });
 
 
@@ -10,6 +11,16 @@ function registerAllListener(){
 	onSortingOrder();
 	fillSizePageSelect();
 	onChangeSizePageSelect();
+	onClickDeleteButton();
+}
+
+function onClickDeleteButton(){
+	$('.table .delBtn').on('click',function(event){
+		event.preventDefault()
+		var href = $(this).attr('href');
+		$('#delRef').attr('href',href);
+		$('#exampleModal').modal();
+	});
 }
 
 function selectPage(str, selector) {

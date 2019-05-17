@@ -59,7 +59,7 @@
 							<td><a th:href="@{/profile(email=${user.email})}" th:text="#{labelBt.usersPage.work}" class="btn btn-dark">View task</a> </td>
 							<td><a th:href="@{/addTask(email=${user.email})}" th:text="#{labelBt.usersPage.addTask}" class="btn btn-dark">AddTask</a> </td>							
 							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/privileges(email=${user.email})}" th:text="#{labelBt.usersPage.privileges}" class="btn btn-dark">Add privileges</a> </td>
-							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/deleteUser(email=${user.email})}" th:text="#{labelBt.usersPage.delete}" class="btn btn-dark">Delete</a> </td>
+							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/deleteUser(email=${user.email})}" th:text="#{labelBt.usersPage.delete}" class="btn btn-dark delBtn">Delete</a> </td>
 							
 							
 <!-- 							<td th:if="${#authentication.name } == ${user.email}"><a th:href="@{/addTask(email=${user.email})}" th:text="#{labelBt.usersPage.addTask}" class="btn btn-dark">AddTask</a> </td> -->
@@ -71,6 +71,28 @@
 			<hr/>
 				<div th:replace="views/usersListPageData :: pageDataListUsers"></div>
 		</div>
+			<!-- Modal for delete user -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          <span aria-hidden="true">&times;</span>
+	        </button>
+	      </div>
+	      <div class="modal-body">
+	        <p>
+	        	Czy chcech usunąć użytkownika?
+	        </p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+	        <a href="" class="btn btn-danger" id="delRef">Delete</a>
+	      </div>
+	    </div>
+	  </div>
+	</div>		
 	</div>
 </body>
 </html>
