@@ -23,76 +23,28 @@
 			<div>
 				<form action="/users" class="form-inline">
 					<div class="form-group mb-2">
-					<input type="text" class="form-control" name="name" placeholder="Search User"/>
-					<input type="submit" value="Search" class="btn btn-primary"/>
+						<input type="text" class="form-control" name="name"
+							placeholder="Search User" /> <input type="submit" value="Search"
+							class="btn btn-primary" />
 					</div>
-				</form>				
-				
+				</form>
 			</div>
 			<div>
-				<a th:href="@{/createExcelAllUsersTasks}" id="createExcelAllUsersTasks"
-						style="float:right"><img th:src="@{/images/excel.png}" style="width:40px;margin-left: 10px;"></a>
-				<div th:replace="fragments/yearSelect :: yearSelect"></div>				
+				<a th:href="@{/createExcelAllUsersTasks}"
+					id="createExcelAllUsersTasks" style="float: right"><img
+					th:src="@{/images/excel.png}"
+					style="width: 40px; margin-left: 10px;"></a>
+				<div th:replace="fragments/yearSelect :: yearSelect"></div>
 			</div>
-			
 		</div>
 		<div class="card">
 			<div class="card card-body">
-				<table id="tListUsers" class="table table-hover">
-					<thead class="headTableUserList">
-						<tr>
-<!-- 							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate" sd:pagination-url="@{/profileYear}">Start Date</a></th> -->
-							<th><a th:text="#{labelTh.usersPage.name}" class="sorted" sd:pagination-sort="name" sd:pagination-url="@{/users}">Name</a></th>
-							<th><a th:text="#{labelTh.usersPage.lastName}" class="sorted" sd:pagination-sort="lastName" sd:pagination-url="@{/users}">Last Name</a></th>
-							<th><a th:text="#{labelTh.usersPage.email}" class="sorted" sd:pagination-sort="email" sd:pagination-url="@{/users}">Email</a></th>
-							<th th:text="#{labelTh.usersPage.work}">Work</th>
-							<th th:text="#{labelTh.usersPage.add}">Add</th>							
-							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{labelTh.usersPage.privileges}">Privileges</th>
-							<th sec:authorize="hasRole('ROLE_ADMIN')" th:text="#{labelTh.usersPage.delete}">Delete</th>							
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="user:${users}">
-							<td th:text="${user.name}"></td>
-							<td th:text="${user.lastName}"></td>
-							<td th:text="${user.email}"></td>
-							<td><a th:href="@{/profile(email=${user.email})}" th:text="#{labelBt.usersPage.work}" class="btn btn-dark">View task</a> </td>
-							<td><a th:href="@{/addTask(email=${user.email})}" th:text="#{labelBt.usersPage.addTask}" class="btn btn-dark">AddTask</a> </td>							
-							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/privileges(email=${user.email})}" th:text="#{labelBt.usersPage.privileges}" class="btn btn-dark">Add privileges</a> </td>
-							<td sec:authorize="hasRole('ROLE_ADMIN')"><a th:href="@{/deleteUser(email=${user.email})}" th:text="#{labelBt.usersPage.delete}" class="btn btn-dark delBtn">Delete</a> </td>
-							
-							
-<!-- 							<td th:if="${#authentication.name } == ${user.email}"><a th:href="@{/addTask(email=${user.email})}" th:text="#{labelBt.usersPage.addTask}" class="btn btn-dark">AddTask</a> </td> -->
-<!-- 							<td th:unless="${#authentication.name } == ${user.email}">-</td> -->
-						</tr>
-					</tbody>
-				</table>
+				<div th:replace="fragments/usersListTableData :: tListUsers"></div>
 			</div>
-			<hr/>
-				<div th:replace="views/usersListPageData :: pageDataListUsers"></div>
+			<hr />
+			<div th:replace="fragments/usersListPageData :: pageDataListUsers"></div>
 		</div>
-			<!-- Modal for delete user -->
-	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-	          <span aria-hidden="true">&times;</span>
-	        </button>
-	      </div>
-	      <div class="modal-body">
-	        <p>
-	        	Czy chcech usunąć użytkownika?
-	        </p>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-	        <a href="" class="btn btn-danger" id="delRef">Delete</a>
-	      </div>
-	    </div>
-	  </div>
-	</div>		
+	<div th:replace="fragments/modalDeleteEntry :: modalDeleteEntry"></div>
 	</div>
 </body>
 </html>

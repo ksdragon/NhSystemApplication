@@ -41,7 +41,7 @@ public class UserController {
 	public String listUsers(Model model,
 			@RequestParam(defaultValue="") String name,
 			@RequestParam("selectedYear") Optional<String> selectedYear,
-			@RequestParam(defaultValue="listUsers") String returnPage,
+			@RequestParam(defaultValue="views/listUsers") String returnPage,
 			@RequestParam("page") Optional<Integer> page,
 			@RequestParam("size") Optional<Integer> size,
 			@RequestParam("sort") Optional<String> sort,
@@ -70,8 +70,7 @@ public class UserController {
 		model.addAttribute("size",pageSize);
 		model.addAttribute("years", taskService.getAllYeas(userService.findAll()));
 		session.setAttribute(currentPageSessionName, clikedPage);
-
-		return "views/" + returnPage;
+		return returnPage;
 	}
 	
 	
@@ -100,7 +99,7 @@ public class UserController {
 		userService.deleteUser(email);
 //		session.setAttribute("email", email);
 //		model.addAttribute("task", new Task());
-		return "redirect:/users";
+		return "redirect:/users";		
 	}
 	
 	

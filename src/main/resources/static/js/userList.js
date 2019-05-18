@@ -1,8 +1,14 @@
+var _returnPageTableData = "fragments/usersListTableData";
+var _returnPagePageData = "fragments/usersListPageData";
+var _selectorByIdTableData = "tListUsers";	
+var _selectorByIdPageBehavior = "pageDataListUsers";
+var getUrl = window.location;
+var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
+			+ getUrl.pathname.split('/')[1];
 
-$(function() {
+$(function() {	
 	onClickCreateExcelAllUsersTasks();
-	registerAllListener();
-	
+	registerAllListener();	
 });
 
 
@@ -16,17 +22,28 @@ function registerAllListener(){
 
 function onClickDeleteButton(){
 	$('.table .delBtn').on('click',function(event){
-		event.preventDefault()
+		event.preventDefault();
 		var href = $(this).attr('href');
-		$('#delRef').attr('href',href);
-		$('#exampleModal').modal();
+		$('#deleteModal #delRef').attr('href',href);
+		onClickModalDeleteButton();
+		$('#deleteModal').modal();		
+	});
+}
+
+function onClickModalDeleteButton(){
+	$('#deleteModal #delRef').on('click',function(event){
+		var _href = this.getElementsByTagName('a')[0].href;
+		var urlSortingOrder = _href + "&returnPage="
+		+ _returnPageTableData;
+		
+		selectPage(urlSortingOrder, _selectorByIdTableData);
 	});
 }
 
 function selectPage(str, selector) {
 
 	var xhttp; // deklaracja pustej zmienej
-
+	
 	if (str == "") {
 		document.getElementById(selector).innerHTML = "";
 		return;
@@ -57,13 +74,7 @@ function selectPage(str, selector) {
 }
 
 function seleYear(year) {
-	//	var urlSelectedYear = "/profileYear?selectedYear=" + year + "&email=" + email
-	//						+ "&returnPage=profileTableData" + "&sort=" + sortParam;
-	//	var urlPageData = "/profileYear?selectedYear=" + year + "&email=" + email
-	//					+ "&returnPage=pageData" + "&sort=" + sortParam;
 	selectedYear = year;
-	//	selectPage(urlSelectedYear,'table');
-	//	selectPage(urlPageData, 'pageData');
 }
 
 function onClickCreateExcelAllUsersTasks() {
@@ -82,9 +93,7 @@ function onSortingOrder() {
 			"click",
 			function(event) {
 				event.preventDefault()
-				var _href = this.getElementsByTagName('a')[0].href;
-				var _selectorByIdTableData = "tListUsers";
-				var _returnPageTableData = "usersListTableData";
+				var _href = this.getElementsByTagName('a')[0].href;								
 				//				var getUrl = window.location;
 				//				var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 				sortParam = getUrlVars(_href)["sort"];
@@ -100,16 +109,9 @@ function onPaginationChangeData() {
 			"click",
 			function(event) {
 				event.preventDefault();
-				var _href = this.getElementsByTagName('a')[0].href;
-				var _selectorByIdTableData = "tListUsers";
-				var _selectorByIdPageBehavior = "pageDataListUsers";
-				var _returnPageTableData = "usersListTableData";
-				var _returnPagePageData = "usersListPageData";
-				pageParam = getUrlVars(_href)["page"];
-				var getUrl = window.location;
-				var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
-						+ getUrl.pathname.split('/')[1];
-
+				var _href = this.getElementsByTagName('a')[0].href;							
+				pageParam = getUrlVars(_href)["page"];	
+				
 				var urlTableData = baseUrl + "?returnPage="
 						+ _returnPageTableData + "&sort=" + sortParam
 						+ "&page=" + pageParam + "&size=" + sizeParam;
@@ -141,18 +143,6 @@ function getUrlVars(str) {
 }
 
 function onSizeNumberOfRow() {
-	//	$("#sizePageSelect").on(
-	//			"onchange",
-	//			function(event) {
-	//				event.preventDefault()
-	//				var _href = this.getElementsByTagName('a')[0].href;
-	var _selectorByIdTableData = "tListUsers";
-	var _returnPageTableData = "usersListTableData";
-	var _returnPagePageData = "usersListPageData";
-	var _selectorByIdPageBehavior = "pageDataListUsers";
-	var getUrl = window.location;
-	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
-			+ getUrl.pathname.split('/')[1];
 	//				sortParam = getUrlVars(_href)["sort"];
 	var urlPageData = baseUrl + "?returnPage=" + _returnPagePageData
 	//					+ "&sort=" + sortParam
@@ -162,7 +152,6 @@ function onSizeNumberOfRow() {
 	+ "&page=" + 0 + "&size=" + sizeParam;
 	selectPage(urlSortingOrder, _selectorByIdTableData);
 	selectPage(urlPageData, _selectorByIdPageBehavior);
-	//			});
 }
 
 //var _innerText = this.innerText;
