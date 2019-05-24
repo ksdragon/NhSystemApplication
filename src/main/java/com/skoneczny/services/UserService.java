@@ -6,6 +6,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -138,6 +140,10 @@ public class UserService implements IUserService {
 	public void setRole(List<Role> roles, User user) {		
 		user.setRoles(roles);	
 		userRepository.save(user);
+	}
+
+	public Page<User> findByName(String name, Pageable pageable) {
+		return userRepository.findByNameLike("%"+name+"%",pageable);		
 	}	
 		
 }

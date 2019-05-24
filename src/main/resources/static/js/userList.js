@@ -1,46 +1,47 @@
-var _returnPageTableData = "fragments/usersListTableData";
-var _returnPagePageData = "fragments/usersListPageData";
-var _selectorByIdTableData = "tListUsers";	
-var _selectorByIdPageBehavior = "pageDataListUsers";
-var getUrl = window.location;
-var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
-			+ getUrl.pathname.split('/')[1];
+var returnViewUsersList = "fragments/usersListTableData";
+var currentUrlInUsersList = window.location; 
+var getUrlInUsersList = window.location;
+var baseUrl = getUrlInUsersList.protocol + "//" + getUrlInUsersList.host + "/"
+			+ getUrlInUsersList.pathname.split('/')[1];
 
 $(function() {	
 	onClickCreateExcelAllUsersTasks();
-	registerAllListener();	
+	registerAllListenerInUsersList();
+	onClickModalDeleteButtonInUsersList();
 });
 
-
-function registerAllListener(){
-	onPaginationChangeData();
-	onSortingOrder();
-	fillSizePageSelect();
-	onChangeSizePageSelect();
-	onClickDeleteButton();
+function registerAllListenerInUsersList(){	
+	onPaginationChangeDataInUsersList();	
+	onChangeSizePageSelectInUsersList();
+	fillSizePageSelectInUsersList();
+	onClickDeleteButtonInUsersList();	
+	onSortingOrderInUsersList();
+	
 }
 
-function onClickDeleteButton(){
-	$('.table .delBtn').on('click',function(event){
-		event.preventDefault();
+function onClickDeleteButtonInUsersList(){
+	$('#usersTableData .table .delBtn').on('click',function(event){
+		event.preventDefault();		
 		var href = $(this).attr('href');
-		$('#deleteModal #delRef').attr('href',href);
-		onClickModalDeleteButton();
+		$('#deleteModal #delRef').attr('href',href);			
 		$('#deleteModal').modal();		
 	});
 }
 
-function onClickModalDeleteButton(){
+function onClickModalDeleteButtonInUsersList(){
 	$('#deleteModal #delRef').on('click',function(event){
-		var _href = this.getElementsByTagName('a')[0].href;
-		var urlSortingOrder = _href + "&returnPage="
-		+ _returnPageTableData;
-		
-		selectPage(urlSortingOrder, _selectorByIdTableData);
+		event.preventDefault();
+		var href = $(this).attr('href');
+		$.get(href,"returnPage=" + returnViewUsersList, function(data){
+			$("#usersTableData").html(data);			
+			registerAllListenerInUsersList();
+		});
+		$('#deleteModal').modal('hide');
 	});
 }
 
-function selectPage(str, selector) {
+
+function selectPageInUsersList(str, selector) {
 
 	var xhttp; // deklaracja pustej zmienej
 	
@@ -62,8 +63,7 @@ function selectPage(str, selector) {
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			document.getElementById(selector).innerHTML = this.responseText;
-			registerAllListener();
-
+			registerAllListenerInUsersList();
 		}
 	};
 	console.log(email);
@@ -88,41 +88,37 @@ function onClickCreateExcelAllUsersTasks() {
 			});
 }
 
-function onSortingOrder() {
-	$(".headTableUserList th").on(
+function onSortingOrderInUsersList() {
+	$("#usersTableData .headTableUserList th").on(
 			"click",
 			function(event) {
 				event.preventDefault()
-				var _href = this.getElementsByTagName('a')[0].href;								
-				//				var getUrl = window.location;
-				//				var baseUrl = getUrl .protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
+				var _href = this.getElementsByTagName('a')[0].href;				
 				sortParam = getUrlVars(_href)["sort"];
-
-				var urlSortingOrder = _href + "&returnPage="
-						+ _returnPageTableData + "&size=" + sizeParam;
-				selectPage(urlSortingOrder, _selectorByIdTableData);
+				var urlSortingOrder = _href 
+					+ "&returnPage=" + returnViewUsersList 
+					+ "&size=" + sizeParam;
+				selectPageInUsersList(urlSortingOrder, "usersTableData");
+				currentUrlInUsersList = urlSortingOrder;
 			});
 }
 
-function onPaginationChangeData() {
-	$(".pagination li").on(
+function onPaginationChangeDataInUsersList() {
+	$("#usersTableData .pagination li").on(
 			"click",
 			function(event) {
 				event.preventDefault();
 				var _href = this.getElementsByTagName('a')[0].href;							
 				pageParam = getUrlVars(_href)["page"];	
 				
-				var urlTableData = baseUrl + "?returnPage="
-						+ _returnPageTableData + "&sort=" + sortParam
-						+ "&page=" + pageParam + "&size=" + sizeParam;
-				var urlPageData = baseUrl + "?returnPage="
-						+ _returnPagePageData + "&sort=" + sortParam + "&page="
-						+ pageParam + "&size=" + sizeParam;
-
-				selectPage(urlTableData, _selectorByIdTableData);
-				selectPage(urlPageData, _selectorByIdPageBehavior);
+				var urlTableData = baseUrl 
+						+ "?returnPage=" + returnViewUsersList 
+						+ "&sort=" + sortParam
+						+ "&page=" + pageParam 
+						+ "&size=" + sizeParam;
+				selectPageInUsersList(urlTableData, "usersTableData");
+				currentUrlInUsersList = urlTableData;
 			});
-
 }
 
 // retrieve param from url.
@@ -141,59 +137,27 @@ function getUrlVars(str) {
 	}
 	return vars;
 }
-
-function onSizeNumberOfRow() {
-	//				sortParam = getUrlVars(_href)["sort"];
-	var urlPageData = baseUrl + "?returnPage=" + _returnPagePageData
-	//					+ "&sort=" + sortParam
-	+ "&page=" + 0 + "&size=" + sizeParam;
-	var urlSortingOrder = baseUrl + "?returnPage=" + _returnPageTableData
-	//					+ "&sort=" + sortParam
-	+ "&page=" + 0 + "&size=" + sizeParam;
-	selectPage(urlSortingOrder, _selectorByIdTableData);
-	selectPage(urlPageData, _selectorByIdPageBehavior);
+function fillSizePageSelectInUsersList() {
+	var options = [ 1, 2, 5, 10, 15, 20, 50, 100 ];
+	$('#sizePageSelect').empty();
+	$.each(options, function(i, p) {
+		$('#sizePageSelect').append($('<option></option>').val(p).html(p));
+	});
+	$('#sizePageSelect').val(sizeParam);
 }
 
-//var _innerText = this.innerText;
-// var _innerHTML = this.innerHTML;
-// var _textContent = this.textContent;
-// console.log(/* _innerText, _innerHTML, _textContent,
-// */ _href)
+function onChangeSizePageSelectInUsersList() {
+	$("#usersTableData #sizePageSelect").on(
+			"change",
+			function(event){
+				event.preventDefault();
+				let selOptionValue = this.options[this.selectedIndex].value;
+				sizeParam = selOptionValue;
+				
+				var urlSortingOrder = baseUrl + "?returnPage=" + returnViewUsersList
+				//					+ "&sort=" + sortParam
+				+ "&page=" + 0 + "&size=" + sizeParam;
+				selectPageInUsersList(urlSortingOrder, "usersTableData");
+			});
+}
 
-//function selectYear(str) {
-//
-//	var xhttp; // deklaracja pustej zmienej
-//	// if(email == ""){
-//	// var email = /*[[${email}]]*/ 'default';
-//	// //var email = $('#email').val();
-//	// return;
-//	// }
-//	if (str == "") {
-//		document.getElementById("table").innerHTML = "";
-//		return;
-//	}
-//
-//	// create object XMLHttpRequest
-//	if (window.XMLHttpRequest) {
-//		// code for modern browsers
-//		xhttp = new XMLHttpRequest();
-//	} else {
-//		// code for old IE browsers
-//		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-//	}
-//
-//	// w�a�ciwo�c kt�r� posiada obiekt xhttp
-//	xhttp.onreadystatechange = function() {
-//		if (this.readyState == 4 && this.status == 200) {
-//			document.getElementById("table").innerHTML = this.responseText;
-//			onPaginationChangeData();
-//			onSortingOrder();
-//
-//		}
-//	};
-//	xhttp.open("GET", "/profileYear?selectedYear=" + str + "&email=" + email,
-//			true);
-//	// xhttp.setRequestHeader("Content-type",
-//	// "application/x-www-form-urlencoded");
-//	xhttp.send();
-//}

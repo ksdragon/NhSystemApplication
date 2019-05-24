@@ -5,7 +5,7 @@
 <head>
 <title th:text="#{label.usersPage.title}">Users Page</title>
 <script type="text/javascript" th:src="@{js/userList.js}" src="../static/js/userList.js"></script>
-<script type="text/javascript" th:src="@{js/pageSize.js}" src="../static/js/pageSize.js"></script>
+<!-- <script type="text/javascript" th:src="@{js/pageSize.js}" src="../static/js/pageSize.js"></script> -->
 <link rel="stylesheet" href="../../static/css/style.css" th:href="@{css/style.css}" />
 <script th:inline="javascript">
 /*<![CDATA[*/
@@ -37,14 +37,12 @@
 				<div th:replace="fragments/yearSelect :: yearSelect"></div>
 			</div>
 		</div>
-		<div class="card">
-			<div class="card card-body">
+		<div id="usersTableData" class="card">
+<!-- 			<div class="card card-body"> -->
 				<div th:replace="fragments/usersListTableData :: tListUsers"></div>
-			</div>
-			<hr />
-			<div th:replace="fragments/usersListPageData :: pageDataListUsers"></div>
+<!-- 			</div> -->
 		</div>
-	<div th:replace="fragments/modalDeleteEntry :: modalDeleteEntry"></div>
+		<div th:replace="fragments/modalDeleteEntry :: modalDeleteEntry"></div>	
 	</div>
 </body>
 </html>

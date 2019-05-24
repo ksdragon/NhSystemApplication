@@ -48,28 +48,35 @@ public class UserController {
 			Pageable pageable,
 			HttpSession session,
 			HttpServletRequest request) {
-		String currentPageSessionName = "userListCurrentPageSessionAttribute";
+		String currentPageSessionNameUserList = "userListCurrentPageSessionAttribute";
+		String pageableSessionAtrrtibute = "pageableSessionAtrrtibute";
 		int clikedPage;
 		int currentPage = page.orElse(0);
         int pageSize = size.orElse(5);
-        if(session.getAttribute(currentPageSessionName) != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionName) ;
+        if(session.getAttribute(currentPageSessionNameUserList) != null) {
+			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameUserList) ;
 			currentPage = clikedPage;
 		}else
 		{
 			clikedPage = currentPage;
 		}
+//        if(session.getAttribute(pageableSessionAtrrtibute) != null) {
+//        	pageable =  (Pageable) session.getAttribute(pageableSessionAtrrtibute);
+//        }
+        
         Sort sortP = pageable.getSort();     
         
 //        List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year,sortP);
 //		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
         
+        Page<User> listOfUserPageable = userService.findByName(name,pageable);
 		List<User> listOfUser = userService.findByName(name,sortP);		
 		Page<User> listOfUserPaged = (Page<User>) taskService.findPaginated(PageRequest.of(currentPage, pageSize,sortP), listOfUser);
-		model.addAttribute("users",listOfUserPaged);
+		model.addAttribute("users",listOfUserPageable);
 		model.addAttribute("size",pageSize);
 		model.addAttribute("years", taskService.getAllYeas(userService.findAll()));
-		session.setAttribute(currentPageSessionName, clikedPage);
+		session.setAttribute(currentPageSessionNameUserList, clikedPage);
+//		session.setAttribute(pageableSessionAtrrtibute, pageable);
 		return returnPage;
 	}
 	
@@ -95,12 +102,15 @@ public class UserController {
 	
 	
 	@GetMapping("/deleteUser")
-	public String taskFrom(String email, Model model, HttpSession session) {
+	public String taskFrom(String email, @RequestParam(defaultValue="views/listUsers") String returnPage) {
 		userService.deleteUser(email);
-//		session.setAttribute("email", email);
-//		model.addAttribute("task", new Task());
-		return "redirect:/users";		
+		return "redirect:/users?returnPage=" + returnPage;		
 	}
+	
+//	@DeleteMapping("/deleteUser/{email}")
+//	public void taskFrom(@PathVariable String email) {
+//		userService.deleteUser(email);			
+//	}
 	
 	
 }

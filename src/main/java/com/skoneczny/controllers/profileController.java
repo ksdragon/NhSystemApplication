@@ -53,18 +53,18 @@ public class profileController {
 			HttpServletRequest request,
 			Pageable pageable
 			) {
-		String currentPageSessionName = "profileCurrentPageSessionAttribute";
+		String currentPageSessionNameProfile = "profileCurrentPageSessionAttribute";
 		int clikedPage;
 		int currentPage = page.orElse(0/*1*/);
 		int pageSize = size.orElse(5);
 		
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
-				session.removeAttribute(currentPageSessionName);
+				session.removeAttribute(currentPageSessionNameProfile);
 			}
 		}		
-		if(session.getAttribute(currentPageSessionName) != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionName) ;
+		if(session.getAttribute(currentPageSessionNameProfile) != null) {
+			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameProfile) ;
 			currentPage = clikedPage;
 		}else
 		{
@@ -89,7 +89,7 @@ public class profileController {
 //		model.addAttribute("pageWrapp", pageWrapp);
 			
 		
-		session.setAttribute(currentPageSessionName, clikedPage);
+		session.setAttribute(currentPageSessionNameProfile, clikedPage);
 		session.setAttribute("emailSession", email);
 
 		return "views/profile";
@@ -110,16 +110,16 @@ public class profileController {
 			HttpServletRequest request,
 			Pageable pageable
 			) {
-		String currentPageSessionName = "profileCurrentPageSessionAttribute";
+		String currentPageSessionNameProfile = "profileCurrentPageSessionAttribute";
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
-				session.removeAttribute(currentPageSessionName);
+				session.removeAttribute(currentPageSessionNameProfile);
 			}
 		} 
 		int clikedPage;
 		int currentPage = /*pageable.getPageNumber();*/ page.orElse(0/*1*/);		
-		if(session.getAttribute(currentPageSessionName) != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionName) ;
+		if(session.getAttribute(currentPageSessionNameProfile) != null) {
+			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameProfile) ;
 			currentPage = clikedPage;
 		}else
 		{
@@ -145,7 +145,7 @@ public class profileController {
 		model.addAttribute("tasks", listPaged);
 //		model.addAttribute("pageWrapp", pageWrapp);			
 		model.addAttribute("size",pageSize);
-		session.setAttribute(currentPageSessionName, clikedPage  );
+		session.setAttribute(currentPageSessionNameProfile, clikedPage  );
 		session.setAttribute("emailSession", email);
 		return "views/" + returnPage;
 	}
