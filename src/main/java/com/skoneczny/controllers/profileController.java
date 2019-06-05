@@ -127,7 +127,7 @@ public class profileController {
 //			clikedPage = currentPage;
 //		}
 //		Sort sortP = pageable.getSort();
-		//Sort s = new Sort.Order(Direction.ASC, sort.orElse("aa"));
+
 		
 		
 //        int pageSize = /*pageable.getPageSize();*/ size.orElse(5);
