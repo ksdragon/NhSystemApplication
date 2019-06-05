@@ -45,32 +45,32 @@ public class profileController {
 	@GetMapping("/profile")
 	public String showProfilePage(Model model,
 			@RequestParam(defaultValue="") String email,
-			@RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size,
-			@RequestParam("sort") Optional<String> sort,
+//			@RequestParam("page") Optional<Integer> page,
+//			@RequestParam("size") Optional<Integer> size,
+//			@RequestParam("sort") Optional<String> sort,
 			Principal principal,
 			HttpSession session,
 			HttpServletRequest request,
 			Pageable pageable
 			) {
 		String currentPageSessionNameProfile = "profileCurrentPageSessionAttribute";
-		int clikedPage;
-		int currentPage = page.orElse(0/*1*/);
-		int pageSize = size.orElse(5);
+//		int clikedPage;
+//		int currentPage = page.orElse(0/*1*/);
+//		int pageSize = size.orElse(5);
 		
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
 				session.removeAttribute(currentPageSessionNameProfile);
 			}
 		}		
-		if(session.getAttribute(currentPageSessionNameProfile) != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameProfile) ;
-			currentPage = clikedPage;
-		}else
-		{
-			clikedPage = currentPage;
-		}
-		Sort sortP = pageable.getSort();	
+//		if(session.getAttribute(currentPageSessionNameProfile) != null) {
+//			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameProfile) ;
+//			currentPage = clikedPage;
+//		}else
+//		{
+//			clikedPage = currentPage;
+//		}
+//		Sort sortP = pageable.getSort();	
 		
 //        String sortParam = sort.orElse("startDate");
         String year = Integer.toString(LocalDate.now().getYear());		
@@ -81,15 +81,16 @@ public class profileController {
 		model.addAttribute("email",user.getEmail());
 //		model.addAttribute("allYear", allYear);				
 		
-		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year,sortP);
-		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
+		Page<Task> pageableListTasksYear = taskService.findUsersTasksPageableByYear(user, year, pageable);
+//		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, year,sortP);
+//		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
-		model.addAttribute("tasks", listPaged);
-		model.addAttribute("size",pageSize);
+		model.addAttribute("tasks", pageableListTasksYear);
+//		model.addAttribute("size",pageSize);
 //		model.addAttribute("pageWrapp", pageWrapp);
 			
 		
-		session.setAttribute(currentPageSessionNameProfile, clikedPage);
+//		session.setAttribute(currentPageSessionNameProfile, clikedPage);
 		session.setAttribute("emailSession", email);
 
 		return "views/profile";
@@ -101,9 +102,9 @@ public class profileController {
 			Model model,
 			@RequestParam(defaultValue="") String email,
 			@RequestParam(defaultValue="profileTableData") String returnPage,
-			@RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size,
-			@RequestParam("sort") Optional<String> sort,
+//			@RequestParam("page") Optional<Integer> page,
+//			@RequestParam("size") Optional<Integer> size,
+//			@RequestParam("sort") Optional<String> sort,
 			@RequestParam("selectedYear") Optional<String> selectedYear,
 			Principal principal,
 			HttpSession session,
@@ -116,20 +117,20 @@ public class profileController {
 				session.removeAttribute(currentPageSessionNameProfile);
 			}
 		} 
-		int clikedPage;
-		int currentPage = /*pageable.getPageNumber();*/ page.orElse(0/*1*/);		
-		if(session.getAttribute(currentPageSessionNameProfile) != null) {
-			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameProfile) ;
-			currentPage = clikedPage;
-		}else
-		{
-			clikedPage = currentPage;
-		}
-		Sort sortP = pageable.getSort();
+//		int clikedPage;
+//		int currentPage = /*pageable.getPageNumber();*/ page.orElse(0/*1*/);		
+//		if(session.getAttribute(currentPageSessionNameProfile) != null) {
+//			clikedPage = page.isPresent()? currentPage : (int) session.getAttribute(currentPageSessionNameProfile) ;
+//			currentPage = clikedPage;
+//		}else
+//		{
+//			clikedPage = currentPage;
+//		}
+//		Sort sortP = pageable.getSort();
 		//Sort s = new Sort.Order(Direction.ASC, sort.orElse("aa"));
 		
 		
-        int pageSize = /*pageable.getPageSize();*/ size.orElse(5);
+//        int pageSize = /*pageable.getPageSize();*/ size.orElse(5);
 //        String sortParam = sort.orElse("startDate");
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
@@ -138,14 +139,14 @@ public class profileController {
 		model.addAttribute("years", taskService.getAllYeas(user));
 		model.addAttribute("email",user.getEmail());
 		//model.addAttribute("allYear", allYear);				
-		
-		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
-		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
+		Page<Task> pageableListTasksYear = taskService.findUsersTasksPageableByYear(user, year, pageable);
+//		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
+//		Page<Task> listPaged = (Page<Task>) taskService.findPaginated(PageRequest.of(currentPage /*-1*/ , pageSize, sortP /*Sort.by(sortParam)*/),findUserTasksYear);	
 //		PageWrapper<Task> pageWrapp = new PageWrapper<Task>(listPaged, "/profile");
-		model.addAttribute("tasks", listPaged);
+		model.addAttribute("tasks", pageableListTasksYear);
 //		model.addAttribute("pageWrapp", pageWrapp);			
-		model.addAttribute("size",pageSize);
-		session.setAttribute(currentPageSessionNameProfile, clikedPage  );
+//		model.addAttribute("size",pageSize);
+//		session.setAttribute(currentPageSessionNameProfile, clikedPage  );
 		session.setAttribute("emailSession", email);
 		return "views/" + returnPage;
 	}

@@ -2,16 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-<!-- <script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script> -->
-<script>
-// /*<![CDATA[*/
-// 		  var email = /*[[${email}]]*/ 'default';
-// /*]]>*/
-</script>
 </head>
 <body>
 				
-				<div id="pageData" class="row container" th:fragment="pageData">
+				<div id="profilePageData" class="row container" th:fragment="profilePageData">
 				    <div class="col-sm-5">
 	                    <div class="pagination"><p>Pokazano<span class="badge"
 	                                                               th:text="${tasks.size * tasks.number + 1}"></span> do

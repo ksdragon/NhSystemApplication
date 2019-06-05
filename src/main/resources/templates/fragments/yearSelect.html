@@ -12,7 +12,7 @@
 				<div th:fragment="yearSelect" class="form-group blu-margin">
 					<br>
 					<label class="form-control-label" for="selectedYear" th:text="#{label.profile.ListYears}">Select Year</label>
-					<select class="form-control" id="selectedYear" name="selectedYear" onchange="seleYear(this.value)">
+					<select class="form-control" id="selectedYear" name="selectedYear" onchange="seleYearInProfile(this.value)">
 						<option value="All" th:text="#{label.option.profile.ListYears}">Select Date</option>
 						<option th:each="year : ${years}" 
 							th:value="${year}" 

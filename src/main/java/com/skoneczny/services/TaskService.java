@@ -542,12 +542,12 @@ public class TaskService implements ITaskService{
 				//dopisać jak będzie all
 				if (!isEmptyForSelectedYear(selectedYear, user)) {
 					List<Task> userTasks = findUserTasksYear(user,selectedYear,sortP);
-					createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+					if(!userTasks.isEmpty())createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
 				}else {
 					List<Task> userTasks = new ArrayList<Task>();					
 					userTasks.add(new Task());
 					userTasks.get(0).setUser(user);
-					createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
+					if(!userTasks.isEmpty())createExcelSheetRaportAllUsers(workbook, userTasks, workSheet,i);
 				}
 				i++;
 				
@@ -569,6 +569,7 @@ public class TaskService implements ITaskService{
 			return true;
 			
 		}catch (Exception e) {
+				e.printStackTrace();
 				return false;
 			}
 	}
@@ -681,5 +682,18 @@ public class TaskService implements ITaskService{
 			}
 		}
 		
+	}
+	@Override
+	public Page<Task> findUsersTasksPageableByYear(User user, String year, Pageable pageable) {
+		if(!year.equals("All")) {
+			 Page<Task> x = taskRepository.findByUser(user,pageable);
+			 x.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year));
+			return x;
+//					.stream()
+//					.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
+//					.collect(Collectors.toList());
+			}else {
+				return taskRepository.findByUser(user,pageable);
+			}
 	}
 }

@@ -49,4 +49,6 @@ public interface ITaskService {
 
 	void filedownload(String fullPath, HttpServletResponse response, String fileName);
 
+	Page<Task> findUsersTasksPageableByYear(User user, String year, Pageable pageable);
+
 }

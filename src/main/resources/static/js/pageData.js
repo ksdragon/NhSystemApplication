@@ -1,17 +1,21 @@
+var _selectorByIdTableData = "table";
+var _returnPageTableData = "profileTableData";
+var _returnPagePageData = "profilePageData";	
+
 $(function() {
-	registerAllListener();
+	registerAllListenerInProfile();
 	onClickPdfDownloadRaportTasksUser();
 
 });
 
-function registerAllListener(){
-	onSortingOrder();
-	onPaginationChangeData();
-	fillSizePageSelect();
-	onChangeSizePageSelect();
+function registerAllListenerInProfile(){
+	onSortingOrderInProfile();
+	onPaginationChangeDataInProfile();
+	fillSizePageSelectInProfile();
+	onChangeSizePageSelectInProfile();
 }
 
-function selectPage(str, selector) {
+function selectPageInProfile(str, selector) {
 
 	var xhttp; // deklaracja pustej zmienej
 
@@ -33,7 +37,7 @@ function selectPage(str, selector) {
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			document.getElementById(selector).innerHTML = this.responseText;
-			registerAllListener();
+			registerAllListenerInProfile();
 
 		}
 	};
@@ -44,28 +48,14 @@ function selectPage(str, selector) {
 	xhttp.send();
 }
 
-function seleYear(year){
+function seleYearInProfile(year){
 	var urlSelectedYear = "/profileYear?selectedYear=" + year + "&email=" + email
 						+ "&returnPage=profileTableData" + "&sort=" + sortParam;
 	var urlPageData = "/profileYear?selectedYear=" + year + "&email=" + email
-					+ "&returnPage=pageData" + "&sort=" + sortParam;
+					+ "&returnPage=profilePageData" + "&sort=" + sortParam;
 	selectedYear = year;
-	selectPage(urlSelectedYear,'table');
-	selectPage(urlPageData, 'pageData');
+	selectPageInProfile(urlSelectedYear,'table');
 }
-
-function selectPage1(obiekt) {
-	console.log(obiekt.href);
-}
-
-//function onClickPdfDownloadRaportTasksUser1(){	
-//			event.preventDefault()
-//			var urlcreatePdf = "/createPdf?selectedYear=" + year + "&email=" + email
-//			 + "&sort=" + sortParam;
-//			window.location.href = urlcreatePdf;
-//			};
-//}
-//
 
 function onClickPdfDownloadRaportTasksUser(){
 	$("#pdfRaportTasksUser").on(
@@ -77,14 +67,12 @@ function onClickPdfDownloadRaportTasksUser(){
 			});
 }
 
-function onSortingOrder() {
+function onSortingOrderInProfile() {
 	$(".headTable th").on(
 			"click",
 			function(event) {
 				event.preventDefault()
-				var _href = this.getElementsByTagName('a')[0].href;
-				var _selectorByIdTableData = "table";
-				var _returnPageProfileTableData = "profileTableData";
+				var _href = this.getElementsByTagName('a')[0].href;					
 				// "http://localhost:8090/profileYear?email=6John@mail.com&returnPage=profileTableData&sort=startDate,desc"
 				if (!_href.includes("email=")) {
 					var urlSortingOrder = _href + "&email=" + email
@@ -94,22 +82,17 @@ function onSortingOrder() {
 					var urlSortingOrder = _href + '&selectedYear=' + selectedYear;
 				}
 				sortParam = getUrlVars(_href)["sort"];
-				selectPage(urlSortingOrder, _selectorByIdTableData);
+				selectPageInProfile(urlSortingOrder, _selectorByIdTableData);
 			});
 }
 
-function onPaginationChangeData() {
+function onPaginationChangeDataInProfile() {
 	$(".pagination li")
 			.on(
 					"click",
 					function(event) {
 						event.preventDefault()
-						var _href = this.getElementsByTagName('a')[0].href;
-						var _selectorByIdTableData = "table";
-						var _selectorByIdPageBehavior = "pageData";
-						var _returnPageProfileTableData = "profileTableData";
-						var _returnPagePageData = "pageData";
-						
+						var _href = this.getElementsByTagName('a')[0].href;							
 						var urlProfileTableData = _href 
 								+ "&email=" + email
 								+ "&returnPage=profileTableData" 
@@ -118,21 +101,17 @@ function onPaginationChangeData() {
 								+ "&size=" + sizeParam;
 						var urlPageData = _href 
 								+ "&email=" + email
-								+ "&returnPage=pageData" 
+								+ "&returnPage=profilePageData" 
 								+ "&selectedYear=" 	+ selectedYear 
 								+ "&sort=" + sortParam
 								+ "&size=" + sizeParam;
-						selectPage(urlProfileTableData, _selectorByIdTableData);
-						selectPage(urlPageData, _selectorByIdPageBehavior);
+						selectPageInProfile(urlProfileTableData, _selectorByIdTableData);
 					});
 
 }
 
-function onSizeNumberOfRow() {	
-	var _selectorByIdTableData = "table";
-	var _returnPageTableData = "profileTableData";
-	var _returnPagePageData = "pageData";
-	var _selectorByIdPageBehavior = "pageData";
+function onSizeNumberOfRowInProfile() {
+	
 	let sActionName = "profileYear"
 	var getUrl = window.location;	
 	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
@@ -149,9 +128,7 @@ function onSizeNumberOfRow() {
 		+ "&sort=" + sortParam
 		+ "&page=" + 0 
 		+ "&size=" + sizeParam;
-	selectPage(urlSortingOrder, _selectorByIdTableData);
-	selectPage(urlPageData, _selectorByIdPageBehavior);
-	//			});
+	selectPageInProfile(urlSortingOrder, _selectorByIdTableData);
 }
 
 // retrieve param from url.
@@ -170,6 +147,44 @@ function getUrlVars(str) {
 	}
 	return vars;
 }
+
+function fillSizePageSelectInProfile() {
+	var options = [ 1, 2, 5, 10, 15, 20, 50, 100 ];
+	$('#sizePageSelect').empty();
+	$.each(options, function(i, p) {
+		$('#sizePageSelect').append($('<option></option>').val(p).html(p));
+	});
+	$('#sizePageSelect').val(sizeParam);
+}
+
+function onChangeSizePageSelectInProfile() {
+	$("#sizePageSelect").on(
+			"change",
+			function(event){
+				event.preventDefault();
+				let selOptionValue = this.options[this.selectedIndex].value;
+				sizeParam = selOptionValue;
+				onSizeNumberOfRowInProfile()
+			});
+}
+
+
+
+function selectPageInProfile1(obiekt) {
+	console.log(obiekt.href);
+}
+
+//function onClickPdfDownloadRaportTasksUser1(){	
+//			event.preventDefault()
+//			var urlcreatePdf = "/createPdf?selectedYear=" + year + "&email=" + email
+//			 + "&sort=" + sortParam;
+//			window.location.href = urlcreatePdf;
+//			};
+//}
+//
+
+
+
 
 //var _innerText = this.innerText;
 // var _innerHTML = this.innerHTML;
@@ -204,8 +219,8 @@ function getUrlVars(str) {
 //	xhttp.onreadystatechange = function() {
 //		if (this.readyState == 4 && this.status == 200) {
 //			document.getElementById("table").innerHTML = this.responseText;
-//			onPaginationChangeData();
-//			onSortingOrder();
+//			onPaginationChangeDataInProfile();
+//			onSortingOrderInProfile();
 //
 //		}
 //	};

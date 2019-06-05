@@ -6,8 +6,9 @@ var baseUrl = getUrlInUsersList.protocol + "//" + getUrlInUsersList.host + "/"
 
 $(function() {	
 	onClickCreateExcelAllUsersTasks();
-	registerAllListenerInUsersList();
+	registerAllListenerInUsersList();	
 	onClickModalDeleteButtonInUsersList();
+	
 });
 
 function registerAllListenerInUsersList(){	
