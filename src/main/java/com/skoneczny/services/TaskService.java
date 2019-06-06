@@ -108,7 +108,7 @@ public class TaskService implements ITaskService{
 	}
 		
 
-	/*public List<Task> findUserTasksYear(User user, String year) {
+/*	public List<Task> findUserTasksYear(User user, String year) {
 		List<Task> tList = new ArrayList<>();
 		
 		List<Task> tasks = taskRepository.findByUser(user);
@@ -118,7 +118,8 @@ public class TaskService implements ITaskService{
 			};
 		}
 		return tList;
-	}*/
+	}
+*/	
 	
 	@Override
 	public List<Task> findUserTasksYear(User user, String year) {		
@@ -686,12 +687,15 @@ public class TaskService implements ITaskService{
 	@Override
 	public Page<Task> findUsersTasksPageableByYear(User user, String year, Pageable pageable) {
 		if(!year.equals("All")) {
-			 Page<Task> x = taskRepository.findByUser(user,pageable);
-			 x.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year));
-			return x;
-//					.stream()
-//					.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
-//					.collect(Collectors.toList());
+							 	
+			 	List<Task> tasksList = taskRepository.findByUser(user)
+				.stream()
+				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
+				.collect(Collectors.toList());
+				final long count = tasksList.size();			 
+				
+			return new PageImpl<Task>(tasksList, pageable, count);
+//				return taskRepository.findByUser(user,pageable);
 			}else {
 				return taskRepository.findByUser(user,pageable);
 			}

@@ -1,6 +1,5 @@
 var _selectorByIdTableData = "table";
-var _returnPageTableData = "profileTableData";
-var _returnPagePageData = "profilePageData";	
+var _returnPageTableData = "views/profileTableData";	
 
 $(function() {
 	registerAllListenerInProfile();
@@ -49,10 +48,10 @@ function selectPageInProfile(str, selector) {
 }
 
 function seleYearInProfile(year){
-	var urlSelectedYear = "/profileYear?selectedYear=" + year + "&email=" + email
-						+ "&returnPage=profileTableData" + "&sort=" + sortParam;
-	var urlPageData = "/profileYear?selectedYear=" + year + "&email=" + email
-					+ "&returnPage=profilePageData" + "&sort=" + sortParam;
+	var urlSelectedYear = "/profile?selectedYear=" + year + "&email=" + email
+						+ "&returnPage=views/profileTableData" + "&sort=" + sortParam;
+//	var urlPageData = "/profile?selectedYear=" + year + "&email=" + email
+//					+ "&returnPage=views/profilePageData" + "&sort=" + sortParam;
 	selectedYear = year;
 	selectPageInProfile(urlSelectedYear,'table');
 }
@@ -76,8 +75,10 @@ function onSortingOrderInProfile() {
 				// "http://localhost:8090/profileYear?email=6John@mail.com&returnPage=profileTableData&sort=startDate,desc"
 				if (!_href.includes("email=")) {
 					var urlSortingOrder = _href + "&email=" + email
-							+ "&returnPage=profileTableData" 
-							+ '&selectedYear=' + selectedYear;
+							+ "&returnPage=" + _returnPageTableData
+							+ '&selectedYear=' + selectedYear
+							+ "&sort=" + sortParam 
+							+ "&size=" + sizeParam;
 				} else {
 					var urlSortingOrder = _href + '&selectedYear=' + selectedYear;
 				}
@@ -95,15 +96,9 @@ function onPaginationChangeDataInProfile() {
 						var _href = this.getElementsByTagName('a')[0].href;							
 						var urlProfileTableData = _href 
 								+ "&email=" + email
-								+ "&returnPage=profileTableData" 
+								+ "&returnPage=" + _returnPageTableData 
 								+ "&selectedYear="	+ selectedYear 
 								+ "&sort=" + sortParam 
-								+ "&size=" + sizeParam;
-						var urlPageData = _href 
-								+ "&email=" + email
-								+ "&returnPage=profilePageData" 
-								+ "&selectedYear=" 	+ selectedYear 
-								+ "&sort=" + sortParam
 								+ "&size=" + sizeParam;
 						selectPageInProfile(urlProfileTableData, _selectorByIdTableData);
 					});
@@ -112,20 +107,15 @@ function onPaginationChangeDataInProfile() {
 
 function onSizeNumberOfRowInProfile() {
 	
-	let sActionName = "profileYear"
+	let sActionName = "profile"
 	var getUrl = window.location;	
 	var baseUrl = getUrl.protocol + "//" + getUrl.host + "/"
 			+ sActionName;
-	var urlPageData = baseUrl 
-		+ "?returnPage=" + _returnPagePageData
-		+ "&email=" + email
-		+ "&sort=" + sortParam
-		+ "&page=" + 0 
-		+ "&size=" + sizeParam;
 	var urlSortingOrder = baseUrl 
 		+ "?returnPage=" + _returnPageTableData
 		+ "&email=" + email
 		+ "&sort=" + sortParam
+		+ "&selectedYear="	+ selectedYear
 		+ "&page=" + 0 
 		+ "&size=" + sizeParam;
 	selectPageInProfile(urlSortingOrder, _selectorByIdTableData);
