@@ -41,7 +41,7 @@ public class UserController {
 			HttpSession session,
 			HttpServletRequest request) {
 		String pageableSessionAtrrtibute = "pageableSessionAtrrtibute";	
-
+		String year = Integer.toString(LocalDate.now().getYear());	
         if(!request.getHeader("referer").contains("users")) {
         	pageable =  (Pageable) session.getAttribute(pageableSessionAtrrtibute);
         }        
@@ -49,6 +49,7 @@ public class UserController {
         model.addAttribute("users",listOfUserPageable);
 		model.addAttribute("years", taskService.getAllYeas(userService.findAll()));
 		session.setAttribute(pageableSessionAtrrtibute, pageable);
+		model.addAttribute("selectedYear", selectedYear.orElse(year));
 		return returnPage;
 	}
 	

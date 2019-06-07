@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -15,6 +16,10 @@ import org.springframework.lang.NonNull;
 
  
  @Entity
+// @NamedQuery(
+//	        name = "Task.findAllTaskForUserByYear",
+//	        query = "select t from Task t where user = ?1 and where "
+//	)
 public class Task {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)

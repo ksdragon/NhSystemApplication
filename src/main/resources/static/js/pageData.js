@@ -1,5 +1,5 @@
 var _selectorByIdTableData = "table";
-var _returnPageTableData = "views/profileTableData";	
+var _returnPageTableData = "fragments/profileTableData";	
 
 $(function() {
 	registerAllListenerInProfile();
@@ -48,8 +48,11 @@ function selectPageInProfile(str, selector) {
 }
 
 function seleYearInProfile(year){
-	var urlSelectedYear = "/profile?selectedYear=" + year + "&email=" + email
-						+ "&returnPage=views/profileTableData" + "&sort=" + sortParam;
+	var urlSelectedYear = "/profile?selectedYear=" + year 
+						+ "&email=" + email
+						+ "&returnPage=" + _returnPageTableData 
+						+ "&sort=" + sortParam
+						+ "&size=" + sizeParam;
 //	var urlPageData = "/profile?selectedYear=" + year + "&email=" + email
 //					+ "&returnPage=views/profilePageData" + "&sort=" + sortParam;
 	selectedYear = year;

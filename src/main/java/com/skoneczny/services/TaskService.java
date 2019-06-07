@@ -26,6 +26,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor.HSSFColorPredefined;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -686,17 +687,18 @@ public class TaskService implements ITaskService{
 	}
 	@Override
 	public Page<Task> findUsersTasksPageableByYear(User user, String year, Pageable pageable) {
-		if(!year.equals("All")) {
-							 	
-			 	List<Task> tasksList = taskRepository.findByUser(user)
-				.stream()
-				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
-				.collect(Collectors.toList());
-				final long count = tasksList.size();			 
-				
-			return new PageImpl<Task>(tasksList, pageable, count);
-//				return taskRepository.findByUser(user,pageable);
-			}else {
+		if(!year.equals("All")) {				
+//			 	List<Task> tasksList = taskRepository.findByUser(user)
+//				.stream()
+//				.filter(task -> Objects.equals(task.getStartDate().substring(0,4), year))
+//				.collect(Collectors.toList());				
+//				int pageSize = pageable.getPageSize();
+//				long pageOffset = pageable.getOffset();
+//				long total = pageOffset + tasksList.size() + (tasksList.size() == pageSize ? pageSize : 0);
+//				return new PageImpl<Task>(tasksList, pageable, total);
+			
+				return taskRepository.findByUser(user, year ,pageable);
+			}else {			 
 				return taskRepository.findByUser(user,pageable);
 			}
 	}

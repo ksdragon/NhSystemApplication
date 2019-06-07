@@ -1,6 +1,5 @@
 package com.skoneczny.controllers;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.security.Principal;
@@ -51,22 +50,26 @@ public class profileController {
 			HttpSession session,
 			HttpServletRequest request,
 			Pageable pageable
-			) {
+			) {		
 		String currentPageSessionNameProfile = "profileCurrentPageSessionAttribute";
 		if(session.getAttribute("emailSession") != null) {
 			if(!session.getAttribute("emailSession").equals(email)) {
 				session.removeAttribute(currentPageSessionNameProfile);
 			}
 		}
+		String pageableSessionAtrrtibute = "pageableSessionAtrrtibuteInProfiles";
+        if(!request.getHeader("referer").contains("profile")) {
+        	pageable =  (Pageable) session.getAttribute(pageableSessionAtrrtibute);
+        }        
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
 		User user = userService.findOne(email);
 		model.addAttribute("years", taskService.getAllYeas(user));
 		model.addAttribute("email",user.getEmail());
-		
+		session.setAttribute(pageableSessionAtrrtibute, pageable);		
 		Page<Task> pageableListTasksYear = taskService.findUsersTasksPageableByYear(user, selectedYear.orElse(year), pageable);
-		Page<Task> pageableListTasksYear1 = taskService.findUsersTasksPageableByYear(user, "All", pageable);
 		model.addAttribute("tasks", pageableListTasksYear);
+		model.addAttribute("selectedYear", selectedYear.orElse(year));
 		session.setAttribute("emailSession", email);
 		return returnPage;
 	
