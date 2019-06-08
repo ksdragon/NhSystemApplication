@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,8 @@ import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -95,11 +98,24 @@ public class TaskController {
 	}
 	
 	@GetMapping("/deleteTask")
-	public String taskFrom(Long id, Model model, HttpSession session) {
+	public String taskFrom(Long id, Model model, HttpSession session,  
+			@RequestParam(defaultValue="fragments/profileTableData") String returnPage, 
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size,
+			@RequestParam("sort") String sort,
+			@RequestParam("totalElements") Integer totalElements,
+			Pageable pageable) {
 		Task taskById = taskService.findTaskById(id);
 		String email = taskById.getUser().getEmail();
-		taskService.deleteTask(id);		
-		return "redirect:/profile?email=" + email;
+		taskService.deleteTask(id);
+		if(totalElements%size == 1){
+			page -= 1;
+		}
+		return "redirect:/profile?email=" + email 
+				+ "&returnPage=" + returnPage
+				+ "&size=" + size
+				+ "&page=" + page  
+				+ "&sort=" + sort;
 	}
 	
 	@GetMapping("/editTask")
@@ -112,11 +128,24 @@ public class TaskController {
 	}
 	
 	@GetMapping("/approvTask")
-	public String approvTaskFrom(Long id, Model model, HttpSession session) {
+	public String approvTaskFrom(Long id, Model model, HttpSession session,
+			@RequestParam(defaultValue="fragments/profileTableData") String returnPage,			
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size,
+			@RequestParam("sort") String sort,
+			Pageable pageable) {
 		Task taskById = taskService.findTaskById(id);
 		String email = taskById.getUser().getEmail();
 		taskService.approvDeapprovTask(id);		
-		return "redirect:/profile?email=" + email;
+//		String sortParam = pageable.getSort().toString();
+//		int iend = sortParam.indexOf(":");
+//		int pageNumber = pageable.getPageNumber();
+//		pageNumber = pageNumber - 1;
+		return "redirect:/profile?email=" + email 
+					+ "&returnPage=" + returnPage 
+					+ "&size=" + size
+					+ "&page=" + page  
+					+ "&sort=" + sort; 
 		}	
 	
 }

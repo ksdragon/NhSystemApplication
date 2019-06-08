@@ -51,16 +51,17 @@ public class profileController {
 			HttpServletRequest request,
 			Pageable pageable
 			) {		
-		String currentPageSessionNameProfile = "profileCurrentPageSessionAttribute";
-		if(session.getAttribute("emailSession") != null) {
-			if(!session.getAttribute("emailSession").equals(email)) {
-				session.removeAttribute(currentPageSessionNameProfile);
-			}
-		}
+		String currentPageSessionNameProfile = "profileCurrentPageSessionAttribute";		
 		String pageableSessionAtrrtibute = "pageableSessionAtrrtibuteInProfiles";
         if(!request.getHeader("referer").contains("profile")) {
         	pageable =  (Pageable) session.getAttribute(pageableSessionAtrrtibute);
-        }        
+        }
+        if(session.getAttribute("emailSession") != null) {
+			if(!session.getAttribute("emailSession").equals(email)) {
+				session.removeAttribute(currentPageSessionNameProfile);
+				if(pageable != null)pageable = PageRequest.of(0, pageable.getPageSize(),pageable.getSort());
+			}
+		}
         String year = Integer.toString(LocalDate.now().getYear());		
 		if(email.isEmpty()) email = principal.getName();
 		User user = userService.findOne(email);
@@ -73,6 +74,55 @@ public class profileController {
 		session.setAttribute("emailSession", email);
 		return returnPage;
 	
+	}
+	
+
+	@GetMapping("/createPdf")
+	public void createPdf (
+			@RequestParam(defaultValue="") String email,
+			@RequestParam(defaultValue="profileTableData") String returnPage,
+			@RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam("sort") Optional<String> sort,
+			@RequestParam("selectedYear") Optional<String> selectedYear,
+			Principal principal,
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			Pageable pageable) {
+				Sort sortP = pageable.getSort();
+				User user = userService.findOne(email);
+				String year = Integer.toString(LocalDate.now().getYear());	
+				List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
+				boolean isFlag = taskService.createPdf(findUserTasksYear,context,selectedYear.orElse(year));
+				if(isFlag) {
+					String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".pdf");
+					taskService.filedownload(fullPath,response,"userTasks.pdf");
+				}
+	
+	}
+	
+	@GetMapping("/createExcel")
+	public void createExcel (
+			@RequestParam(defaultValue="") String email,
+			@RequestParam(defaultValue="profileTableData") String returnPage,
+			@RequestParam("page") Optional<Integer> page,
+			@RequestParam("size") Optional<Integer> size,
+			@RequestParam("sort") Optional<String> sort,
+			@RequestParam("selectedYear") Optional<String> selectedYear,
+			Principal principal,
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			Pageable pageable) {
+		Sort sortP = pageable.getSort();
+		User user = userService.findOne(email);
+		String year = Integer.toString(LocalDate.now().getYear());	
+		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
+		boolean isFlag = taskService.createExcel(findUserTasksYear,context,selectedYear.orElse(year));
+		if(isFlag) {
+			String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".xls");
+			taskService.filedownload(fullPath,response,"userTasks.xls");
+		}
+				
 	}
 	
 //	@GetMapping("/profileYear")
@@ -128,52 +178,4 @@ public class profileController {
 //		session.setAttribute("emailSession", email);
 //		return "views/" + returnPage;
 //	}
-	
-	@GetMapping("/createPdf")
-	public void createPdf (
-			@RequestParam(defaultValue="") String email,
-			@RequestParam(defaultValue="profileTableData") String returnPage,
-			@RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size,
-			@RequestParam("sort") Optional<String> sort,
-			@RequestParam("selectedYear") Optional<String> selectedYear,
-			Principal principal,
-			HttpServletRequest request, 
-			HttpServletResponse response, 
-			Pageable pageable) {
-				Sort sortP = pageable.getSort();
-				User user = userService.findOne(email);
-				String year = Integer.toString(LocalDate.now().getYear());	
-				List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
-				boolean isFlag = taskService.createPdf(findUserTasksYear,context,selectedYear.orElse(year));
-				if(isFlag) {
-					String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".pdf");
-					taskService.filedownload(fullPath,response,"userTasks.pdf");
-				}
-	
-	}
-	
-	@GetMapping("/createExcel")
-	public void createExcel (
-			@RequestParam(defaultValue="") String email,
-			@RequestParam(defaultValue="profileTableData") String returnPage,
-			@RequestParam("page") Optional<Integer> page,
-			@RequestParam("size") Optional<Integer> size,
-			@RequestParam("sort") Optional<String> sort,
-			@RequestParam("selectedYear") Optional<String> selectedYear,
-			Principal principal,
-			HttpServletRequest request, 
-			HttpServletResponse response, 
-			Pageable pageable) {
-		Sort sortP = pageable.getSort();
-		User user = userService.findOne(email);
-		String year = Integer.toString(LocalDate.now().getYear());	
-		List<Task> findUserTasksYear = taskService.findUserTasksYear(user, selectedYear.orElse(year),sortP);
-		boolean isFlag = taskService.createExcel(findUserTasksYear,context,selectedYear.orElse(year));
-		if(isFlag) {
-			String fullPath = request.getServletContext().getRealPath("/resources/reports/"+"userTasks"+".xls");
-			taskService.filedownload(fullPath,response,"userTasks.xls");
-		}
-				
-	}	
 }

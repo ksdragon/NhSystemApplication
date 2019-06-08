@@ -4,7 +4,7 @@
 	layout:decorate="~{fragments/main_layout}">
 	
 <head>
-<script type="text/javascript" th:src="@{js/pageData.js}" src="../static/js/pageData.js"></script>
+<script type="text/javascript" th:src="@{js/profile.js}" src="../static/js/profile.js"></script>
 <link rel="stylesheet" href="../../static/css/style.css" th:href="@{css/style.css}" />
 <title th:text="#{label.profile.title}">Profile Page</title>
 <script th:inline="javascript">
@@ -13,6 +13,8 @@
 		  var sortParam = 'startDate';
 		  var selectedYear = 'All';
 		  var sizeParam = /*[[${tasks.size}]]*/ 'default';
+		  var pageParam = /*[[${tasks.number}]]*/ 'default';
+		  var pageElements = /*[[${tasks.totalElements}]]*/ 'default';
 /*]]>*/
 </script>
 </head>
@@ -33,10 +35,10 @@
 		</div>
 		<br>
 		
-		<div class="card" >
+		<div id="profileTable" class="card" >
 			<div th:replace="fragments/profileTableData :: profileTableData"></div>						
 		</div>				
-		
+		<div th:replace="fragments/modalDeleteEntry :: modalDeleteEntry"></div>
 	</div>	
 </body>
 </html>

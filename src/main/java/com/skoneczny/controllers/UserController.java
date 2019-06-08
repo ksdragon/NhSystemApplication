@@ -74,9 +74,21 @@ public class UserController {
 	}
 	
 	@GetMapping("/deleteUser")
-	public String taskFrom(String email, @RequestParam(defaultValue="views/listUsers") String returnPage) {
+	public String taskFrom(String email, 
+			@RequestParam(defaultValue="views/listUsers") String returnPage,
+			@RequestParam("page") Integer page,
+			@RequestParam("size") Integer size,
+			@RequestParam("sort") String sort,
+			@RequestParam("totalElements") Integer totalElements
+			) {
 		userService.deleteUser(email);
-		return "redirect:/users?returnPage=" + returnPage;		
+		if(totalElements%size == 1){
+			page -= 1;
+		}
+		return "redirect:/users?returnPage=" + returnPage				
+				+ "&size=" + size
+				+ "&page=" + page  
+				+ "&sort=" + sort;		
 	}
 	
 }

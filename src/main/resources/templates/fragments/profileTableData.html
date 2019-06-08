@@ -2,12 +2,17 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
+	<script th:inline="javascript">
+	/*<![CDATA[*/		
+	  	var pageElements = /*[[${tasks.totalElements}]]*/ 'default';
+	/*]]>*/
+	</script>
 </head>
 <body>
 			
-			<div id="table" th:fragment="profileTableData">
-				<div>
-				<table class="table table-hover">
+			<div th:fragment="profileTableData">
+				<div class="card card-body">
+				<table id="profileTableData" class="table table-hover">
 					<thead class="headTable">
 						<tr>
 							<th><a th:text="#{label.profile.startDate}" class="sorted" sd:pagination-sort="startDate" sd:pagination-url="@{/profile}">Start Date</a></th>
@@ -31,7 +36,7 @@
 							<td th:unless="${task.isApproved}" th:text="#{label.profile.no}">No</td>							
 							<td th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
 								<a th:href="@{/approvTask(id=${task.id}, email=${task.user.email} )}"
-								th:text="#{label.profile.activate}" class="btn btn-dark">Activate</a></td>							
+								th:text="#{label.profile.activate}" class="btn btn-dark approvBtn">Activate</a></td>							
 							
 							<td th:unless="(${task.isApproved} and  ${#authorization.expression('hasRole(''USER'')')}) 
 											"><a th:href="@{/editTask(id=${task.id}, email=${task.user.email} )}"
@@ -42,7 +47,7 @@
 							</td>
 							
 							<td><a th:href="@{/deleteTask(id=${task.id})}"
-								th:text="#{label.profile.delete}" class="btn btn-dark">Delete</a>
+								th:text="#{label.profile.delete}" class="btn btn-dark delBtn">Delete</a>
 							</td>
 						</tr>
 					</tbody>

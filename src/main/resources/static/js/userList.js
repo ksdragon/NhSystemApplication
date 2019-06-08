@@ -33,10 +33,16 @@ function onClickModalDeleteButtonInUsersList(){
 	$('#deleteModal #delRef').on('click',function(event){
 		event.preventDefault();
 		var href = $(this).attr('href');
-		$.get(href,"returnPage=" + returnViewUsersList, function(data){
-			$("#usersTableData").html(data);			
-			registerAllListenerInUsersList();
-		});
+		$.get(href,
+				"returnPage=" + returnViewUsersList
+				+ "&sort=" + sortParam
+				+ "&size=" + sizeParam
+				+ "&page=" + pageParam
+				+ "&totalElements=" + pageElements,		
+			function(data){
+				$("#usersTableData").html(data);			
+				registerAllListenerInUsersList();
+			});
 		$('#deleteModal').modal('hide');
 	});
 }

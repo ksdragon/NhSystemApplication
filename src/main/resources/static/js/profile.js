@@ -1,17 +1,19 @@
-var _selectorByIdTableData = "table";
+var _selectorByIdTableData = "profileTable";
 var _returnPageTableData = "fragments/profileTableData";	
 
 $(function() {
 	registerAllListenerInProfile();
 	onClickPdfDownloadRaportTasksUser();
-
+	onClickModalDeleteButtonInProfile();
 });
 
 function registerAllListenerInProfile(){
 	onSortingOrderInProfile();
-	onPaginationChangeDataInProfile();
-	fillSizePageSelectInProfile();
+	onPaginationChangeDataInProfile();	
 	onChangeSizePageSelectInProfile();
+	onClickDeleteButtonInProfile();
+	fillSizePageSelectInProfile();
+	noClickApprovButtonInProfile();
 }
 
 function selectPageInProfile(str, selector) {
@@ -56,7 +58,7 @@ function seleYearInProfile(year){
 //	var urlPageData = "/profile?selectedYear=" + year + "&email=" + email
 //					+ "&returnPage=views/profilePageData" + "&sort=" + sortParam;
 	selectedYear = year;
-	selectPageInProfile(urlSelectedYear,'table');
+	selectPageInProfile(urlSelectedYear, _selectorByIdTableData);
 }
 
 function onClickPdfDownloadRaportTasksUser(){
@@ -80,7 +82,7 @@ function onSortingOrderInProfile() {
 					var urlSortingOrder = _href + "&email=" + email
 							+ "&returnPage=" + _returnPageTableData
 							+ '&selectedYear=' + selectedYear
-							+ "&sort=" + sortParam 
+//							+ "&sort=" + sortParam 
 							+ "&size=" + sizeParam;
 				} else {
 					var urlSortingOrder = _href + '&selectedYear=' + selectedYear;
@@ -96,7 +98,8 @@ function onPaginationChangeDataInProfile() {
 					"click",
 					function(event) {
 						event.preventDefault()
-						var _href = this.getElementsByTagName('a')[0].href;							
+						var _href = this.getElementsByTagName('a')[0].href;						
+						pageParam = getUrlVars(_href)["page"];
 						var urlProfileTableData = _href 
 								+ "&email=" + email
 								+ "&returnPage=" + _returnPageTableData 
@@ -161,65 +164,46 @@ function onChangeSizePageSelectInProfile() {
 			});
 }
 
-
-
-function selectPageInProfile1(obiekt) {
-	console.log(obiekt.href);
+function onClickDeleteButtonInProfile(){
+	$('#profileTableData .delBtn').on('click',function(event){
+		event.preventDefault();		
+		var href = $(this).attr('href');
+		$('#deleteModal #delRef').attr('href',href);			
+		$('#deleteModal').modal();		
+	});
 }
 
-//function onClickPdfDownloadRaportTasksUser1(){	
-//			event.preventDefault()
-//			var urlcreatePdf = "/createPdf?selectedYear=" + year + "&email=" + email
-//			 + "&sort=" + sortParam;
-//			window.location.href = urlcreatePdf;
-//			};
-//}
-//
+function onClickModalDeleteButtonInProfile(){
+	$('#deleteModal #delRef').on('click',function(event){
+		event.preventDefault();
+		var href = $(this).attr('href');
+		$.get(href,
+				"returnPage=" + _returnPageTableData
+				+ "&sort=" + sortParam
+				+ "&size=" + sizeParam
+				+ "&page=" + pageParam
+				+ "&totalElements=" + pageElements
+				, function(data){
+			$("#profileTable").html(data);			
+			registerAllListenerInProfile();
+		});
+		$('#deleteModal').modal('hide');
+	});
+}
 
+function noClickApprovButtonInProfile(){
+	$("#profileTableData .approvBtn").on('click',function(event){
+		event.preventDefault();
+		var href = $(this).attr('href');
+		$.get(href,
+				"returnPage=" + _returnPageTableData
+				+ "&sort=" + sortParam
+				+ "&size=" + sizeParam
+				+ "&page=" + pageParam				
+				, function(data){
+			$("#profileTable").html(data);			
+			registerAllListenerInProfile();		
+	});
+	});
+}
 
-
-
-//var _innerText = this.innerText;
-// var _innerHTML = this.innerHTML;
-// var _textContent = this.textContent;
-// console.log(/* _innerText, _innerHTML, _textContent,
-// */ _href)
-
-
-//function selectYear(str) {
-//
-//	var xhttp; // deklaracja pustej zmienej
-//	// if(email == ""){
-//	// var email = /*[[${email}]]*/ 'default';
-//	// //var email = $('#email').val();
-//	// return;
-//	// }
-//	if (str == "") {
-//		document.getElementById("table").innerHTML = "";
-//		return;
-//	}
-//
-//	// create object XMLHttpRequest
-//	if (window.XMLHttpRequest) {
-//		// code for modern browsers
-//		xhttp = new XMLHttpRequest();
-//	} else {
-//		// code for old IE browsers
-//		xhttp = new ActiveXObject("Microsoft.XMLHTTP");
-//	}
-//
-//	// w�a�ciwo�c kt�r� posiada obiekt xhttp
-//	xhttp.onreadystatechange = function() {
-//		if (this.readyState == 4 && this.status == 200) {
-//			document.getElementById("table").innerHTML = this.responseText;
-//			onPaginationChangeDataInProfile();
-//			onSortingOrderInProfile();
-//
-//		}
-//	};
-//	xhttp.open("GET", "/profileYear?selectedYear=" + str + "&email=" + email,
-//			true);
-//	// xhttp.setRequestHeader("Content-type",
-//	// "application/x-www-form-urlencoded");
-//	xhttp.send();
-//}
